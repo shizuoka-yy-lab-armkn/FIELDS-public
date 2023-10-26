@@ -1,0 +1,28 @@
+[tool.poetry]
+name = "proficiv"
+version = "0.1.0"
+description = "Assembly operation proficiency visualizer for YMC"
+authors = ["arumakan1727 <33191176+arumakan1727@users.noreply.github.com>"]
+license = "MIT"
+readme = "README.md"
+
+[tool.poetry.dependencies]
+python = "~3.12"
+fastapi = {extras = ["standard"], version = "^0.104.0"}
+pydantic = "^2.4.2"
+pydantic-settings = "^2.0.3"
+
+
+[tool.poetry.group.dev.dependencies]
+ruff = "^0.1.2"
+pyright = "^1.1.333"
+black = "^23.10.1"
+isort = "^5.12.0"
+
+
+[tool.poetry.group.dev-extra.dependencies]
+ipython = "^8.16.1"
+
+[build-system]
+requires = ["poetry-core"]
+build-backend = "poetry.core.masonry.api"

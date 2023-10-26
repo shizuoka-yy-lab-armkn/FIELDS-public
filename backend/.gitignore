@@ -1,0 +1,9 @@
+.env
+tmp
+
+.venv/
+__pycache__/
+*.py[cod]
+*$py.class
+*.so
+.mypy_cache

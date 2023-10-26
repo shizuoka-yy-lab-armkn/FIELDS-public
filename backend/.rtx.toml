@@ -1,0 +1,3 @@
+[tools]
+# version を変更するときは .python-version ファイルの変更もお忘れなく
+python = { version="3.12.0", virtualenv=".venv" }
