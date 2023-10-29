@@ -1,5 +1,7 @@
 from fastapi import APIRouter
 
+from proficiv.config import cfg
+from proficiv.domain.records import usecase
 from proficiv.domain.records.schema import IRecord
 
 router = APIRouter(
@@ -8,6 +10,6 @@ router = APIRouter(
 )
 
 
-@router.get("/")
+@router.get("")
 def list_records() -> list[IRecord]:
-    raise NotImplementedError()
+    return usecase.list_records(cfg)

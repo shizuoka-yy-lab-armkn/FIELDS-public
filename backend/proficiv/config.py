@@ -29,6 +29,7 @@ class Config(BaseSettings):
     debug: bool
     fake_db_dir: Path
     static_dir: Path
+    static_base_url: str
 
 
 cfg = Config.from_envfile(get_activated_env_path())
