@@ -43,3 +43,7 @@ class ISegment(RootModel):
     root: IValidSegment | IExtraSegment | IMissingSegment | IWrongSegment = Field(
         discriminator="type"
     )
+
+
+class IEvaluation(BaseModel):
+    segs: list[ISegment]

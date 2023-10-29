@@ -50,3 +50,20 @@ def get_subject_or_none(cfg: Config, id: SubjectID) -> ISubjectDetail | None:
         actions=actions,
         exemplar=exemplar,
     )
+
+
+def get_exemplar_action_sequence(cfg: Config, id: SubjectID) -> list[ActionID] | None:
+    dir = cfg.fake_db_dir / "subjects" / str(id)
+
+    if not dir.is_dir():
+        return None
+
+    res: list[ActionID] = []
+
+    with open(dir / "master_durs.csv", "r") as f:
+        f.readline()  # skip header line
+        for row in csv.reader(f):
+            aid = int(row[0])
+            res.append(ActionID(aid))
+
+    return res
