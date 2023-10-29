@@ -1,5 +1,7 @@
 .env
 tmp
+/fake_db/
+/static/
 
 .venv/
 __pycache__/
