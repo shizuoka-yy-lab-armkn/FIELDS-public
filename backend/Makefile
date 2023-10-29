@@ -1,9 +1,23 @@
 SHELL := /usr/bin/env bash -Eeuo pipefail
+CMD_MAIN := poetry run python3 -m proficiv.main
+SET_DEV_ENV := PROFICIV_ENV_FILE=./env/dev.env
 
 .PHONY:	serve/dev
 serve/dev:
-	PROFICIV_ENV_FILE=./env/dev.env \
-		poetry run python3 -m proficiv.main serve --reload
+	$(SET_DEV_ENV) \
+		$(CMD_MAIN) serve --reload
+
+
+.PHONY:	gen/oapi/stdout
+gen/oapi/stdout:
+	$(SET_DEV_ENV) \
+		$(CMD_MAIN) gen-openapi --indent=2
+
+
+.PHONY:	gen/oapi
+gen/oapi:
+	$(SET_DEV_ENV) \
+		$(CMD_MAIN) gen-openapi --out ../docs/openapi.json
 
 
 .PHONY:	fmt
