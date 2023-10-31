@@ -1,0 +1,32 @@
+sequenceDiagram
+  participant U as User (or WebBrowser)
+  participant S as API Server
+  participant D as Data Processor
+  participant X as Sensor,Camera
+
+  Note over U,X: 今回のプロトタイプ作成では、↓灰色部分は省略<br>予め動画がある状態からスタート (Webページ上で動画ファイル名を選択)
+  rect rgb(240, 240, 240)
+    U->>S: 開始信号(ボタン押下など)
+    activate U
+    S->>X: 各機材のレコーディングを開始
+    activate X
+    U->>S: 終了信号
+    deactivate U
+    S->>X: 各機材のレコーディングを終了
+    deactivate X
+
+    S->>D: 各機材のデータの開始時刻を同期
+    activate D
+
+    U-->>U: サーバへポーリング<br>orサーバからのプッシュを待機
+
+    D->>S: 同期終了
+    deactivate D
+  end
+
+  S->>D: 行動分節
+  activate D
+  D->>S: 行動分節完了
+  deactivate D
+
+  S->>U: データ分析結果を返却
