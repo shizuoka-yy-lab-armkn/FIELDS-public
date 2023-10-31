@@ -4,6 +4,7 @@ from fastapi import APIRouter, HTTPException
 from starlette.status import HTTP_403_FORBIDDEN
 
 from proficiv.config import Config, cfg
+from proficiv.domain.debug.schema import PingResponse
 
 router = APIRouter(
     prefix="/debug",
@@ -15,12 +16,12 @@ router = APIRouter(
     "/ping",
     summary="疎通確認API",
 )
-def ping() -> dict:
+def ping() -> PingResponse:
     now = datetime.now()
-    return {
-        "message": "pong",
-        "server_time": now,
-    }
+    return PingResponse(
+        message="pong",
+        server_time=now,
+    )
 
 
 @router.get(
