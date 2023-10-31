@@ -32,6 +32,11 @@ lint:
 	poetry run ruff check .
 
 
+.PHONY:	lint/fix
+lint/fix:
+	poetry run ruff check --fix-only --show-fixes .
+
+
 .PHONY: typecheck
 typecheck:
 	poetry run pyright .
