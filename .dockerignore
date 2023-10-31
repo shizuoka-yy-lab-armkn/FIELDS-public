@@ -1,0 +1,13 @@
+docs
+backend
+frontned
+.venv
+__pycache__
+*.py[cod]
+node_modules
+vendor
+.data
+build
+static
+_workdir
+_docker
