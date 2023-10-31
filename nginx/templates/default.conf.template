@@ -22,7 +22,7 @@ server {
     }
 
     location /_static/ {
-      root /var/www/static;
+      alias /var/www/static/;
     }
 
     # 参考: https://nextjs.org/docs/pages/building-your-application/upgrading/version-12#hmr-connection-now-uses-a-websocket
