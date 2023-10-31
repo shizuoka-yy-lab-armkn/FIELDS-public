@@ -17,7 +17,7 @@ gen/oapi/stdout:
 .PHONY:	gen/oapi
 gen/oapi:
 	$(SET_DEV_ENV) \
-		$(CMD_MAIN) gen-openapi --out ../docs/openapi.json
+		$(CMD_MAIN) gen-openapi --out ../docs/backend.openapi.json
 
 
 .PHONY:	fmt

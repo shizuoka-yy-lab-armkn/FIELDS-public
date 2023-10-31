@@ -1,4 +1,5 @@
 openapi.json
+*.openapi.json
 
 .idea
 .vscode/

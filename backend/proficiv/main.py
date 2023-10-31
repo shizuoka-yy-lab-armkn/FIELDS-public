@@ -11,7 +11,7 @@ from fastapi.openapi.utils import get_openapi
 from proficiv.routers import router
 
 api = FastAPI(
-    title="Proficiv API",
+    title="Proficiv Backend API",
 )
 api.include_router(router)
 
@@ -66,7 +66,7 @@ def gen_openapi(*, out: str | None = None, indent: int | str | None = None) -> N
     with open(out, "w") as f:
         _write_oapi_json(f, indent=indent)
 
-    print(f"Wrote to {out}.")
+    print(f"Wrote to {out}")
 
 
 if __name__ == "__main__":
