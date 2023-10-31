@@ -18,7 +18,7 @@ gen/oapi/stdout:
 .PHONY:	gen/oapi
 gen/oapi:
 	$(SET_DEV_ENV) \
-		$(PROFICIV_CMD).gen_oapi --out ../docs/backend.openapi.json
+		$(PROFICIV_CMD).gen_oapi --only-version v1 --out ../docs/backend.v1.openapi.json
 
 
 .PHONY:	fmt
