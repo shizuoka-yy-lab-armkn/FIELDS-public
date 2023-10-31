@@ -30,3 +30,55 @@ ipython = "^8.16.1"
 [build-system]
 requires = ["poetry-core"]
 build-backend = "poetry.core.masonry.api"
+
+#------------------ CI tool settings --------------------
+[tool.pyright]
+exclude = [
+  "**/node_modules",
+  "**/__pycache__",
+  "**/.*",
+  "tmp",
+  "data",
+  "fake_db",
+  "static",
+]
+[tool.isort]
+profile = "black"
+extend_skip = [
+  "tmp",
+  "data",
+  "fake_db",
+  "static",
+]
+
+[tool.ruff]
+extend-exclude = [
+  "tmp",
+  "data",
+  "fake_db",
+  "static",
+]
+[tool.ruff.lint]
+# see: https://docs.astral.sh/ruff/rules/
+select = [
+  "E",  # pycodestyle (Errors)
+  "W",  # pycodestyle (Warnings)
+  "F",  # pyflakes
+  "N",  # pep8-naming
+  "UP", # pyupgrade
+  "B",  # bugbear
+  "ANN", # flake8-annotations
+  "BLE", # flake8-blind-except
+  "FBT", # flake8-boolean-trap
+  "C4",  # flake8-comprehensions
+  "DTZ", # flake8-datetimez
+  "T20", # flake8-print
+  "TCH", # flake8-type-checking
+  "SIM", # flake8-simplify
+]
+ignore = [
+  "ANN101", # missing-type-self
+]
+[tool.ruff.lint.per-file-ignores]
+"**/cmd/*.py" = ["T201"]  # allow print()
+
