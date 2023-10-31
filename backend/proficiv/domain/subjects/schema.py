@@ -1,14 +1,15 @@
-from pydantic import BaseModel, Field
+from pydantic import Field
 
+from proficiv.base.schema import CamelizedPydanticModel
 from proficiv.entity import ActionID, SubjectID
 
 
-class IActionMeta(BaseModel):
+class IActionMeta(CamelizedPydanticModel):
     short_name: str
     long_name: str
 
 
-class IExemplarAction(BaseModel):
+class IExemplarAction(CamelizedPydanticModel):
     """熟練者をお手本とした各アクションの詳細"""
 
     action_id: ActionID
@@ -19,7 +20,7 @@ class IExemplarAction(BaseModel):
     dur_median: float = Field(description="中央値 (sec)")
 
 
-class ISubjectDetail(BaseModel):
+class ISubjectDetail(CamelizedPydanticModel):
     id: SubjectID
     name: str
     actions: dict[ActionID, IActionMeta]
