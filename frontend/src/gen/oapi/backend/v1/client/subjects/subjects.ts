@@ -6,19 +6,27 @@
  */
 import { useQuery } from "@tanstack/react-query";
 import type { QueryFunction, QueryKey, UseQueryOptions, UseQueryResult } from "@tanstack/react-query";
-import axios from "axios";
-import type { AxiosError, AxiosRequestConfig, AxiosResponse } from "axios";
+import { customInstance } from "../../../../../../config/orval/backend";
+import type { ErrorType } from "../../../../../../config/orval/backend";
 import type { HTTPValidationError, ISubjectDetail } from "../../schema";
+
+// eslint-disable-next-line
+type SecondParameter<T extends (...args: any) => any> = T extends (
+  config: any,
+  args: infer P,
+) => any ? P
+  : never;
 
 /**
  * @summary Get Subject
  */
 export const getSubject = (
   subjectId: number,
-  options?: AxiosRequestConfig,
-): Promise<AxiosResponse<ISubjectDetail>> => {
-  return axios.get(
-    `/api/v1/subjects/${subjectId}`,
+  options?: SecondParameter<typeof customInstance>,
+  signal?: AbortSignal,
+) => {
+  return customInstance<ISubjectDetail>(
+    { url: `/api/v1/subjects/${subjectId}`, method: "get", ...(signal ? { signal } : {}) },
     options,
   );
 };
@@ -29,20 +37,20 @@ export const getGetSubjectQueryKey = (subjectId: number) => {
 
 export const getGetSubjectQueryOptions = <
   TData = Awaited<ReturnType<typeof getSubject>>,
-  TError = AxiosError<HTTPValidationError>,
+  TError = ErrorType<HTTPValidationError>,
 >(
   subjectId: number,
   options?: {
     query?: Partial<UseQueryOptions<Awaited<ReturnType<typeof getSubject>>, TError, TData>>;
-    axios?: AxiosRequestConfig;
+    request?: SecondParameter<typeof customInstance>;
   },
 ) => {
-  const { query: queryOptions, axios: axiosOptions } = options ?? {};
+  const { query: queryOptions, request: requestOptions } = options ?? {};
 
   const queryKey = queryOptions?.queryKey ?? getGetSubjectQueryKey(subjectId);
 
   const queryFn: QueryFunction<Awaited<ReturnType<typeof getSubject>>> = ({ signal }) =>
-    getSubject(subjectId, { ...(signal ? { signal } : {}), ...axiosOptions });
+    getSubject(subjectId, requestOptions, signal);
 
   return { queryKey, queryFn, enabled: !!subjectId, ...queryOptions } as
     & UseQueryOptions<Awaited<ReturnType<typeof getSubject>>, TError, TData>
@@ -50,16 +58,16 @@ export const getGetSubjectQueryOptions = <
 };
 
 export type GetSubjectQueryResult = NonNullable<Awaited<ReturnType<typeof getSubject>>>;
-export type GetSubjectQueryError = AxiosError<HTTPValidationError>;
+export type GetSubjectQueryError = ErrorType<HTTPValidationError>;
 
 /**
  * @summary Get Subject
  */
-export const useGetSubject = <TData = Awaited<ReturnType<typeof getSubject>>, TError = AxiosError<HTTPValidationError>>(
+export const useGetSubject = <TData = Awaited<ReturnType<typeof getSubject>>, TError = ErrorType<HTTPValidationError>>(
   subjectId: number,
   options?: {
     query?: Partial<UseQueryOptions<Awaited<ReturnType<typeof getSubject>>, TError, TData>>;
-    axios?: AxiosRequestConfig;
+    request?: SecondParameter<typeof customInstance>;
   },
 ): UseQueryResult<TData, TError> & { queryKey: QueryKey } => {
   const queryOptions = getGetSubjectQueryOptions(subjectId, options);

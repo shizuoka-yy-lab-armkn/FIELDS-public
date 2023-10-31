@@ -6,18 +6,26 @@
  */
 import { useQuery } from "@tanstack/react-query";
 import type { QueryFunction, QueryKey, UseQueryOptions, UseQueryResult } from "@tanstack/react-query";
-import axios from "axios";
-import type { AxiosError, AxiosRequestConfig, AxiosResponse } from "axios";
+import { customInstance } from "../../../../../../config/orval/backend";
+import type { ErrorType } from "../../../../../../config/orval/backend";
 import type { PingResponse } from "../../schema";
+
+// eslint-disable-next-line
+type SecondParameter<T extends (...args: any) => any> = T extends (
+  config: any,
+  args: infer P,
+) => any ? P
+  : never;
 
 /**
  * @summary 疎通確認API
  */
 export const ping = (
-  options?: AxiosRequestConfig,
-): Promise<AxiosResponse<PingResponse>> => {
-  return axios.get(
-    `/api/v1/debug/ping`,
+  options?: SecondParameter<typeof customInstance>,
+  signal?: AbortSignal,
+) => {
+  return customInstance<PingResponse>(
+    { url: `/api/v1/debug/ping`, method: "get", ...(signal ? { signal } : {}) },
     options,
   );
 };
@@ -26,18 +34,17 @@ export const getPingQueryKey = () => {
   return [`/api/v1/debug/ping`] as const;
 };
 
-export const getPingQueryOptions = <TData = Awaited<ReturnType<typeof ping>>, TError = AxiosError<unknown>>(
+export const getPingQueryOptions = <TData = Awaited<ReturnType<typeof ping>>, TError = ErrorType<unknown>>(
   options?: {
     query?: Partial<UseQueryOptions<Awaited<ReturnType<typeof ping>>, TError, TData>>;
-    axios?: AxiosRequestConfig;
+    request?: SecondParameter<typeof customInstance>;
   },
 ) => {
-  const { query: queryOptions, axios: axiosOptions } = options ?? {};
+  const { query: queryOptions, request: requestOptions } = options ?? {};
 
   const queryKey = queryOptions?.queryKey ?? getPingQueryKey();
 
-  const queryFn: QueryFunction<Awaited<ReturnType<typeof ping>>> = ({ signal }) =>
-    ping({ ...(signal ? { signal } : {}), ...axiosOptions });
+  const queryFn: QueryFunction<Awaited<ReturnType<typeof ping>>> = ({ signal }) => ping(requestOptions, signal);
 
   return { queryKey, queryFn, ...queryOptions } as UseQueryOptions<Awaited<ReturnType<typeof ping>>, TError, TData> & {
     queryKey: QueryKey;
@@ -45,15 +52,15 @@ export const getPingQueryOptions = <TData = Awaited<ReturnType<typeof ping>>, TE
 };
 
 export type PingQueryResult = NonNullable<Awaited<ReturnType<typeof ping>>>;
-export type PingQueryError = AxiosError<unknown>;
+export type PingQueryError = ErrorType<unknown>;
 
 /**
  * @summary 疎通確認API
  */
-export const usePing = <TData = Awaited<ReturnType<typeof ping>>, TError = AxiosError<unknown>>(
+export const usePing = <TData = Awaited<ReturnType<typeof ping>>, TError = ErrorType<unknown>>(
   options?: {
     query?: Partial<UseQueryOptions<Awaited<ReturnType<typeof ping>>, TError, TData>>;
-    axios?: AxiosRequestConfig;
+    request?: SecondParameter<typeof customInstance>;
   },
 ): UseQueryResult<TData, TError> & { queryKey: QueryKey } => {
   const queryOptions = getPingQueryOptions(options);

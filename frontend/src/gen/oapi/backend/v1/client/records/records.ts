@@ -6,18 +6,26 @@
  */
 import { useQuery } from "@tanstack/react-query";
 import type { QueryFunction, QueryKey, UseQueryOptions, UseQueryResult } from "@tanstack/react-query";
-import axios from "axios";
-import type { AxiosError, AxiosRequestConfig, AxiosResponse } from "axios";
+import { customInstance } from "../../../../../../config/orval/backend";
+import type { ErrorType } from "../../../../../../config/orval/backend";
 import type { HTTPValidationError, IEvaluation, IRecord } from "../../schema";
+
+// eslint-disable-next-line
+type SecondParameter<T extends (...args: any) => any> = T extends (
+  config: any,
+  args: infer P,
+) => any ? P
+  : never;
 
 /**
  * @summary List Records
  */
 export const listRecords = (
-  options?: AxiosRequestConfig,
-): Promise<AxiosResponse<IRecord[]>> => {
-  return axios.get(
-    `/api/v1/records`,
+  options?: SecondParameter<typeof customInstance>,
+  signal?: AbortSignal,
+) => {
+  return customInstance<IRecord[]>(
+    { url: `/api/v1/records`, method: "get", ...(signal ? { signal } : {}) },
     options,
   );
 };
@@ -28,19 +36,19 @@ export const getListRecordsQueryKey = () => {
 
 export const getListRecordsQueryOptions = <
   TData = Awaited<ReturnType<typeof listRecords>>,
-  TError = AxiosError<unknown>,
+  TError = ErrorType<unknown>,
 >(
   options?: {
     query?: Partial<UseQueryOptions<Awaited<ReturnType<typeof listRecords>>, TError, TData>>;
-    axios?: AxiosRequestConfig;
+    request?: SecondParameter<typeof customInstance>;
   },
 ) => {
-  const { query: queryOptions, axios: axiosOptions } = options ?? {};
+  const { query: queryOptions, request: requestOptions } = options ?? {};
 
   const queryKey = queryOptions?.queryKey ?? getListRecordsQueryKey();
 
   const queryFn: QueryFunction<Awaited<ReturnType<typeof listRecords>>> = ({ signal }) =>
-    listRecords({ ...(signal ? { signal } : {}), ...axiosOptions });
+    listRecords(requestOptions, signal);
 
   return { queryKey, queryFn, ...queryOptions } as
     & UseQueryOptions<Awaited<ReturnType<typeof listRecords>>, TError, TData>
@@ -48,15 +56,15 @@ export const getListRecordsQueryOptions = <
 };
 
 export type ListRecordsQueryResult = NonNullable<Awaited<ReturnType<typeof listRecords>>>;
-export type ListRecordsQueryError = AxiosError<unknown>;
+export type ListRecordsQueryError = ErrorType<unknown>;
 
 /**
  * @summary List Records
  */
-export const useListRecords = <TData = Awaited<ReturnType<typeof listRecords>>, TError = AxiosError<unknown>>(
+export const useListRecords = <TData = Awaited<ReturnType<typeof listRecords>>, TError = ErrorType<unknown>>(
   options?: {
     query?: Partial<UseQueryOptions<Awaited<ReturnType<typeof listRecords>>, TError, TData>>;
-    axios?: AxiosRequestConfig;
+    request?: SecondParameter<typeof customInstance>;
   },
 ): UseQueryResult<TData, TError> & { queryKey: QueryKey } => {
   const queryOptions = getListRecordsQueryOptions(options);
@@ -73,10 +81,11 @@ export const useListRecords = <TData = Awaited<ReturnType<typeof listRecords>>, 
  */
 export const getEvaluation = (
   recordId: number,
-  options?: AxiosRequestConfig,
-): Promise<AxiosResponse<IEvaluation>> => {
-  return axios.get(
-    `/api/v1/records/${recordId}/evaluation`,
+  options?: SecondParameter<typeof customInstance>,
+  signal?: AbortSignal,
+) => {
+  return customInstance<IEvaluation>(
+    { url: `/api/v1/records/${recordId}/evaluation`, method: "get", ...(signal ? { signal } : {}) },
     options,
   );
 };
@@ -87,20 +96,20 @@ export const getGetEvaluationQueryKey = (recordId: number) => {
 
 export const getGetEvaluationQueryOptions = <
   TData = Awaited<ReturnType<typeof getEvaluation>>,
-  TError = AxiosError<HTTPValidationError>,
+  TError = ErrorType<HTTPValidationError>,
 >(
   recordId: number,
   options?: {
     query?: Partial<UseQueryOptions<Awaited<ReturnType<typeof getEvaluation>>, TError, TData>>;
-    axios?: AxiosRequestConfig;
+    request?: SecondParameter<typeof customInstance>;
   },
 ) => {
-  const { query: queryOptions, axios: axiosOptions } = options ?? {};
+  const { query: queryOptions, request: requestOptions } = options ?? {};
 
   const queryKey = queryOptions?.queryKey ?? getGetEvaluationQueryKey(recordId);
 
   const queryFn: QueryFunction<Awaited<ReturnType<typeof getEvaluation>>> = ({ signal }) =>
-    getEvaluation(recordId, { ...(signal ? { signal } : {}), ...axiosOptions });
+    getEvaluation(recordId, requestOptions, signal);
 
   return { queryKey, queryFn, enabled: !!recordId, ...queryOptions } as
     & UseQueryOptions<Awaited<ReturnType<typeof getEvaluation>>, TError, TData>
@@ -108,19 +117,19 @@ export const getGetEvaluationQueryOptions = <
 };
 
 export type GetEvaluationQueryResult = NonNullable<Awaited<ReturnType<typeof getEvaluation>>>;
-export type GetEvaluationQueryError = AxiosError<HTTPValidationError>;
+export type GetEvaluationQueryError = ErrorType<HTTPValidationError>;
 
 /**
  * @summary Get Evaluation
  */
 export const useGetEvaluation = <
   TData = Awaited<ReturnType<typeof getEvaluation>>,
-  TError = AxiosError<HTTPValidationError>,
+  TError = ErrorType<HTTPValidationError>,
 >(
   recordId: number,
   options?: {
     query?: Partial<UseQueryOptions<Awaited<ReturnType<typeof getEvaluation>>, TError, TData>>;
-    axios?: AxiosRequestConfig;
+    request?: SecondParameter<typeof customInstance>;
   },
 ): UseQueryResult<TData, TError> & { queryKey: QueryKey } => {
   const queryOptions = getGetEvaluationQueryOptions(recordId, options);

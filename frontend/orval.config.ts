@@ -12,10 +12,15 @@ export default defineConfig({
       clean: true,
       override: {
         useTypeOverInterfaces: true,
-      }
+        mutator: {
+          path: "./src/config/orval/backend.ts",
+          name: "customInstance",
+        },
+      },
     },
     hooks: {
-      afterAllFilesWrite: "dprint fmt",
+      // dprint.json では src/gen/** を exclude しているのでコマンドライン引数でoverride
+      afterAllFilesWrite: "dprint fmt --config dprint.orval.json",
     },
   },
 });
