@@ -7,8 +7,7 @@
     ".next/**",
     "out/**",
     "storybook-static/**",
-    "public/**",
-    "src/gen/**"
+    "public/**"
   ],
   "plugins": [
     "https://plugins.dprint.dev/typescript-0.86.2.wasm",
