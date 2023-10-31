@@ -21,7 +21,7 @@ def get_subject_or_none(cfg: Config, id: SubjectID) -> ISubjectDetail | None:
     subject_name = meta["name"]
     actions: dict[ActionID, IActionMeta] = {}
 
-    with open(dir / "name_mappings.tsv", "r") as f:
+    with open(dir / "name_mappings.tsv") as f:
         for row in csv.reader(f, delimiter="\t"):
             aid, short_name, long_name = row
             aid = ActionID(int(aid))
@@ -29,7 +29,7 @@ def get_subject_or_none(cfg: Config, id: SubjectID) -> ISubjectDetail | None:
 
     exemplar: list[IExemplarAction] = []
 
-    with open(dir / "master_durs.csv", "r") as f:
+    with open(dir / "master_durs.csv") as f:
         f.readline()  # skip header line
         for row in csv.reader(f):
             aid, _count, mean, std, minv, _25, median, _75, maxv = row
@@ -60,7 +60,7 @@ def get_exemplar_action_sequence(cfg: Config, id: SubjectID) -> list[ActionID] |
 
     res: list[ActionID] = []
 
-    with open(dir / "master_durs.csv", "r") as f:
+    with open(dir / "master_durs.csv") as f:
         f.readline()  # skip header line
         for row in csv.reader(f):
             aid = int(row[0])

@@ -9,7 +9,9 @@ from proficiv.entity import ActionID, RecordID, SubjectID
 class IRecord(CamelizedPydanticModel):
     record_id: RecordID
     subject_id: SubjectID
-    fps: float = Field(description="Frames per second; 一秒間あたりのサンプリングレート")
+    fps: float = Field(
+        description="Frames per second; 一秒間あたりのサンプリングレート",
+    )
     head_camera_video_url: HttpUrl
 
 
