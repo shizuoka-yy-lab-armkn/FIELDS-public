@@ -1,6 +1,7 @@
 openapi.json
 *.openapi.json
 nginx.env
+/tmp/
 
 .idea
 .vscode/
