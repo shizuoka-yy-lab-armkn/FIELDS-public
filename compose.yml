@@ -1,13 +1,37 @@
+version: "3"
 services:
   nginx:
-    build:
-      context: .
-      dockerfile: ./nginx/Dockerfile
-    image: armkn-proficiv-nginx
-    env_file: ./nginx.env
+    image: nginx:1.25.3-bookworm
+    env_file: ./.env.nginx
     ports:
       - "80:80"
     volumes:
       - ./nginx/nginx.conf:/etc/nginx/nginx.conf
       - ./nginx/templates:/etc/nginx/templates
       - ./backend/static:/var/www/static
+
+  postgres:
+    image: postgres:16.0-bookworm
+    env_file: ./.env.postgres
+    environment:
+      #POSTGRES_USER: See .env.postgres
+      #POSTGRES_PASSWORD: See .env.postgres
+      POSTGRES_DB: proficiv
+      POSTGRES_INITDB_ARGS: '--encoding=UTF-8'
+      POSTGRES_HOST_AUTH_METHOD: trust
+      PGDATA: /var/lib/postgresql/data/pgdata
+    ports:
+      - "25432:5432"
+    volumes:
+      - pg-data:/var/lib/postgresql/data
+
+  redis:
+    image: redis:7.2-bookworm
+    ports:
+      - "26379:6379"
+    volumes:
+      - redis-data:/data
+
+volumes:
+  pg-data:
+  redis-data:

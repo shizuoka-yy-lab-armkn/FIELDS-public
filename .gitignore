@@ -1,6 +1,8 @@
 openapi.json
 *.openapi.json
-nginx.env
+.env
+.env.*
+!.env.*.sample
 /tmp/
 
 .idea
