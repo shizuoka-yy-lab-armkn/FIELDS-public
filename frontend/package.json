@@ -10,7 +10,8 @@
     "lint:fix": "next lint --fix",
     "fmt": "dprint fmt",
     "fmt:check": "dprint check",
-    "orval": "orval"
+    "orval": "orval",
+    "postinstall": "msw init public"
   },
   "dependencies": {
     "@chakra-ui/next-js": "^2.1.5",
@@ -35,7 +36,11 @@
     "dprint": "^0.42.5",
     "eslint": "^8",
     "eslint-config-next": "14.0.1",
+    "msw": "^2.0.6",
     "orval": "^6.19.1",
     "typescript": "^5"
+  },
+  "msw": {
+    "workerDirectory": "public"
   }
 }

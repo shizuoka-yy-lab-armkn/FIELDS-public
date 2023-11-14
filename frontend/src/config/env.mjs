@@ -9,9 +9,12 @@ export const env = createEnv({
   client: {
     /** バックエンドAPIのベースURL */
     NEXT_PUBLIC_BACKEND_BASE_URL: z.string().url().regex(/^https?:.*[a-zA-Z0-9]$/),
+    /** Web ブラウザ上でのモックを有効にするか */
+    NEXT_PUBLIC_MOCK_ENABLED: z.boolean(),
   },
   runtimeEnv: {
     // ここで実際の環境変数とマッピングを行う
     NEXT_PUBLIC_BACKEND_BASE_URL: process.env.NEXT_PUBLIC_BACKEND_BASE_URL,
+    NEXT_PUBLIC_MOCK_ENABLED: ["1", "true", "yes"].includes(process.env.NEXT_PUBLIC_MOCK_ENABLED || ""),
   },
 });
