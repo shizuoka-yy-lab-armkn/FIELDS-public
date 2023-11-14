@@ -1,7 +1,7 @@
 const REGEX_ISO_DATE = /^\d{4}-\d{2}-\d{2}T\d{2}:\d{2}:\d{2}(?:\.\d*)?(?:[-+]\d{2}:?\d{2}|Z)?$/;
 
-const isIsoDateString = (value: any): value is string => {
-  return value && typeof value === "string" && REGEX_ISO_DATE.test(value);
+const isIsoDateString = (value: unknown): value is string => {
+  return value != null && typeof value === "string" && REGEX_ISO_DATE.test(value);
 };
 
 /**
@@ -9,13 +9,14 @@ const isIsoDateString = (value: any): value is string => {
  * body が object ではない場合は何もしない．
  * 再帰的に処理するので body がネストされたオブジェクトでも大丈夫．
  */
-export const replaceAllIsoDateStrToJsDate = (body: any): void => {
+export const replaceAllIsoDateStrToJsDate = (body: unknown): void => {
   if (body === null || body === undefined || typeof body !== "object") {
     return;
   }
 
   for (const [key, value] of Object.entries(body)) {
     if (isIsoDateString(value)) {
+      // @ts-expect-error: [TS7053] Element implicitly has an 'any' type because expression of type 'string' can't be used to index type '{}'
       body[key] = new Date(value);
     } else if (typeof value === "object") {
       replaceAllIsoDateStrToJsDate(value);
