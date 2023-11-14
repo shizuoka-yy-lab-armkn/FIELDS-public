@@ -6,7 +6,7 @@
  */
 import { useQuery } from "@tanstack/react-query";
 import type { QueryFunction, QueryKey, UseQueryOptions, UseQueryResult } from "@tanstack/react-query";
-import { customInstance } from "../../../../../../config/orval/backend";
+import { customAxios } from "../../../../../../config/orval/backend";
 import type { ErrorType } from "../../../../../../config/orval/backend";
 import type { PingResponse } from "../../schema";
 
@@ -21,10 +21,10 @@ type SecondParameter<T extends (...args: any) => any> = T extends (
  * @summary 疎通確認API
  */
 export const ping = (
-  options?: SecondParameter<typeof customInstance>,
+  options?: SecondParameter<typeof customAxios>,
   signal?: AbortSignal,
 ) => {
-  return customInstance<PingResponse>(
+  return customAxios<PingResponse>(
     { url: `/api/v1/debug/ping`, method: "get", ...(signal ? { signal } : {}) },
     options,
   );
@@ -37,7 +37,7 @@ export const getPingQueryKey = () => {
 export const getPingQueryOptions = <TData = Awaited<ReturnType<typeof ping>>, TError = ErrorType<unknown>>(
   options?: {
     query?: Partial<UseQueryOptions<Awaited<ReturnType<typeof ping>>, TError, TData>>;
-    request?: SecondParameter<typeof customInstance>;
+    request?: SecondParameter<typeof customAxios>;
   },
 ) => {
   const { query: queryOptions, request: requestOptions } = options ?? {};
@@ -60,7 +60,7 @@ export type PingQueryError = ErrorType<unknown>;
 export const usePing = <TData = Awaited<ReturnType<typeof ping>>, TError = ErrorType<unknown>>(
   options?: {
     query?: Partial<UseQueryOptions<Awaited<ReturnType<typeof ping>>, TError, TData>>;
-    request?: SecondParameter<typeof customInstance>;
+    request?: SecondParameter<typeof customAxios>;
   },
 ): UseQueryResult<TData, TError> & { queryKey: QueryKey } => {
   const queryOptions = getPingQueryOptions(options);

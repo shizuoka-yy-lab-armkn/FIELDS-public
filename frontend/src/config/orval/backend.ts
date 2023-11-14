@@ -3,7 +3,7 @@ import axios, { AxiosError, AxiosRequestConfig } from "axios";
 import { backendAxios } from "../axios/backend";
 
 // add a second `options` argument here if you want to pass extra options to each generated query
-export const customInstance = <T>(
+export const customAxios = <T>(
   config: AxiosRequestConfig,
   options?: AxiosRequestConfig,
 ): Promise<T> => {

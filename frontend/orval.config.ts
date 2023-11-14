@@ -14,7 +14,7 @@ export default defineConfig({
         useTypeOverInterfaces: true,
         mutator: {
           path: "./src/config/orval/backend.ts",
-          name: "customInstance",
+          name: "customAxios",
         },
       },
     },

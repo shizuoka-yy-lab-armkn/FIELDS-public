@@ -6,7 +6,7 @@
  */
 import { useQuery } from "@tanstack/react-query";
 import type { QueryFunction, QueryKey, UseQueryOptions, UseQueryResult } from "@tanstack/react-query";
-import { customInstance } from "../../../../../../config/orval/backend";
+import { customAxios } from "../../../../../../config/orval/backend";
 import type { ErrorType } from "../../../../../../config/orval/backend";
 import type { HTTPValidationError, Subject } from "../../schema";
 
@@ -22,10 +22,10 @@ type SecondParameter<T extends (...args: any) => any> = T extends (
  */
 export const getSubject = (
   subjectId: string,
-  options?: SecondParameter<typeof customInstance>,
+  options?: SecondParameter<typeof customAxios>,
   signal?: AbortSignal,
 ) => {
-  return customInstance<Subject>(
+  return customAxios<Subject>(
     { url: `/api/v1/subjects/${subjectId}`, method: "get", ...(signal ? { signal } : {}) },
     options,
   );
@@ -42,7 +42,7 @@ export const getGetSubjectQueryOptions = <
   subjectId: string,
   options?: {
     query?: Partial<UseQueryOptions<Awaited<ReturnType<typeof getSubject>>, TError, TData>>;
-    request?: SecondParameter<typeof customInstance>;
+    request?: SecondParameter<typeof customAxios>;
   },
 ) => {
   const { query: queryOptions, request: requestOptions } = options ?? {};
@@ -67,7 +67,7 @@ export const useGetSubject = <TData = Awaited<ReturnType<typeof getSubject>>, TE
   subjectId: string,
   options?: {
     query?: Partial<UseQueryOptions<Awaited<ReturnType<typeof getSubject>>, TError, TData>>;
-    request?: SecondParameter<typeof customInstance>;
+    request?: SecondParameter<typeof customAxios>;
   },
 ): UseQueryResult<TData, TError> & { queryKey: QueryKey } => {
   const queryOptions = getGetSubjectQueryOptions(subjectId, options);

@@ -6,7 +6,7 @@
  */
 import { useQuery } from "@tanstack/react-query";
 import type { QueryFunction, QueryKey, UseQueryOptions, UseQueryResult } from "@tanstack/react-query";
-import { customInstance } from "../../../../../../config/orval/backend";
+import { customAxios } from "../../../../../../config/orval/backend";
 import type { ErrorType } from "../../../../../../config/orval/backend";
 import type { HTTPValidationError, Record, RecordEvaluation } from "../../schema";
 
@@ -21,10 +21,10 @@ type SecondParameter<T extends (...args: any) => any> = T extends (
  * @summary Get Record List
  */
 export const getRecordList = (
-  options?: SecondParameter<typeof customInstance>,
+  options?: SecondParameter<typeof customAxios>,
   signal?: AbortSignal,
 ) => {
-  return customInstance<Record[]>(
+  return customAxios<Record[]>(
     { url: `/api/v1/records`, method: "get", ...(signal ? { signal } : {}) },
     options,
   );
@@ -40,7 +40,7 @@ export const getGetRecordListQueryOptions = <
 >(
   options?: {
     query?: Partial<UseQueryOptions<Awaited<ReturnType<typeof getRecordList>>, TError, TData>>;
-    request?: SecondParameter<typeof customInstance>;
+    request?: SecondParameter<typeof customAxios>;
   },
 ) => {
   const { query: queryOptions, request: requestOptions } = options ?? {};
@@ -64,7 +64,7 @@ export type GetRecordListQueryError = ErrorType<unknown>;
 export const useGetRecordList = <TData = Awaited<ReturnType<typeof getRecordList>>, TError = ErrorType<unknown>>(
   options?: {
     query?: Partial<UseQueryOptions<Awaited<ReturnType<typeof getRecordList>>, TError, TData>>;
-    request?: SecondParameter<typeof customInstance>;
+    request?: SecondParameter<typeof customAxios>;
   },
 ): UseQueryResult<TData, TError> & { queryKey: QueryKey } => {
   const queryOptions = getGetRecordListQueryOptions(options);
@@ -81,10 +81,10 @@ export const useGetRecordList = <TData = Awaited<ReturnType<typeof getRecordList
  */
 export const getRecord = (
   recordId: string,
-  options?: SecondParameter<typeof customInstance>,
+  options?: SecondParameter<typeof customAxios>,
   signal?: AbortSignal,
 ) => {
-  return customInstance<Record>(
+  return customAxios<Record>(
     { url: `/api/v1/records/${recordId}`, method: "get", ...(signal ? { signal } : {}) },
     options,
   );
@@ -101,7 +101,7 @@ export const getGetRecordQueryOptions = <
   recordId: string,
   options?: {
     query?: Partial<UseQueryOptions<Awaited<ReturnType<typeof getRecord>>, TError, TData>>;
-    request?: SecondParameter<typeof customInstance>;
+    request?: SecondParameter<typeof customAxios>;
   },
 ) => {
   const { query: queryOptions, request: requestOptions } = options ?? {};
@@ -126,7 +126,7 @@ export const useGetRecord = <TData = Awaited<ReturnType<typeof getRecord>>, TErr
   recordId: string,
   options?: {
     query?: Partial<UseQueryOptions<Awaited<ReturnType<typeof getRecord>>, TError, TData>>;
-    request?: SecondParameter<typeof customInstance>;
+    request?: SecondParameter<typeof customAxios>;
   },
 ): UseQueryResult<TData, TError> & { queryKey: QueryKey } => {
   const queryOptions = getGetRecordQueryOptions(recordId, options);
@@ -143,10 +143,10 @@ export const useGetRecord = <TData = Awaited<ReturnType<typeof getRecord>>, TErr
  */
 export const getEvaluation = (
   recordId: string,
-  options?: SecondParameter<typeof customInstance>,
+  options?: SecondParameter<typeof customAxios>,
   signal?: AbortSignal,
 ) => {
-  return customInstance<RecordEvaluation>(
+  return customAxios<RecordEvaluation>(
     { url: `/api/v1/records/${recordId}/evaluation`, method: "get", ...(signal ? { signal } : {}) },
     options,
   );
@@ -163,7 +163,7 @@ export const getGetEvaluationQueryOptions = <
   recordId: string,
   options?: {
     query?: Partial<UseQueryOptions<Awaited<ReturnType<typeof getEvaluation>>, TError, TData>>;
-    request?: SecondParameter<typeof customInstance>;
+    request?: SecondParameter<typeof customAxios>;
   },
 ) => {
   const { query: queryOptions, request: requestOptions } = options ?? {};
@@ -191,7 +191,7 @@ export const useGetEvaluation = <
   recordId: string,
   options?: {
     query?: Partial<UseQueryOptions<Awaited<ReturnType<typeof getEvaluation>>, TError, TData>>;
-    request?: SecondParameter<typeof customInstance>;
+    request?: SecondParameter<typeof customAxios>;
   },
 ): UseQueryResult<TData, TError> & { queryKey: QueryKey } => {
   const queryOptions = getGetEvaluationQueryOptions(recordId, options);
