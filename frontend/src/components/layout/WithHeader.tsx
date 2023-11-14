@@ -21,7 +21,7 @@ export const WithHeader = ({
           // そこで、適当に height=1px を設定することで非 auto にするというトリックを施している
         }
         <Flex flexDirection="column" minH="100vh" h="1px" pt={GLOBAL_HEADER_H} flex={1} w="1px">
-          <Box as="main" bg={bg} flexGrow={1}>{children}</Box>
+          <Box as="main" bg={bg} flexGrow={1} minH="100%" h="1px">{children}</Box>
         </Flex>
       </Flex>
     </>
