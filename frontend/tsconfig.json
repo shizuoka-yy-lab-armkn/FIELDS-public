@@ -17,7 +17,6 @@
     "noImplicitReturns": true,
     "noUncheckedIndexedAccess": true,
     "noFallthroughCasesInSwitch": true,
-    "exactOptionalPropertyTypes": true,
     "noImplicitOverride": true,
     "plugins": [
       {
