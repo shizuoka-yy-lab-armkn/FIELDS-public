@@ -7,6 +7,7 @@ export const dummyRecord: schema.Record = {
   fps: 29.97,
   headCameraVideoUrl: "/_static/records/dummy.mp4",
   recordAt: "2023-11-14T01:52:31.174Z",
+  seq: 1,
 };
 
 export const dummyRecordEvaluation: schema.RecordEvaluation = {
@@ -89,14 +90,14 @@ export const dummyRecordEvaluation: schema.RecordEvaluation = {
     },
     {
       type: "wrong",
-      recogActionId: 19,
+      actionId: 19,
       expectedActionId: 18,
       begin: 5081,
       end: 5649,
     },
     {
       type: "wrong",
-      recogActionId: 18,
+      actionId: 18,
       expectedActionId: 19,
       begin: 5649,
       end: 5787,
