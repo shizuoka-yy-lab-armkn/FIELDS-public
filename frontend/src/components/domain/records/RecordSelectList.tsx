@@ -1,5 +1,5 @@
 import * as schema from "@/gen/oapi/backend/v1/schema";
-import { fmtDatetime } from "@/utils/datetime";
+import { fmtRecordName } from "@/usecase/records";
 import { ChevronDownIcon } from "@chakra-ui/icons";
 import { ButtonProps, Flex, Menu, MenuButton, MenuItem, MenuList, Text } from "@chakra-ui/react";
 import { useRouter } from "next/router";
@@ -9,11 +9,6 @@ export type RecordSelectListProps = {
   records: readonly schema.Record[];
   currentRecordId?: string;
 } & ButtonProps;
-
-const fmtRecordName = (recordIndex: number, record: schema.Record): string => {
-  const d = new Date(record.recordAt);
-  return `収録 ${recordIndex + 1} - ${fmtDatetime(d)}`;
-};
 
 export const RecordSelectList = ({ records, currentRecordId, ...props }: RecordSelectListProps) => {
   const currentRecordIndex = useMemo(() => {
@@ -51,7 +46,7 @@ export const RecordSelectList = ({ records, currentRecordId, ...props }: RecordS
             overflow="hidden"
             textOverflow="ellipsis"
           >
-            {currentRecordIndex == null ? "" : fmtRecordName(currentRecordIndex, records[currentRecordIndex]!)}
+            {currentRecordIndex == null ? "" : fmtRecordName(records[currentRecordIndex]!)}
           </Text>
           <ChevronDownIcon ml={1} />
         </Flex>
@@ -62,7 +57,7 @@ export const RecordSelectList = ({ records, currentRecordId, ...props }: RecordS
             key={r.recordId}
             onClick={() => i !== currentRecordIndex && router.push(`/records/${r.recordId}`)}
           >
-            {fmtRecordName(i, r)}
+            {fmtRecordName(r)}
           </MenuItem>
         ))}
       </MenuList>

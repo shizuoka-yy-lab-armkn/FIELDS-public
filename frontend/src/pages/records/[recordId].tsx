@@ -1,8 +1,3 @@
-import { WithRecordSelectableHeader } from "@/components/layout/WithRecordSelectableHeader";
+import { RecordDetailPage } from "@/components/page/RecordDetail/RecordDetail.page";
 
-export default function RecordDetailPage() {
-  return (
-    <WithRecordSelectableHeader>
-    </WithRecordSelectableHeader>
-  );
-}
+export default RecordDetailPage;
