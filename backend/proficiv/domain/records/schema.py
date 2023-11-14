@@ -15,6 +15,7 @@ class Record(CamelizedPydanticModel):
     )
     head_camera_video_url: HttpUrl
     record_at: datetime
+    seq: int = Field(description="何回目の収録か")
 
 
 class ValidSegment(CamelizedPydanticModel):
@@ -38,7 +39,7 @@ class MissingSegment(CamelizedPydanticModel):
 
 class WrongSegment(CamelizedPydanticModel):
     type: Literal["wrong"] = "wrong"
-    recog_action_id: ActionID = Field(description="認識されたアクション")
+    action_id: ActionID = Field(description="認識されたアクション")
     expected_action_id: ActionID = Field(description="期待されたアクション")
     begin: int
     end: int

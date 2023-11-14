@@ -25,7 +25,7 @@ export const getRecordList = (
   signal?: AbortSignal,
 ) => {
   return customAxios<Record[]>(
-    { url: `/api/v1/records`, method: "get", ...(signal ? { signal } : {}) },
+    { url: `/api/v1/records`, method: "get", signal },
     options,
   );
 };
@@ -85,7 +85,7 @@ export const getRecord = (
   signal?: AbortSignal,
 ) => {
   return customAxios<Record>(
-    { url: `/api/v1/records/${recordId}`, method: "get", ...(signal ? { signal } : {}) },
+    { url: `/api/v1/records/${recordId}`, method: "get", signal },
     options,
   );
 };
@@ -147,7 +147,7 @@ export const getEvaluation = (
   signal?: AbortSignal,
 ) => {
   return customAxios<RecordEvaluation>(
-    { url: `/api/v1/records/${recordId}/evaluation`, method: "get", ...(signal ? { signal } : {}) },
+    { url: `/api/v1/records/${recordId}/evaluation`, method: "get", signal },
     options,
   );
 };

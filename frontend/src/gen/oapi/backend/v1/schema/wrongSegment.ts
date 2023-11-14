@@ -7,11 +7,11 @@
 import type { WrongSegmentType } from './wrongSegmentType';
 
 export type WrongSegment = {
+  /** 認識されたアクション */
+  actionId: number;
   begin: number;
   end: number;
   /** 期待されたアクション */
   expectedActionId: number;
-  /** 認識されたアクション */
-  recogActionId: number;
   type: WrongSegmentType;
 };

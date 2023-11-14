@@ -11,5 +11,7 @@ export type Record = {
   headCameraVideoUrl: string;
   recordAt: string;
   recordId: string;
+  /** 何回目の収録か */
+  seq: number;
   subjectId: string;
 };

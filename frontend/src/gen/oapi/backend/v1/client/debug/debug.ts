@@ -25,7 +25,7 @@ export const ping = (
   signal?: AbortSignal,
 ) => {
   return customAxios<PingResponse>(
-    { url: `/api/v1/debug/ping`, method: "get", ...(signal ? { signal } : {}) },
+    { url: `/api/v1/debug/ping`, method: "get", signal },
     options,
   );
 };

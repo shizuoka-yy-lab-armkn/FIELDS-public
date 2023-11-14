@@ -26,7 +26,7 @@ export const getSubject = (
   signal?: AbortSignal,
 ) => {
   return customAxios<Subject>(
-    { url: `/api/v1/subjects/${subjectId}`, method: "get", ...(signal ? { signal } : {}) },
+    { url: `/api/v1/subjects/${subjectId}`, method: "get", signal },
     options,
   );
 };
