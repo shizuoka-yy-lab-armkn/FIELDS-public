@@ -9,6 +9,10 @@ services:
       - ./nginx/nginx.conf:/etc/nginx/nginx.conf
       - ./nginx/templates:/etc/nginx/templates
       - ./backend/static:/var/www/static
+    extra_hosts:
+      # コンテナ内部からコンテナ外のネイティブのホストへ繋げるようにする
+      # `host-gateway` が特殊なキーワードで，`native-host` は任意のドメイン名にできる
+      - native-host:host-gateway
 
   postgres:
     image: postgres:16.0-bookworm
