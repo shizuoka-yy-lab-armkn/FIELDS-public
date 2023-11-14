@@ -1,9 +1,6 @@
-from fastapi import APIRouter, HTTPException
-from starlette.status import HTTP_404_NOT_FOUND
+from fastapi import APIRouter
 
-from proficiv.config import cfg
-from proficiv.domain.subjects import usecase
-from proficiv.domain.subjects.schema import ISubjectDetail
+from proficiv.domain.subjects.schema import Subject
 from proficiv.entity import SubjectID
 
 router = APIRouter(
@@ -13,9 +10,6 @@ router = APIRouter(
 
 
 @router.get("/{subject_id}")
-async def get_subject(subject_id: SubjectID) -> ISubjectDetail:
-    subj = usecase.get_subject_or_none(cfg, subject_id)
-    if subj is None:
-        raise HTTPException(HTTP_404_NOT_FOUND)
-
-    return subj
+async def get_subject(subject_id: SubjectID) -> Subject:
+    del subject_id
+    raise NotImplementedError()

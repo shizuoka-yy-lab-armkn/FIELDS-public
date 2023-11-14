@@ -4,8 +4,10 @@
  * Proficiv Backend API
  * OpenAPI spec version: 0.1.0
  */
-import type { ISegment } from './iSegment';
+import type { ActionMeta } from './actionMeta';
 
-export type IEvaluation = {
-  segs: ISegment[];
+export type Subject = {
+  actions: ActionMeta[];
+  id: string;
+  name: string;
 };

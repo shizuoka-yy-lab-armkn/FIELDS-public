@@ -4,14 +4,14 @@
  * Proficiv Backend API
  * OpenAPI spec version: 0.1.0
  */
-import type { IWrongSegmentType } from './iWrongSegmentType';
+import type { WrongSegmentType } from './wrongSegmentType';
 
-export type IWrongSegment = {
+export type WrongSegment = {
   begin: number;
   end: number;
   /** 期待されたアクション */
   expectedActionId: number;
   /** 認識されたアクション */
   recogActionId: number;
-  type: IWrongSegmentType;
+  type: WrongSegmentType;
 };

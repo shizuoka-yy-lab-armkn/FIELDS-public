@@ -4,9 +4,11 @@
  * Proficiv Backend API
  * OpenAPI spec version: 0.1.0
  */
-import type { IMissingSegmentType } from './iMissingSegmentType';
+import type { ExtraSegmentType } from './extraSegmentType';
 
-export type IMissingSegment = {
+export type ExtraSegment = {
   actionId: number;
-  type: IMissingSegmentType;
+  begin: number;
+  end: number;
+  type: ExtraSegmentType;
 };

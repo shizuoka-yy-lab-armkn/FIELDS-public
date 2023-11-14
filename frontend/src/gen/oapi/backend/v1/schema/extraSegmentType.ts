@@ -5,10 +5,10 @@
  * OpenAPI spec version: 0.1.0
  */
 
-export type IMissingSegmentType = typeof IMissingSegmentType[keyof typeof IMissingSegmentType];
+export type ExtraSegmentType = typeof ExtraSegmentType[keyof typeof ExtraSegmentType];
 
 
 // eslint-disable-next-line @typescript-eslint/no-redeclare
-export const IMissingSegmentType = {
-  missing: 'missing',
+export const ExtraSegmentType = {
+  extra: 'extra',
 } as const;

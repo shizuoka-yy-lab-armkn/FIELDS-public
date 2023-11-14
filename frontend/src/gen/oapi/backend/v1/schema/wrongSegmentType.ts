@@ -5,10 +5,10 @@
  * OpenAPI spec version: 0.1.0
  */
 
-export type IValidSegmentType = typeof IValidSegmentType[keyof typeof IValidSegmentType];
+export type WrongSegmentType = typeof WrongSegmentType[keyof typeof WrongSegmentType];
 
 
 // eslint-disable-next-line @typescript-eslint/no-redeclare
-export const IValidSegmentType = {
-  valid: 'valid',
+export const WrongSegmentType = {
+  wrong: 'wrong',
 } as const;

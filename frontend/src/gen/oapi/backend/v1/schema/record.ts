@@ -5,10 +5,11 @@
  * OpenAPI spec version: 0.1.0
  */
 
-export type IRecord = {
+export type Record = {
   /** Frames per second; 一秒間あたりのサンプリングレート */
   fps: number;
   headCameraVideoUrl: string;
-  recordId: number;
-  subjectId: number;
+  recordAt: string;
+  recordId: string;
+  subjectId: string;
 };

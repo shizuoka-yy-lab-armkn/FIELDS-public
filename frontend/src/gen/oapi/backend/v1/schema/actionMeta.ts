@@ -5,19 +5,19 @@
  * OpenAPI spec version: 0.1.0
  */
 
-/**
- * 熟練者をお手本とした各アクションの詳細
- */
-export type IExemplarAction = {
+export type ActionMeta = {
   actionId: number;
+  longName: string;
+  manualMarkdown: string;
   /** 最大値 (sec) */
-  durMax: number;
+  masterDurMax: number;
   /** 平均値 (sec) */
-  durMean: number;
+  masterDurMean: number;
   /** 中央値 (sec) */
-  durMedian: number;
+  masterDurMedian: number;
   /** 最小値 (sec) */
-  durMin: number;
+  masterDurMin: number;
   /** 標準偏差 (sec) */
-  durStd: number;
+  masterDurStd: number;
+  shortName: string;
 };

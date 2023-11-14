@@ -5,10 +5,10 @@
  * OpenAPI spec version: 0.1.0
  */
 
-export type IExtraSegmentType = typeof IExtraSegmentType[keyof typeof IExtraSegmentType];
+export type ValidSegmentType = typeof ValidSegmentType[keyof typeof ValidSegmentType];
 
 
 // eslint-disable-next-line @typescript-eslint/no-redeclare
-export const IExtraSegmentType = {
-  extra: 'extra',
+export const ValidSegmentType = {
+  valid: 'valid',
 } as const;

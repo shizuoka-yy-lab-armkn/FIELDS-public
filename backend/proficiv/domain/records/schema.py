@@ -1,3 +1,4 @@
+from datetime import datetime
 from typing import Literal
 
 from pydantic import Field, HttpUrl, RootModel
@@ -6,35 +7,36 @@ from proficiv.base.schema import CamelizedPydanticModel
 from proficiv.entity import ActionID, RecordID, SubjectID
 
 
-class IRecord(CamelizedPydanticModel):
+class Record(CamelizedPydanticModel):
     record_id: RecordID
     subject_id: SubjectID
     fps: float = Field(
         description="Frames per second; 一秒間あたりのサンプリングレート",
     )
     head_camera_video_url: HttpUrl
+    record_at: datetime
 
 
-class IValidSegment(CamelizedPydanticModel):
+class ValidSegment(CamelizedPydanticModel):
     type: Literal["valid"] = "valid"
     action_id: ActionID
     begin: int
     end: int
 
 
-class IExtraSegment(CamelizedPydanticModel):
+class ExtraSegment(CamelizedPydanticModel):
     type: Literal["extra"] = "extra"
     action_id: ActionID
     begin: int
     end: int
 
 
-class IMissingSegment(CamelizedPydanticModel):
+class MissingSegment(CamelizedPydanticModel):
     type: Literal["missing"] = "missing"
     action_id: ActionID
 
 
-class IWrongSegment(CamelizedPydanticModel):
+class WrongSegment(CamelizedPydanticModel):
     type: Literal["wrong"] = "wrong"
     recog_action_id: ActionID = Field(description="認識されたアクション")
     expected_action_id: ActionID = Field(description="期待されたアクション")
@@ -42,11 +44,11 @@ class IWrongSegment(CamelizedPydanticModel):
     end: int
 
 
-class ISegment(RootModel):
-    root: IValidSegment | IExtraSegment | IMissingSegment | IWrongSegment = Field(
+class Segment(RootModel):
+    root: ValidSegment | ExtraSegment | MissingSegment | WrongSegment = Field(
         discriminator="type"
     )
 
 
-class IEvaluation(CamelizedPydanticModel):
-    segs: list[ISegment]
+class RecordEvaluation(CamelizedPydanticModel):
+    segs: list[Segment]

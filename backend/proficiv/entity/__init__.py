@@ -1,7 +1,5 @@
 from typing import NewType
 
-SubjectID = NewType("SubjectID", int)
+SubjectID = NewType("SubjectID", str)  # CUID
+RecordID = NewType("RecordID", str)  # CUID
 ActionID = NewType("ActionID", int)
-RecordID = NewType("RecordID", int)
-
-ActorName = NewType("ActorName", str)

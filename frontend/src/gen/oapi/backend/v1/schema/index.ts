@@ -5,22 +5,20 @@
  * OpenAPI spec version: 0.1.0
  */
 
+export * from './actionMeta';
+export * from './extraSegment';
+export * from './extraSegmentType';
 export * from './hTTPValidationError';
-export * from './iActionMeta';
-export * from './iEvaluation';
-export * from './iExemplarAction';
-export * from './iExtraSegment';
-export * from './iExtraSegmentType';
-export * from './iMissingSegment';
-export * from './iMissingSegmentType';
-export * from './iRecord';
-export * from './iSegment';
-export * from './iSubjectDetail';
-export * from './iSubjectDetailActions';
-export * from './iValidSegment';
-export * from './iValidSegmentType';
-export * from './iWrongSegment';
-export * from './iWrongSegmentType';
+export * from './missingSegment';
+export * from './missingSegmentType';
 export * from './pingResponse';
+export * from './record';
+export * from './recordEvaluation';
+export * from './segment';
+export * from './subject';
+export * from './validSegment';
+export * from './validSegmentType';
 export * from './validationError';
 export * from './validationErrorLocItem';
+export * from './wrongSegment';
+export * from './wrongSegmentType';

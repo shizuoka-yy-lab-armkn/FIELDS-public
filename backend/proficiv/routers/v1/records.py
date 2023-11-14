@@ -1,8 +1,6 @@
 from fastapi import APIRouter
 
-from proficiv.config import cfg
-from proficiv.domain.records import usecase
-from proficiv.domain.records.schema import IEvaluation, IRecord
+from proficiv.domain.records.schema import Record, RecordEvaluation
 from proficiv.entity import RecordID
 
 router = APIRouter(
@@ -12,10 +10,17 @@ router = APIRouter(
 
 
 @router.get("")
-def list_records() -> list[IRecord]:
-    return usecase.list_records(cfg)
+def get_record_list() -> list[Record]:
+    raise NotImplementedError()
+
+
+@router.get("/{record_id}")
+def get_record(record_id: RecordID) -> Record:
+    del record_id
+    raise NotImplementedError()
 
 
 @router.get("/{record_id}/evaluation")
-def get_evaluation(record_id: RecordID) -> IEvaluation:
-    return usecase.get_evaluation(cfg, record_id)
+def get_evaluation(record_id: RecordID) -> RecordEvaluation:
+    del record_id
+    raise NotImplementedError()

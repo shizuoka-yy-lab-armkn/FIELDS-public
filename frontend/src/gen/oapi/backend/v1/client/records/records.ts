@@ -8,7 +8,7 @@ import { useQuery } from "@tanstack/react-query";
 import type { QueryFunction, QueryKey, UseQueryOptions, UseQueryResult } from "@tanstack/react-query";
 import { customInstance } from "../../../../../../config/orval/backend";
 import type { ErrorType } from "../../../../../../config/orval/backend";
-import type { HTTPValidationError, IEvaluation, IRecord } from "../../schema";
+import type { HTTPValidationError, Record, RecordEvaluation } from "../../schema";
 
 // eslint-disable-next-line
 type SecondParameter<T extends (...args: any) => any> = T extends (
@@ -18,56 +18,118 @@ type SecondParameter<T extends (...args: any) => any> = T extends (
   : never;
 
 /**
- * @summary List Records
+ * @summary Get Record List
  */
-export const listRecords = (
+export const getRecordList = (
   options?: SecondParameter<typeof customInstance>,
   signal?: AbortSignal,
 ) => {
-  return customInstance<IRecord[]>(
+  return customInstance<Record[]>(
     { url: `/api/v1/records`, method: "get", ...(signal ? { signal } : {}) },
     options,
   );
 };
 
-export const getListRecordsQueryKey = () => {
+export const getGetRecordListQueryKey = () => {
   return [`/api/v1/records`] as const;
 };
 
-export const getListRecordsQueryOptions = <
-  TData = Awaited<ReturnType<typeof listRecords>>,
+export const getGetRecordListQueryOptions = <
+  TData = Awaited<ReturnType<typeof getRecordList>>,
   TError = ErrorType<unknown>,
 >(
   options?: {
-    query?: Partial<UseQueryOptions<Awaited<ReturnType<typeof listRecords>>, TError, TData>>;
+    query?: Partial<UseQueryOptions<Awaited<ReturnType<typeof getRecordList>>, TError, TData>>;
     request?: SecondParameter<typeof customInstance>;
   },
 ) => {
   const { query: queryOptions, request: requestOptions } = options ?? {};
 
-  const queryKey = queryOptions?.queryKey ?? getListRecordsQueryKey();
+  const queryKey = queryOptions?.queryKey ?? getGetRecordListQueryKey();
 
-  const queryFn: QueryFunction<Awaited<ReturnType<typeof listRecords>>> = ({ signal }) =>
-    listRecords(requestOptions, signal);
+  const queryFn: QueryFunction<Awaited<ReturnType<typeof getRecordList>>> = ({ signal }) =>
+    getRecordList(requestOptions, signal);
 
   return { queryKey, queryFn, ...queryOptions } as
-    & UseQueryOptions<Awaited<ReturnType<typeof listRecords>>, TError, TData>
+    & UseQueryOptions<Awaited<ReturnType<typeof getRecordList>>, TError, TData>
     & { queryKey: QueryKey };
 };
 
-export type ListRecordsQueryResult = NonNullable<Awaited<ReturnType<typeof listRecords>>>;
-export type ListRecordsQueryError = ErrorType<unknown>;
+export type GetRecordListQueryResult = NonNullable<Awaited<ReturnType<typeof getRecordList>>>;
+export type GetRecordListQueryError = ErrorType<unknown>;
 
 /**
- * @summary List Records
+ * @summary Get Record List
  */
-export const useListRecords = <TData = Awaited<ReturnType<typeof listRecords>>, TError = ErrorType<unknown>>(
+export const useGetRecordList = <TData = Awaited<ReturnType<typeof getRecordList>>, TError = ErrorType<unknown>>(
   options?: {
-    query?: Partial<UseQueryOptions<Awaited<ReturnType<typeof listRecords>>, TError, TData>>;
+    query?: Partial<UseQueryOptions<Awaited<ReturnType<typeof getRecordList>>, TError, TData>>;
     request?: SecondParameter<typeof customInstance>;
   },
 ): UseQueryResult<TData, TError> & { queryKey: QueryKey } => {
-  const queryOptions = getListRecordsQueryOptions(options);
+  const queryOptions = getGetRecordListQueryOptions(options);
+
+  const query = useQuery(queryOptions) as UseQueryResult<TData, TError> & { queryKey: QueryKey };
+
+  query.queryKey = queryOptions.queryKey;
+
+  return query;
+};
+
+/**
+ * @summary Get Record
+ */
+export const getRecord = (
+  recordId: string,
+  options?: SecondParameter<typeof customInstance>,
+  signal?: AbortSignal,
+) => {
+  return customInstance<Record>(
+    { url: `/api/v1/records/${recordId}`, method: "get", ...(signal ? { signal } : {}) },
+    options,
+  );
+};
+
+export const getGetRecordQueryKey = (recordId: string) => {
+  return [`/api/v1/records/${recordId}`] as const;
+};
+
+export const getGetRecordQueryOptions = <
+  TData = Awaited<ReturnType<typeof getRecord>>,
+  TError = ErrorType<HTTPValidationError>,
+>(
+  recordId: string,
+  options?: {
+    query?: Partial<UseQueryOptions<Awaited<ReturnType<typeof getRecord>>, TError, TData>>;
+    request?: SecondParameter<typeof customInstance>;
+  },
+) => {
+  const { query: queryOptions, request: requestOptions } = options ?? {};
+
+  const queryKey = queryOptions?.queryKey ?? getGetRecordQueryKey(recordId);
+
+  const queryFn: QueryFunction<Awaited<ReturnType<typeof getRecord>>> = ({ signal }) =>
+    getRecord(recordId, requestOptions, signal);
+
+  return { queryKey, queryFn, enabled: !!recordId, ...queryOptions } as
+    & UseQueryOptions<Awaited<ReturnType<typeof getRecord>>, TError, TData>
+    & { queryKey: QueryKey };
+};
+
+export type GetRecordQueryResult = NonNullable<Awaited<ReturnType<typeof getRecord>>>;
+export type GetRecordQueryError = ErrorType<HTTPValidationError>;
+
+/**
+ * @summary Get Record
+ */
+export const useGetRecord = <TData = Awaited<ReturnType<typeof getRecord>>, TError = ErrorType<HTTPValidationError>>(
+  recordId: string,
+  options?: {
+    query?: Partial<UseQueryOptions<Awaited<ReturnType<typeof getRecord>>, TError, TData>>;
+    request?: SecondParameter<typeof customInstance>;
+  },
+): UseQueryResult<TData, TError> & { queryKey: QueryKey } => {
+  const queryOptions = getGetRecordQueryOptions(recordId, options);
 
   const query = useQuery(queryOptions) as UseQueryResult<TData, TError> & { queryKey: QueryKey };
 
@@ -80,17 +142,17 @@ export const useListRecords = <TData = Awaited<ReturnType<typeof listRecords>>, 
  * @summary Get Evaluation
  */
 export const getEvaluation = (
-  recordId: number,
+  recordId: string,
   options?: SecondParameter<typeof customInstance>,
   signal?: AbortSignal,
 ) => {
-  return customInstance<IEvaluation>(
+  return customInstance<RecordEvaluation>(
     { url: `/api/v1/records/${recordId}/evaluation`, method: "get", ...(signal ? { signal } : {}) },
     options,
   );
 };
 
-export const getGetEvaluationQueryKey = (recordId: number) => {
+export const getGetEvaluationQueryKey = (recordId: string) => {
   return [`/api/v1/records/${recordId}/evaluation`] as const;
 };
 
@@ -98,7 +160,7 @@ export const getGetEvaluationQueryOptions = <
   TData = Awaited<ReturnType<typeof getEvaluation>>,
   TError = ErrorType<HTTPValidationError>,
 >(
-  recordId: number,
+  recordId: string,
   options?: {
     query?: Partial<UseQueryOptions<Awaited<ReturnType<typeof getEvaluation>>, TError, TData>>;
     request?: SecondParameter<typeof customInstance>;
@@ -126,7 +188,7 @@ export const useGetEvaluation = <
   TData = Awaited<ReturnType<typeof getEvaluation>>,
   TError = ErrorType<HTTPValidationError>,
 >(
-  recordId: number,
+  recordId: string,
   options?: {
     query?: Partial<UseQueryOptions<Awaited<ReturnType<typeof getEvaluation>>, TError, TData>>;
     request?: SecondParameter<typeof customInstance>;
