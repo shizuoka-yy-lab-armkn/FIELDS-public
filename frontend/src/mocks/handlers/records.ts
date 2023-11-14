@@ -3,7 +3,7 @@ import { dummyRecord, dummyRecordEvaluation } from "../data/record";
 
 export const mockRecordsHandlers: HttpHandler[] = [
   http.get("/api/v1/records", () => {
-    return Response.json([dummyRecord]);
+    return Response.json([dummyRecord, dummyRecord, dummyRecord]);
   }),
 
   http.get("/api/v1/records/r1", () => {
