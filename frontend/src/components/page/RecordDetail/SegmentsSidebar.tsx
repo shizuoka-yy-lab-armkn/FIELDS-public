@@ -26,6 +26,19 @@ export const SegmentsSidebar = ({
 }: SegmentsSidebarProps) => {
   const invalidCount = useMemo(() => segs.filter((s) => s.type !== "valid").length, [segs.length]);
 
+  const segUListRef = useRef<HTMLUListElement | null>(null);
+
+  // 現在のセグメント位置が見えるように自動スクロール
+  useEffect(() => {
+    if (currentSegIndex == null || segUListRef.current == null) return;
+    // scrollIntoView() は対象の要素を最上部へスクロールさせる．最上部だと見にくいので2要素分の空きを作る．
+    const i = Math.max(0, currentSegIndex - 2);
+    console.log("currentSegIndex changed: scroll to", i + 1)
+    if (i < segs.length) {
+      segUListRef.current.querySelector(`li:nth-child(${i + 1})`)?.scrollIntoView({ behavior: "smooth" });
+    }
+  }, [currentSegIndex])
+
   return (
     <Flex
       flexDir="column"
@@ -48,6 +61,7 @@ export const SegmentsSidebar = ({
       </Flex>
       <Flex
         as="ul"
+        ref={segUListRef}
         listStyleType="none"
         flexDir="column"
         overflowY="auto"
