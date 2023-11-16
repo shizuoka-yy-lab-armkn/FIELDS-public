@@ -26,6 +26,7 @@ export const RecordDetail = ({
     <Flex minH="full" h="1px">
       <SegmentsSidebar
         segs={evaluation.segs}
+        currentSegIndex={currentSegIndex}
         actionMetaDict={actionMetaDict}
         fps={record.fps}
         onSegmentClick={() => {}}

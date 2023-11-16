@@ -2,6 +2,7 @@ import { ActionId } from "@/components/domain/records/ActionId";
 import { SegmentStatusBadge } from "@/components/domain/records/SegmentTypeBadge";
 import * as schema from "@/gen/oapi/backend/v1/schema";
 import { ActionMetaDict } from "@/model/subjects";
+import utilStyle from "@/styles/util.module.css";
 import { Box, BoxProps, Flex, Heading, Text } from "@chakra-ui/react";
 import { useMemo } from "react";
 
@@ -10,6 +11,7 @@ const BORDER_COLOR: Color = "gray.400";
 
 type SegmentsSidebarProps = {
   segs: schema.Segment[];
+  currentSegIndex?: number;
   actionMetaDict: ActionMetaDict;
   fps: number;
   onSegmentClick: (seg: schema.Segment) => void;
@@ -17,6 +19,7 @@ type SegmentsSidebarProps = {
 
 export const SegmentsSidebar = ({
   segs,
+  currentSegIndex,
   actionMetaDict,
   fps,
   onSegmentClick,
@@ -55,6 +58,10 @@ export const SegmentsSidebar = ({
           const tooLong = seg.type !== "missing"
             && actionMetaDict[seg.actionId]!.masterDurMean * fps * 2 < seg.end - seg.begin;
 
+          const highlightProps: BoxProps = {
+            boxShadow: "0 0 6px 2px inset darkturquoise",
+          };
+
           return (
             <Box
               key={segIdx}
@@ -64,10 +71,17 @@ export const SegmentsSidebar = ({
               borderColor="gray.400"
               borderBottomWidth="1px"
               bg={seg.type !== "valid" ? "red.100" : undefined}
+              {...(segIdx === currentSegIndex ? highlightProps : undefined)}
             >
               <Box>
                 <ActionId actionId={seg.actionId} mr={1} />
-                <Text as="span" fontWeight="semibold">{actionMetaDict[seg.actionId]!.shortName}</Text>
+                <Text
+                  as="span"
+                  fontWeight="semibold"
+                  className={segIdx === currentSegIndex ? utilStyle.opacityBlink : ""}
+                >
+                  {actionMetaDict[seg.actionId]!.shortName}
+                </Text>
               </Box>
               <Box ml={8}>
                 {seg.type === "missing" ? <Text as="span">---</Text> : (
