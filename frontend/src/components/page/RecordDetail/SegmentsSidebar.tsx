@@ -4,7 +4,7 @@ import * as schema from "@/gen/oapi/backend/v1/schema";
 import { ActionMetaDict } from "@/model/subjects";
 import utilStyle from "@/styles/util.module.css";
 import { Box, BoxProps, Flex, Heading, Text } from "@chakra-ui/react";
-import { useMemo } from "react";
+import { useEffect, useMemo, useRef } from "react";
 
 type Color = BoxProps["bg"];
 const BORDER_COLOR: Color = "gray.400";
@@ -14,7 +14,7 @@ type SegmentsSidebarProps = {
   currentSegIndex?: number;
   actionMetaDict: ActionMetaDict;
   fps: number;
-  onSegmentClick: (seg: schema.Segment) => void;
+  onSegmentClick: (segIdx: number) => void;
 };
 
 export const SegmentsSidebar = ({
@@ -24,7 +24,7 @@ export const SegmentsSidebar = ({
   fps,
   onSegmentClick,
 }: SegmentsSidebarProps) => {
-  const invalidCount = useMemo(() => segs.filter((s) => s.type !== "valid").length, [segs.length]);
+  const invalidCount = useMemo(() => segs.filter((s) => s.type !== "valid").length, [segs]);
 
   const segUListRef = useRef<HTMLUListElement | null>(null);
 
@@ -33,11 +33,11 @@ export const SegmentsSidebar = ({
     if (currentSegIndex == null || segUListRef.current == null) return;
     // scrollIntoView() は対象の要素を最上部へスクロールさせる．最上部だと見にくいので2要素分の空きを作る．
     const i = Math.max(0, currentSegIndex - 2);
-    console.log("currentSegIndex changed: scroll to", i + 1)
+    console.log("currentSegIndex changed: scroll to", i + 1);
     if (i < segs.length) {
       segUListRef.current.querySelector(`li:nth-child(${i + 1})`)?.scrollIntoView({ behavior: "smooth" });
     }
-  }, [currentSegIndex])
+  }, [currentSegIndex, segs.length]);
 
   return (
     <Flex
@@ -80,40 +80,46 @@ export const SegmentsSidebar = ({
             <Box
               key={segIdx}
               as="li"
-              py={3}
-              px={3}
               borderColor="gray.400"
               borderBottomWidth="1px"
-              bg={seg.type !== "valid" ? "red.100" : undefined}
+              bg={seg.type !== "valid" ? "red.100" : "gray.200"}
+              cursor={seg.type !== "missing" ? "pointer" : "initial"}
+              onClick={() => seg.type !== "missing" && onSegmentClick(segIdx)}
               {...(segIdx === currentSegIndex ? highlightProps : undefined)}
             >
-              <Box>
-                <ActionId actionId={seg.actionId} mr={1} />
-                <Text
-                  as="span"
-                  fontWeight="semibold"
-                  className={segIdx === currentSegIndex ? utilStyle.opacityBlink : ""}
-                >
-                  {actionMetaDict[seg.actionId]!.shortName}
-                </Text>
-              </Box>
-              <Box ml={8}>
-                {seg.type === "missing" ? <Text as="span">---</Text> : (
-                  <>
-                    <Text as="span">
-                      {frameIndexToTimestamp(seg.begin, fps)}
-                      {" - "}
-                      {frameIndexToTimestamp(seg.end, fps)}
-                      <Text as="span" {...(tooLong ? { color: "red.500", fontWeight: "bold" } : {})}>
-                        {` (${frameDiffToSecDuration(seg.begin, seg.end, fps)} s)`}
-                        {tooLong ? " Long" : ""}
+              <Box
+                py={3}
+                px={3}
+                _hover={{ backdropFilter: "brightness(0.95)" }}
+              >
+                <Box>
+                  <ActionId actionId={seg.actionId} mr={1} />
+                  <Text
+                    as="span"
+                    fontWeight="semibold"
+                    className={segIdx === currentSegIndex ? utilStyle.opacityBlink : ""}
+                  >
+                    {actionMetaDict[seg.actionId]!.shortName}
+                  </Text>
+                </Box>
+                <Box ml={8}>
+                  {seg.type === "missing" ? <Text as="span">---</Text> : (
+                    <>
+                      <Text as="span">
+                        {frameIndexToTimestamp(seg.begin, fps)}
+                        {" - "}
+                        {frameIndexToTimestamp(seg.end, fps)}
+                        <Text as="span" {...(tooLong ? { color: "red.500", fontWeight: "bold" } : {})}>
+                          {` (${frameDiffToSecDuration(seg.begin, seg.end, fps)} s)`}
+                          {tooLong ? " Long" : ""}
+                        </Text>
                       </Text>
-                    </Text>
-                  </>
-                )}
-              </Box>
-              <Box mt={1} ml={7}>
-                <SegmentStatusBadge typ={seg.type} />
+                    </>
+                  )}
+                </Box>
+                <Box mt={1} ml={7}>
+                  <SegmentStatusBadge typ={seg.type} />
+                </Box>
               </Box>
             </Box>
           );

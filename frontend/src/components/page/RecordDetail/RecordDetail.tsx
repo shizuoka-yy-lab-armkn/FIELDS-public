@@ -2,7 +2,7 @@ import { ActionId } from "@/components/domain/records/ActionId";
 import * as schema from "@/gen/oapi/backend/v1/schema";
 import { ActionMetaDict } from "@/model/subjects";
 import { Box, Flex, Heading, Text, useCallbackRef } from "@chakra-ui/react";
-import { useEffect, useMemo, useRef, useState } from "react";
+import { forwardRef, useEffect, useImperativeHandle, useMemo, useRef, useState } from "react";
 import { SegmentsSidebar } from "./SegmentsSidebar";
 
 export type RecordDetailProps = {
@@ -22,6 +22,17 @@ export const RecordDetail = ({
 
   const [currentSegIndex, setCurrentSegIndex] = useState<number | undefined>(undefined);
 
+  const mainPaneRef = useRef<RecordDetailMainPaneMethods>(null);
+
+  const handleSegmentClick = (segIdx: number) => {
+    setCurrentSegIndex(segIdx);
+
+    const seg = evaluation.segs[segIdx]!;
+    if (seg.type !== "missing") {
+      mainPaneRef.current?.seek(seg.begin / record.fps + 0.1);
+    }
+  };
+
   return (
     <Flex minH="full" h="1px">
       <SegmentsSidebar
@@ -29,9 +40,10 @@ export const RecordDetail = ({
         currentSegIndex={currentSegIndex}
         actionMetaDict={actionMetaDict}
         fps={record.fps}
-        onSegmentClick={() => {}}
+        onSegmentClick={handleSegmentClick}
       />
       <RecordDetailMainPane
+        ref={mainPaneRef}
         record={record}
         subject={subject}
         actionMetaDict={actionMetaDict}
@@ -43,7 +55,7 @@ export const RecordDetail = ({
   );
 };
 
-export type RecordDetailMainPaneProps = {
+type RecordDetailMainPaneProps = {
   record: schema.Record;
   subject: schema.Subject;
   actionMetaDict: ActionMetaDict;
@@ -52,14 +64,26 @@ export type RecordDetailMainPaneProps = {
   onSegIndexChange: (segIndex: number | undefined) => void;
 };
 
-const RecordDetailMainPane = ({
+type RecordDetailMainPaneMethods = {
+  seek: (sec: number) => void;
+};
+
+const RecordDetailMainPane = forwardRef<RecordDetailMainPaneMethods, RecordDetailMainPaneProps>(({
   record,
   segs,
   currentSegIndex,
   actionMetaDict,
   onSegIndexChange,
-}: RecordDetailMainPaneProps) => {
+}, ref) => {
   const videoRef = useRef<HTMLVideoElement | null>(null);
+
+  useImperativeHandle(ref, () => ({
+    seek: (sec: number): void => {
+      if (videoRef.current != null) {
+        videoRef.current.currentTime = sec;
+      }
+    },
+  }));
 
   useEffect(() => {
     if (videoRef.current != null) videoRef.current.load();
@@ -118,4 +142,6 @@ const RecordDetailMainPane = ({
       </Box>
     </Box>
   );
-};
+});
+
+RecordDetailMainPane.displayName = "RecordDetailMainPane";
