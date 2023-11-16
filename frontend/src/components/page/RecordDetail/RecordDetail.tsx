@@ -1,11 +1,9 @@
-import { SegmentStatusBadge } from "@/components/domain/records/SegmentTypeBadge";
+import { ActionId } from "@/components/domain/records/ActionId";
 import * as schema from "@/gen/oapi/backend/v1/schema";
 import { ActionMetaDict } from "@/model/subjects";
-import { Box, BoxProps, Flex, Heading, Text, TextProps } from "@chakra-ui/react";
-import { useMemo } from "react";
-
-type Color = BoxProps["bg"];
-const BORDER_COLOR: Color = "gray.400";
+import { Box, Flex, Heading, Text, useCallbackRef } from "@chakra-ui/react";
+import { useEffect, useMemo, useRef, useState } from "react";
+import { SegmentsSidebar } from "./SegmentsSidebar";
 
 export type RecordDetailProps = {
   record: schema.Record;
@@ -22,6 +20,8 @@ export const RecordDetail = ({
     return Object.fromEntries(subject.actions.map((a) => [a.actionId, a]));
   }, [subject.actions]);
 
+  const [currentSegIndex, setCurrentSegIndex] = useState<number | undefined>(undefined);
+
   return (
     <Flex minH="full" h="1px">
       <SegmentsSidebar
@@ -30,125 +30,91 @@ export const RecordDetail = ({
         fps={record.fps}
         onSegmentClick={() => {}}
       />
+      <RecordDetailMainPane
+        record={record}
+        subject={subject}
+        actionMetaDict={actionMetaDict}
+        segs={evaluation.segs}
+        currentSegIndex={currentSegIndex}
+        onSegIndexChange={setCurrentSegIndex}
+      />
     </Flex>
   );
 };
 
-type SegmentsSidebarProps = {
-  segs: schema.Segment[];
+export type RecordDetailMainPaneProps = {
+  record: schema.Record;
+  subject: schema.Subject;
   actionMetaDict: ActionMetaDict;
-  fps: number;
-  onSegmentClick: (seg: schema.Segment) => void;
+  segs: schema.Segment[];
+  currentSegIndex?: number;
+  onSegIndexChange: (segIndex: number | undefined) => void;
 };
 
-const frameIndexToTimestamp = (frameIndex: number, fps: number): string => {
-  const secs = frameIndex / fps | 0;
-  const m = secs / 60 | 0;
-  const s = secs % 60;
-  return `${m}:${s.toString().padStart(2, "0")}`;
-};
-
-const frameDiffToSecDuration = (frameBegin: number, frameEnd: number, fps: number): string => {
-  const secs = (frameEnd - frameBegin) / fps;
-  return secs.toFixed(1);
-};
-
-const SegmentsSidebar = ({
+const RecordDetailMainPane = ({
+  record,
   segs,
+  currentSegIndex,
   actionMetaDict,
-  fps,
-  onSegmentClick,
-}: SegmentsSidebarProps) => {
-  const invalidCount = useMemo(() => segs.filter((s) => s.type !== "valid").length, [segs.length]);
+  onSegIndexChange,
+}: RecordDetailMainPaneProps) => {
+  const videoRef = useRef<HTMLVideoElement | null>(null);
+
+  useEffect(() => {
+    if (videoRef.current != null) videoRef.current.load();
+  }, [record.headCameraVideoUrl]);
+
+  const handleVideoTimeUpdate = useCallbackRef(() => {
+    if (videoRef.current == null) return;
+    const video = videoRef.current;
+    const videoFrame = video.currentTime * record.fps | 0;
+
+    // 現在のセグメントが動画のシーク位置を包含しているなら探索しない
+    if (currentSegIndex != null) {
+      const seg = segs[currentSegIndex]!;
+      if (seg?.type !== "missing" && seg.begin <= videoFrame && videoFrame < seg.end) {
+        return;
+      }
+    }
+
+    // 現在の動画のシーク位置を包含するセグメントを探す
+    const foundIndex = segs.findIndex((seg) => (
+      seg.type !== "missing" && seg.begin <= videoFrame && videoFrame < seg.end
+    ));
+    console.log("[RecordDetailMainPane] timeupdate:", currentSegIndex, foundIndex);
+    onSegIndexChange(foundIndex < 0 ? undefined : foundIndex);
+  });
+
+  const currentSeg = currentSegIndex == null ? undefined : segs[currentSegIndex];
 
   return (
-    <Flex
-      flexDir="column"
-      maxW="560px"
-      h="full"
-      maxH="full"
-      borderColor={BORDER_COLOR}
-      borderRightWidth="1px"
+    <Box
+      flex="1"
+      minH="full"
+      h="1px"
+      color="teal.900"
+      px={4}
+      py={4}
+      bg="white"
     >
-      <Flex
-        py={3}
-        px={3}
-        borderColor={BORDER_COLOR}
-        borderBottomWidth="2px"
-        alignItems="center"
-        justifyContent="space-between"
-      >
-        <Heading as="h2" fontSize="md">認識結果</Heading>
-        <Text as="span" fontSize="xs">{invalidCount} 件の工程ミス</Text>
+      <Flex justifyContent="space-between">
+        <Box>
+          <Heading as="h2" fontSize="lg">
+            工程番号
+            <ActionId actionId={currentSeg?.actionId} ml={1} mr={3} />
+            <Text as="span" fontWeight="bold">
+              {currentSeg != null && actionMetaDict[currentSeg.actionId]!.longName}
+            </Text>
+          </Heading>
+        </Box>
+        <Box>
+          X:XX (xx.x s)
+        </Box>
       </Flex>
-      <Flex
-        as="ul"
-        listStyleType="none"
-        flexDir="column"
-        overflowY="auto"
-        fontSize="sm"
-        color="teal.900"
-      >
-        {segs.map((seg, segIdx) => {
-          const tooLong = seg.type !== "missing"
-            && actionMetaDict[seg.actionId]!.masterDurMean * fps * 2 < seg.end - seg.begin;
 
-          return (
-            <Box
-              key={segIdx}
-              as="li"
-              py={3}
-              px={3}
-              borderColor="gray.400"
-              borderBottomWidth="1px"
-              bg={seg.type !== "valid" ? "red.100" : undefined}
-            >
-              <Box>
-                <ActionId actionId={seg.actionId} mr={1} />
-                <Text as="span" fontWeight="semibold">{actionMetaDict[seg.actionId]!.shortName}</Text>
-              </Box>
-              <Box ml={8}>
-                {seg.type === "missing" ? <Text as="span">---</Text> : (
-                  <>
-                    <Text as="span">
-                      {frameIndexToTimestamp(seg.begin, fps)}
-                      {" - "}
-                      {frameIndexToTimestamp(seg.end, fps)}
-                      <Text as="span" {...(tooLong ? { color: "red.500", fontWeight: "bold" } : {})}>
-                        {` (${frameDiffToSecDuration(seg.begin, seg.end, fps)} s)`}
-                        {tooLong ? " ×" : ""}
-                      </Text>
-                    </Text>
-                  </>
-                )}
-              </Box>
-              <Box mt={1} ml={7}>
-                <SegmentStatusBadge typ={seg.type} />
-              </Box>
-            </Box>
-          );
-        })}
-      </Flex>
-    </Flex>
-  );
-};
-
-const ActionId = ({ actionId, ...props }: {
-  actionId: number;
-} & TextProps) => {
-  return (
-    <Text
-      as="span"
-      display="inline-block"
-      minW="1.75em"
-      textAlign="center"
-      px={1}
-      fontWeight="semibold"
-      bg="blackAlpha.100"
-      borderRadius={4}
-      {...props}
-    >
-      {actionId}
-    </Text>
+      <Box as="video" ref={videoRef} controls w="full" my={4} onTimeUpdate={handleVideoTimeUpdate}>
+        <source src={record.headCameraVideoUrl} />
+      </Box>
+    </Box>
   );
 };
