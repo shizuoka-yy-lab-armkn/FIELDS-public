@@ -1,0 +1,9 @@
+.opacityBlink {
+  animation: opacity-blink 0.8s ease-in-out infinite alternate;
+}
+
+@keyframes opacity-blink {
+  0% { opacity: 1; }
+  40% { opacity: 1; }
+  100% { opacity: 0; }
+}
