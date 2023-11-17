@@ -1,0 +1,79 @@
+datasource db {
+  provider = "postgresql"
+  url      = env("PROFICIV_DATABASE_URL")
+}
+
+generator client {
+  provider             = "prisma-client-py"
+  recursive_type_depth = 4
+}
+
+model User {
+  id       String @id @default(cuid())
+  username String @unique
+  pw_hash  Bytes
+
+  created_at DateTime @default(now())
+  updated_at DateTime @default(now()) @updatedAt
+
+  records Record[]
+}
+
+model Subject {
+  id   String @id @default(cuid())
+  name String
+
+  created_at DateTime @default(now())
+  updated_at DateTime @default(now()) @updatedAt
+
+  actions Action[]
+  records Record[]
+}
+
+model Action {
+  id         Int     @id // 工程番号を直接格納するので autoincrement はしない
+  subject_id String
+  subject    Subject @relation(fields: [subject_id], references: [id])
+  short_name String
+  long_name  String
+
+  master_dur_mean   Float
+  master_dur_std    Float
+  master_dur_min    Float
+  master_dur_max    Float
+  master_dur_median Float
+
+  created_at DateTime @default(now())
+  updated_at DateTime @default(now()) @updatedAt
+
+  record_segments RecordSegment[]
+}
+
+model Record {
+  id         String  @id @default(cuid())
+  subject_id String
+  subject    Subject @relation(fields: [subject_id], references: [id])
+  user_id    String
+  user       User    @relation(fields: [user_id], references: [id])
+
+  created_at DateTime @default(now())
+
+  forehead_camera_fps               Float
+  forehead_camera_prelude_frames    Int    @default(0)
+  forehead_camera_total_frames      Int    @default(0)
+  forehead_camera_orig_video_path   String
+  forehead_camera_public_video_path String
+
+  segments RecordSegment[]
+}
+
+model RecordSegment {
+  id        Int    @id @default(autoincrement())
+  record_id String
+  record    Record @relation(fields: [record_id], references: [id])
+  action_id Int
+  action    Action @relation(fields: [action_id], references: [id])
+
+  begin_frame Int // 開始フレーム (0-indexed)
+  end_frame   Int // 終了フレーム (0-indexed); 半開区間なのでこの点は含めない
+}
