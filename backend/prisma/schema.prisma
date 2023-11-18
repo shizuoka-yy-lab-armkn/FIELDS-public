@@ -56,7 +56,8 @@ model Record {
   user_id    String
   user       User    @relation(fields: [user_id], references: [id])
 
-  created_at DateTime @default(now())
+  user_wise_seq Int
+  created_at    DateTime @default(now())
 
   forehead_camera_fps               Float
   forehead_camera_prelude_frames    Int    @default(0)
