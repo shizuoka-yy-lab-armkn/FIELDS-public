@@ -30,6 +30,7 @@ torchvision = [
   {platform = "linux", version = "^0.16.1+cu121", source = "torch_cu121"},
   {platform = "darwin", version = "^0.16.1", source = "pypi"},
 ]
+python-jose = {extras = ["cryptography"], version = "^3.3.0"}
 
 
 [tool.poetry.group.gpu]
