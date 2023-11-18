@@ -28,9 +28,15 @@ class Config(BaseSettings):
     model_config = SettingsConfigDict(env_prefix="PROFICIV_")
 
     debug: bool
-    fake_db_dir: Path
+
     static_dir: Path
     static_base_url: str
+
+    # to get a string like this run:
+    # openssl rand -hex 32
+    jwt_secret_key: str
+    jwt_algo: str = "HS256"
+    jwt_expire_minutes: int = 60
 
 
 @functools.cache
