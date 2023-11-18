@@ -1,7 +1,20 @@
 SHELL := /usr/bin/env bash -Eeuo pipefail
+OS := $(shell uname -s)
 
 PROFICIV_CMD := poetry run python3 -m proficiv.cmd
 SET_DEV_ENV  := PROFICIV_ENV_FILE=./env/dev.env
+
+
+.PHONY:	dev/setup
+dev/setup:
+	ln -sf poetry.$(OS).lock poetry.lock
+
+
+.PHONY:	install
+install:
+	poetry lock --no-update
+	poetry install
+
 
 .PHONY:	serve/dev
 serve/dev:

@@ -6,6 +6,12 @@ authors = ["arumakan1727 <33191176+arumakan1727@users.noreply.github.com>"]
 license = "MIT"
 readme = "README.md"
 
+[[tool.poetry.source]]
+name = "torch_cu121"
+url = "https://download.pytorch.org/whl/cu121"
+priority = "explicit"
+
+
 [tool.poetry.dependencies]
 python = "~3.11"
 fastapi = "^0.104.0"
@@ -16,7 +22,20 @@ uvicorn = {extras = ["standard"], version = "^0.23.2"}
 stringcase = "^1.2.0"
 prisma = "^0.11.0"
 aiofiles = "^23.2.1"
+torch = [
+  {platform = "linux", version = "^2.1.1+cu121", source = "torch_cu121"},
+  {platform = "darwin", version = "^2.1.1", source = "pypi"},
+]
+torchvision = [
+  {platform = "linux", version = "^0.16.1+cu121", source = "torch_cu121"},
+  {platform = "darwin", version = "^0.16.1", source = "pypi"},
+]
 
+
+[tool.poetry.group.gpu]
+optional = true
+[tool.poetry.group.gpu.dependencies]
+salesforce-lavis = "^1.0.2"
 
 [tool.poetry.group.dev.dependencies]
 ruff = "^0.1.2"
