@@ -1,4 +1,5 @@
 .env
+poetry.lock
 tmp
 /fake_db/
 /static/
