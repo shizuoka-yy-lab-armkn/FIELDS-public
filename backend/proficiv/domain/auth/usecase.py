@@ -7,7 +7,7 @@ from pydantic import BaseModel
 from starlette.status import HTTP_401_UNAUTHORIZED
 
 from prisma import models
-from proficiv.depes import ConfigDep
+from proficiv.config import Config
 from proficiv.entity import UserID
 from proficiv.utils.datetime import jst_now
 
@@ -19,7 +19,7 @@ class AuthUser(BaseModel):
     username: str
 
 
-def get_auth_user_or_none(req: Request, cfg: ConfigDep) -> AuthUser | None:
+def extract_auth_user_or_none(req: Request, cfg: Config) -> AuthUser | None:
     a = req.headers.get("Authorization")
     if a is None or not a.startswith("Bearer "):
         return None
@@ -42,8 +42,8 @@ def get_auth_user_or_none(req: Request, cfg: ConfigDep) -> AuthUser | None:
     return AuthUser(user_id=UserID(payload["user_id"]), username=payload["username"])
 
 
-def get_auth_user_or_401(req: Request, cfg: ConfigDep) -> AuthUser:
-    user = get_auth_user_or_none(req, cfg)
+def extract_auth_user_or_401(req: Request, cfg: Config) -> AuthUser:
+    user = extract_auth_user_or_none(req, cfg)
     if user is None:
         raise HTTPException(
             HTTP_401_UNAUTHORIZED, detail="Could not validate Authorization JWT token"
