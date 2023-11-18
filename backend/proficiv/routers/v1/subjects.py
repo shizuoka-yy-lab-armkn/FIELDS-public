@@ -1,6 +1,6 @@
 from fastapi import APIRouter, HTTPException
 
-from proficiv.db import prisma
+from proficiv.db import prisma_client
 from proficiv.domain.subjects.schema import ActionMeta, Subject
 from proficiv.entity import ActionID, SubjectID
 
@@ -12,7 +12,7 @@ router = APIRouter(
 
 @router.get("/{subject_id}")
 async def get_subject(subject_id: SubjectID) -> Subject:
-    subj = await prisma.subject.find_unique(
+    subj = await prisma_client.subject.find_unique(
         where={"id": subject_id},
         include={"actions": True},
     )
