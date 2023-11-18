@@ -1,3 +1,4 @@
+import functools
 import os
 from pathlib import Path
 
@@ -32,4 +33,6 @@ class Config(BaseSettings):
     static_base_url: str
 
 
-cfg = Config.from_envfile(get_activated_env_path())
+@functools.cache
+def get_config() -> Config:
+    return Config.from_envfile(get_activated_env_path())

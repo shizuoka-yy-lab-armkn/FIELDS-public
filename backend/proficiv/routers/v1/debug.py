@@ -1,7 +1,8 @@
 from fastapi import APIRouter, HTTPException
 from starlette.status import HTTP_403_FORBIDDEN
 
-from proficiv.config import Config, cfg
+from proficiv.config import Config
+from proficiv.depes import ConfigDep
 from proficiv.domain.debug.schema import PingResponse
 from proficiv.utils.datetime import jst_now
 
@@ -29,7 +30,7 @@ def ping() -> PingResponse:
     responses={HTTP_403_FORBIDDEN: {"description": "Not debug mode"}},
     include_in_schema=False,
 )
-def retrieve_config() -> Config:
+def retrieve_config(cfg: ConfigDep) -> Config:
     if not cfg.debug:
         raise HTTPException(HTTP_403_FORBIDDEN)
 
