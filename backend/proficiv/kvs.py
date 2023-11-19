@@ -26,12 +26,12 @@ class Recording(BaseModel):
     forehead_video_ffmpeg_pid: int
 
     @staticmethod
-    def redis_key() -> str:
+    def _redis_key() -> str:
         return "recording"
 
     @classmethod
     def get_or_none(cls, redis: Redis) -> "Recording | None":
-        s = redis.get(cls.redis_key())
+        s = redis.get(cls._redis_key())
         if s is None:
             return None
 
@@ -40,14 +40,14 @@ class Recording(BaseModel):
 
     @classmethod
     def exists(cls, redis: Redis) -> bool:
-        return redis.get(cls.redis_key()) is not None
+        return redis.get(cls._redis_key()) is not None
 
     @classmethod
     def delete(cls, redis: Redis) -> None:
         _log.info("delete Recording")
-        redis.delete(cls.redis_key())
+        redis.delete(cls._redis_key())
 
     def save(self, redis: Redis) -> None:
-        key = self.redis_key()
+        key = self._redis_key()
         value = self.model_dump_json()
         redis.set(key, value)
