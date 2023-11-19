@@ -27,7 +27,7 @@ class Recording(BaseModel):
 
     @staticmethod
     def _redis_key() -> str:
-        return "recording"
+        return "Recording"
 
     @classmethod
     def get_or_none(cls, redis: Redis) -> "Recording | None":
@@ -36,7 +36,7 @@ class Recording(BaseModel):
             return None
 
         assert isinstance(s, bytes)
-        return Recording.model_validate_json(s)
+        return cls.model_validate_json(s)
 
     @classmethod
     def exists(cls, redis: Redis) -> bool:
