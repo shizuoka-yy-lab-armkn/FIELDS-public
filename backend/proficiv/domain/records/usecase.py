@@ -6,7 +6,6 @@ import numpy as np
 
 from proficiv.config import Config
 from proficiv.utils.logging import get_colored_logger
-from proficiv.utils.type_bounds import Comparable
 
 _log = get_colored_logger(__name__)
 
@@ -54,7 +53,7 @@ def resolve_forehead_camera_blip2_npy(
 
 SegmentMatchType = Literal["matched", "missing", "wrong"]
 
-_T = TypeVar("_T", bound=Comparable)
+_T = TypeVar("_T")
 
 
 class SegmentMatching(NamedTuple, Generic[_T]):
@@ -107,7 +106,7 @@ def compare_action_seq_by_lcs(
 
     matchings.reverse()
 
-    missing_actions = sorted(set(tgt) - set(src))
+    missing_actions = sorted(set(tgt) - set(src))  # type: ignore
     _log.info(f"{missing_actions=}")
 
     for x in missing_actions:

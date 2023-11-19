@@ -27,20 +27,21 @@ class Record(CamelizedPydanticModel):
             forehead_video_url=HttpUrl(
                 cfg.static_base_url + r.forehead_camera_public_video_path
             ),
-            record_at=r.created_at,
+            started_at=r.recording_started_at,
+            finished_at=r.recording_finished_at,
             seq=r.seq,
         )
 
 
-class ValidSegment(CamelizedPydanticModel):
+class ValidOrderSegment(CamelizedPydanticModel):
     type: Literal["valid"] = "valid"
     action_seq: int
     begin: int
     end: int
 
 
-class ExtraSegment(CamelizedPydanticModel):
-    type: Literal["extra"] = "extra"
+class WrongOrderSegment(CamelizedPydanticModel):
+    type: Literal["wrong"] = "wrong"
     action_seq: int
     begin: int
     end: int
@@ -51,19 +52,12 @@ class MissingSegment(CamelizedPydanticModel):
     action_seq: int
 
 
-class WrongSegment(CamelizedPydanticModel):
-    type: Literal["wrong"] = "wrong"
-    action_seq: int = Field(description="認識されたアクション")
-    expected_action_seq: int = Field(description="期待されたアクション")
-    begin: int
-    end: int
-
-
 class Segment(RootModel):
-    root: ValidSegment | ExtraSegment | MissingSegment | WrongSegment = Field(
+    root: ValidOrderSegment | WrongOrderSegment | MissingSegment = Field(
         discriminator="type"
     )
 
 
 class RecordEvaluation(CamelizedPydanticModel):
     segs: list[Segment]
+    job_progress_percentage: int
