@@ -1,6 +1,6 @@
 from typing import Annotated
 
-from fastapi import Depends, Request
+from fastapi import Depends, Request, Security
 
 from proficiv.config import Config, get_config
 from proficiv.domain.auth.usecase import AuthUser, extract_auth_user_or_401
@@ -13,4 +13,4 @@ def _get_auth_user_or_401(req: Request, cfg: ConfigDep) -> AuthUser:
     return extract_auth_user_or_401(req, cfg)
 
 
-UserDep = Annotated[AuthUser, Depends(_get_auth_user_or_401)]
+UserDep = Annotated[AuthUser, Security(_get_auth_user_or_401)]
