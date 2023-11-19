@@ -31,7 +31,8 @@ model Subject {
 }
 
 model Action {
-  id         Int     @id // 工程番号を直接格納するので autoincrement はしない
+  id         String  @id // 工程番号ではないので注意
+  seq        Int // 工程番号
   subject_id String
   subject    Subject @relation(fields: [subject_id], references: [id])
   short_name String
@@ -47,6 +48,8 @@ model Action {
   updated_at DateTime @default(now()) @updatedAt
 
   record_segments RecordSegment[]
+
+  @@unique([subject_id, seq])
 }
 
 model Record {
@@ -56,8 +59,8 @@ model Record {
   user_id    String
   user       User    @relation(fields: [user_id], references: [id])
 
-  user_wise_seq Int
-  created_at    DateTime @default(now())
+  seq        Int // (subject_id, user_id) の中で1から順にカウントアップ
+  created_at DateTime @default(now())
 
   forehead_camera_fps               Float
   forehead_camera_prelude_frames    Int    @default(0)
@@ -66,13 +69,15 @@ model Record {
   forehead_camera_public_video_path String
 
   segments RecordSegment[]
+
+  @@unique([subject_id, user_id, seq])
 }
 
 model RecordSegment {
   id        Int    @id @default(autoincrement())
   record_id String
   record    Record @relation(fields: [record_id], references: [id])
-  action_id Int
+  action_id String
   action    Action @relation(fields: [action_id], references: [id])
 
   begin_frame Int // 開始フレーム (0-indexed)
