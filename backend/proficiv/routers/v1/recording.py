@@ -126,7 +126,7 @@ async def finish_recording(
             "subject_id": rec.subject_id,
             "user_id": rec.user_id,
             "created_at": rec.start_at,
-            "user_wise_seq": rec.seq,
+            "seq": rec.seq,
             "forehead_camera_fps": 29.97,
             "forehead_camera_orig_video_path": forehead_video_rel_path,
             "forehead_camera_public_video_path": forehead_video_rel_path,

@@ -27,7 +27,7 @@ class Record(CamelizedPydanticModel):
                 cfg.static_base_url + r.forehead_camera_public_video_path
             ),
             record_at=r.created_at,
-            seq=r.user_wise_seq,
+            seq=r.seq,
         )
 
 
