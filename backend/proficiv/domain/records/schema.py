@@ -14,7 +14,8 @@ class Record(CamelizedPydanticModel):
     subject_id: SubjectID
     forehead_video_fps: float
     forehead_video_url: HttpUrl
-    record_at: datetime
+    started_at: datetime
+    finished_at: datetime
     seq: int = Field(description="このユーザの中で何回目の収録か")
 
     @staticmethod

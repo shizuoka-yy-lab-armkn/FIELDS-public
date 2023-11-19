@@ -59,8 +59,10 @@ model Record {
   user_id    String
   user       User    @relation(fields: [user_id], references: [id])
 
-  seq        Int // (subject_id, user_id) の中で1から順にカウントアップ
-  created_at DateTime @default(now())
+  seq Int // (subject_id, user_id) の中で1から順にカウントアップ
+
+  recording_started_at  DateTime
+  recording_finished_at DateTime
 
   forehead_camera_fps               Float
   forehead_camera_prelude_frames    Int    @default(0)

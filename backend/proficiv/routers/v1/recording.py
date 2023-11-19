@@ -115,25 +115,26 @@ async def finish_recording(
 
     background_tasks.add_task(kill_ffmpeg_process_later, rec.forehead_video_ffmpeg_pid)
 
+    rec.delete(redis)
+
+    now = jst_now()
+
     forehead_video_rel_path = str(
         rec.forehead_video_path.relative_to(cfg.public_static_dir)
     )
-
-    rec.delete(redis)
 
     record = await prisma_client.record.create(
         data={
             "subject_id": rec.subject_id,
             "user_id": rec.user_id,
-            "created_at": rec.start_at,
+            "recording_started_at": rec.start_at,
+            "recording_finished_at": now,
             "seq": rec.seq,
             "forehead_camera_fps": 29.97,
             "forehead_camera_orig_video_path": forehead_video_rel_path,
             "forehead_camera_public_video_path": forehead_video_rel_path,
         }
     )
-
-    now = jst_now()
 
     task = kvs.RecordEvalTask(
         record_id=RecordID(record.id),
