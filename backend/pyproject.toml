@@ -101,6 +101,7 @@ select = [
 ]
 ignore = [
   "ANN101", # missing-type-self
+  "ANN102", # missing-type-cls
 ]
 [tool.ruff.lint.per-file-ignores]
 "**/cmd/*.py" = ["T201"]  # allow print()
