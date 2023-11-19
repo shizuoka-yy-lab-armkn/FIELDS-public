@@ -32,6 +32,10 @@ class Config(BaseSettings):
     static_dir: Path
     static_base_url: str
 
+    redis_host: str
+    redis_port: int
+    redis_db: int = 0
+
     # to get a string like this run:
     # openssl rand -hex 32
     jwt_secret_key: str
