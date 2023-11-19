@@ -6,7 +6,7 @@ from pydantic import Field, HttpUrl, RootModel
 from prisma import models
 from proficiv.base.schema import CamelizedPydanticModel
 from proficiv.config import Config
-from proficiv.entity import ActionID, RecordID, SubjectID
+from proficiv.entity import RecordID, SubjectID
 
 
 class Record(CamelizedPydanticModel):
@@ -33,27 +33,27 @@ class Record(CamelizedPydanticModel):
 
 class ValidSegment(CamelizedPydanticModel):
     type: Literal["valid"] = "valid"
-    action_id: ActionID
+    action_seq: int
     begin: int
     end: int
 
 
 class ExtraSegment(CamelizedPydanticModel):
     type: Literal["extra"] = "extra"
-    action_id: ActionID
+    action_seq: int
     begin: int
     end: int
 
 
 class MissingSegment(CamelizedPydanticModel):
     type: Literal["missing"] = "missing"
-    action_id: ActionID
+    action_seq: int
 
 
 class WrongSegment(CamelizedPydanticModel):
     type: Literal["wrong"] = "wrong"
-    action_id: ActionID = Field(description="認識されたアクション")
-    expected_action_id: ActionID = Field(description="期待されたアクション")
+    action_seq: int = Field(description="認識されたアクション")
+    expected_action_seq: int = Field(description="期待されたアクション")
     begin: int
     end: int
 
