@@ -20,3 +20,8 @@ class Subject(CamelizedPydanticModel):
     id: SubjectID
     name: str
     actions: list[ActionMeta]
+
+
+class SubjectBrief(CamelizedPydanticModel):
+    id: SubjectID
+    name: str

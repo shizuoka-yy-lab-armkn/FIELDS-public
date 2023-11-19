@@ -1,13 +1,19 @@
 from fastapi import APIRouter, HTTPException
 
 from proficiv.db import prisma_client
-from proficiv.domain.subjects.schema import ActionMeta, Subject
+from proficiv.domain.subjects.schema import ActionMeta, Subject, SubjectBrief
 from proficiv.entity import ActionID, SubjectID
 
 router = APIRouter(
     prefix="/subjects",
     tags=["subjects"],
 )
+
+
+@router.get("")
+async def get_subject_list() -> list[SubjectBrief]:
+    subjs = await prisma_client.subject.find_many()
+    return [SubjectBrief(id=SubjectID(s.id), name=s.name) for s in subjs]
 
 
 @router.get("/{subject_id}")
