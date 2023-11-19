@@ -5,7 +5,7 @@ export const dummyRecord: schema.Record = {
   recordId: "r1",
   subjectId: dummySubject.id,
   fps: 29.97,
-  headCameraVideoUrl: "/_static/records/dummy.mp4",
+  headCameraVideoUrl: "/_static/dummy.mp4",
   recordAt: "2023-11-14T01:52:31.174Z",
   seq: 1,
 };
