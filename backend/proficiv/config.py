@@ -29,8 +29,18 @@ class Config(BaseSettings):
 
     debug: bool
 
-    static_dir: Path
+    public_static_dir: Path
+    private_static_dir: Path
     static_base_url: str
+
+    rtmp_port: int
+
+    # ffmpeg での RTMPストリーム保存をせずに，既存の適当な動画ファイルを保存する
+    mock_recording: bool = False
+    mock_record_video_path: Path = Path("static/dummy.mp4")
+
+    # 機械学習モデルの行動分節を実行せずに，適当な分節を実施する．
+    mock_action_segmentation: bool = False
 
     redis_host: str
     redis_port: int
