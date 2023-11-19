@@ -2,7 +2,7 @@ from fastapi import APIRouter, HTTPException
 
 from proficiv.db import prisma_client
 from proficiv.domain.subjects.schema import ActionMeta, Subject, SubjectBrief
-from proficiv.entity import ActionID, SubjectID
+from proficiv.entity import SubjectID
 
 router = APIRouter(
     prefix="/subjects",
@@ -29,7 +29,7 @@ async def get_subject(subject_id: SubjectID) -> Subject:
     assert subj.actions is not None
     actions = [
         ActionMeta(
-            action_id=ActionID(a.id),
+            seq=a.seq,
             short_name=a.short_name,
             long_name=a.long_name,
             manual_markdown="",

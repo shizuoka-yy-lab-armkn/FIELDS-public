@@ -1,11 +1,11 @@
 from pydantic import Field
 
 from proficiv.base.schema import CamelizedPydanticModel
-from proficiv.entity import ActionID, SubjectID
+from proficiv.entity import SubjectID
 
 
 class ActionMeta(CamelizedPydanticModel):
-    action_id: ActionID
+    seq: int
     short_name: str
     long_name: str
     manual_markdown: str
