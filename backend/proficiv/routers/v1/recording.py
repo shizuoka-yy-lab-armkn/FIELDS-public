@@ -136,7 +136,7 @@ async def finish_recording(
         }
     )
 
-    task = kvs.RecordEvalTask(
+    task = kvs.RecordEvalJob(
         record_id=RecordID(record.id),
         subject_id=rec.subject_id,
         user_id=rec.user_id,

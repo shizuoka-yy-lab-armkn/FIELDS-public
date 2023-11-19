@@ -53,7 +53,7 @@ class Recording(BaseModel):
         redis.set(key, value)
 
 
-class RecordEvalTask(BaseModel):
+class RecordEvalJob(BaseModel):
     record_id: RecordID
     subject_id: SubjectID
     user_id: UserID
@@ -73,14 +73,14 @@ class RecordEvalTask(BaseModel):
         redis.lpush(key, value)
 
     @classmethod
-    def dequeue_blocking(cls, redis: Redis) -> "RecordEvalTask":
+    def dequeue_blocking(cls, redis: Redis) -> "RecordEvalJob":
         res = redis.brpop([cls._redis_key()])
         _log.info(f"task poped: {res}")
 
         assert isinstance(res, tuple)
         _, serialized = res
 
-        return RecordEvalTask.model_validate_json(serialized)
+        return RecordEvalJob.model_validate_json(serialized)
 
 
 class RecordEvalProgress(BaseModel):
