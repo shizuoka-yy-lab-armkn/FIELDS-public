@@ -133,4 +133,18 @@ async def finish_recording(
         }
     )
 
+    now = jst_now()
+
+    task = kvs.RecordEvalTask(
+        record_id=RecordID(record.id),
+        subject_id=rec.subject_id,
+        user_id=rec.user_id,
+        username=rec.username,
+        seq=rec.seq,
+        recording_start_at=rec.start_at,
+        eval_start_at=now,
+        forehead_video_path=rec.forehead_video_path,
+    )
+    task.enqueue(redis)
+
     return FinishRecordingResp(record_id=RecordID(record.id))

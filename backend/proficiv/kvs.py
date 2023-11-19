@@ -5,7 +5,7 @@ from pathlib import Path
 from pydantic import BaseModel
 from redis import Redis
 
-from proficiv.entity import SubjectID, UserID
+from proficiv.entity import RecordID, SubjectID, UserID
 from proficiv.utils.logging import get_colored_logger
 
 _log = get_colored_logger(__name__)
@@ -49,5 +49,64 @@ class Recording(BaseModel):
 
     def save(self, redis: Redis) -> None:
         key = self._redis_key()
+        value = self.model_dump_json()
+        redis.set(key, value)
+
+
+class RecordEvalTask(BaseModel):
+    record_id: RecordID
+    subject_id: SubjectID
+    user_id: UserID
+    username: str
+    seq: int
+    recording_start_at: datetime
+    eval_start_at: datetime
+    forehead_video_path: Path
+
+    @staticmethod
+    def _redis_key() -> str:
+        return "RecordEvalTaskQueue"
+
+    def enqueue(self, redis: Redis) -> None:
+        key = self._redis_key()
+        value = self.model_dump_json()
+        redis.lpush(key, value)
+
+    @classmethod
+    def dequeue_blocking(cls, redis: Redis) -> "RecordEvalTask":
+        res = redis.brpop([cls._redis_key()])
+        _log.info(f"task poped: {res}")
+
+        assert isinstance(res, tuple)
+        _, serialized = res
+
+        return RecordEvalTask.model_validate_json(serialized)
+
+
+class RecordEvalProgress(BaseModel):
+    record_id: RecordID
+    progress_percentage: int
+
+    @staticmethod
+    def _redis_key(record_id: RecordID) -> str:
+        return f"RecordEvalProgress/{record_id}"
+
+    @classmethod
+    def get_or_none(
+        cls, record_id: RecordID, redis: Redis
+    ) -> "RecordEvalProgress | None":
+        s = redis.get(cls._redis_key(record_id))
+        if s is None:
+            return None
+
+        assert isinstance(s, bytes)
+        return cls.model_validate_json(s)
+
+    def delete(self, redis: Redis) -> None:
+        _log.info("delete Recording")
+        redis.delete(self._redis_key(self.record_id))
+
+    def save(self, redis: Redis) -> None:
+        key = self._redis_key(self.record_id)
         value = self.model_dump_json()
         redis.set(key, value)
