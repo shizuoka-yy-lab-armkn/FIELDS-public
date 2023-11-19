@@ -1,10 +1,7 @@
 from datetime import datetime
 from pathlib import Path
-from typing import Literal
 
 from proficiv.config import Config
-
-kind = Literal["orig", "trimmed_prelude", ""]
 
 
 def _resolve_forehead_camera_resource_path(
