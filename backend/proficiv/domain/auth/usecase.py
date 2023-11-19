@@ -1,4 +1,3 @@
-import logging
 from datetime import timedelta
 
 import jose.jwt
@@ -10,8 +9,9 @@ from prisma import models
 from proficiv.config import Config
 from proficiv.entity import UserID
 from proficiv.utils.datetime import jst_now
+from proficiv.utils.logging import get_colored_logger
 
-_log = logging.getLogger(__name__)
+_log = get_colored_logger(__name__)
 
 
 class AuthUser(BaseModel):
