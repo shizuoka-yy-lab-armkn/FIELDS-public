@@ -35,6 +35,8 @@ class Config(BaseSettings):
 
     rtmp_port: int
 
+    pretrained_mstcn_path: Path
+
     # ffmpeg での RTMPストリーム保存をせずに，既存の適当な動画ファイルを保存する
     mock_recording: bool = False
     mock_record_video_path: Path = Path("static/dummy.mp4")

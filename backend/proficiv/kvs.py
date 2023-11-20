@@ -58,7 +58,7 @@ class RecordEvalJob(BaseModel):
     subject_id: SubjectID
     user_id: UserID
     username: str
-    seq: int
+    record_seq: int
     recording_start_at: datetime
     eval_start_at: datetime
     forehead_video_path: Path

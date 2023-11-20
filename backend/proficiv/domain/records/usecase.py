@@ -43,7 +43,7 @@ def resolve_forehead_camera_prelude_wav_path(
     )
 
 
-def resolve_forehead_camera_blip2_npy(
+def resolve_forehead_camera_blip2_npy_path(
     cfg: Config, username: str, seq: int, record_at: datetime
 ) -> Path:
     return _resolve_forehead_camera_resource_path(
