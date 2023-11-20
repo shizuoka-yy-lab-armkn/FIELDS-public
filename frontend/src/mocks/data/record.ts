@@ -187,21 +187,13 @@ export const dummyRecordEvaluation: schema.RecordEvaluation = {
       end: 11528,
     },
     {
-      type: "missing",
-      actionSeq: 33,
-    },
-    {
-      type: "missing",
-      actionSeq: 34,
-    },
-    {
-      type: "valid",
+      type: "wrong",
       actionSeq: 35,
       begin: 11528,
       end: 11695,
     },
     {
-      type: "valid",
+      type: "wrong",
       actionSeq: 36,
       begin: 11695,
       end: 11846,

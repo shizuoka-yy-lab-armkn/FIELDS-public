@@ -5,7 +5,7 @@ type SegmentStatusBadgeProps = {
   typ: Segment["type"] | "tooLong2x";
 } & BoxProps;
 
-export const SegmentStatusBadge = ({ typ }: SegmentStatusBadgeProps) => {
+export const SegmentStatusBadge = ({ typ, ...props }: SegmentStatusBadgeProps) => {
   if (typ === "valid") {
     return <></>;
   }
@@ -40,6 +40,7 @@ export const SegmentStatusBadge = ({ typ }: SegmentStatusBadgeProps) => {
       px="1.5em"
       fontWeight="semibold"
       {...badgeProps}
+      {...props}
     >
       {text}
     </Box>

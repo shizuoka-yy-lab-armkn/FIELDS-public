@@ -1,8 +1,9 @@
 import { ActionId } from "@/components/domain/records/ActionId";
+import { SegmentStatusBadge } from "@/components/domain/records/SegmentTypeBadge";
 import * as schema from "@/gen/oapi/backend/v1/schema";
 import { ActionMetaDict } from "@/model/subjects";
 import { frameDiffToSecDuration, frameIndexToTimestamp } from "@/usecase/records";
-import { Box, Flex, Heading, Text, useCallbackRef } from "@chakra-ui/react";
+import { Box, BoxProps, Flex, Heading, Text, useCallbackRef } from "@chakra-ui/react";
 import { forwardRef, useEffect, useImperativeHandle, useMemo, useRef, useState } from "react";
 import { SegmentsSidebar } from "./SegmentsSidebar";
 
@@ -11,6 +12,8 @@ export type RecordDetailProps = {
   subject: schema.Subject;
   evaluation: schema.RecordEvaluation;
 };
+
+type Color = BoxProps["bg"];
 
 export const RecordDetail = ({
   record,
@@ -112,6 +115,7 @@ const RecordDetailMainPane = forwardRef<RecordDetailMainPaneMethods, RecordDetai
   });
 
   const currentSeg = currentSegIndex == null ? undefined : segs[currentSegIndex];
+  const fps = record.foreheadVideoFps;
 
   return (
     <Box
@@ -132,19 +136,9 @@ const RecordDetailMainPane = forwardRef<RecordDetailMainPaneMethods, RecordDetai
               {currentSeg != null && actionMetaDict[currentSeg.actionSeq]!.longName}
             </Text>
           </Heading>
+          {currentSeg != null && currentSeg.type !== "valid" && <SegmentStatusBadge typ={currentSeg.type} mt={2} />}
         </Box>
-        <Box>
-          {currentSeg == null || currentSeg.type === "missing" ? "-:-- (--- s)" : (
-            <>
-              <Text as="span">
-                {frameIndexToTimestamp(currentSeg.begin, record.foreheadVideoFps)}
-                {" - "}
-                {frameIndexToTimestamp(currentSeg.end, record.foreheadVideoFps)}
-                {` (${frameDiffToSecDuration(currentSeg.begin, currentSeg.end, record.foreheadVideoFps)} s)`}
-              </Text>
-            </>
-          )}
-        </Box>
+        <SegmentDurInfo seg={currentSeg} fps={fps} actionMetaDict={actionMetaDict} />
       </Flex>
 
       <Box
@@ -162,5 +156,46 @@ const RecordDetailMainPane = forwardRef<RecordDetailMainPaneMethods, RecordDetai
     </Box>
   );
 });
+
+const SegmentDurInfo = ({ seg, fps, actionMetaDict }: {
+  seg: schema.Segment | undefined;
+  fps: number;
+  actionMetaDict: ActionMetaDict;
+}) => {
+  if (seg == null || seg.type === "missing") {
+    return <Box textAlign="right">-:-- (---s)</Box>;
+  }
+
+  const dur = (seg.end - seg.begin) / fps;
+  const masterDurMean = actionMetaDict[seg.actionSeq]!.masterDurMean;
+  const diffSign = dur > masterDurMean ? "+" : "";
+  const tooLong = masterDurMean * 2 < dur;
+  const short = dur < masterDurMean * 1.3;
+  const color: Color = tooLong ? "red.500" : short ? "green.500" : "teal.800";
+
+  return (
+    <Box fontSize="lg" textAlign="right" minWidth="16rem">
+      <Box>
+        <Text as="span">
+          {frameIndexToTimestamp(seg.begin, fps)}
+          {" - "}
+          {frameIndexToTimestamp(seg.end, fps)}
+        </Text>
+        <Text as="span" color={color} fontWeight="bold">
+          {` (${frameDiffToSecDuration(seg.begin, seg.end, fps)} s)`}
+        </Text>
+      </Box>
+      <Box>
+        <Box display="inline-block" bg={color} borderRadius="999px" fontSize="md" color="white" px={4} py={1}>
+          熟練者の {(dur / masterDurMean).toFixed(1)} 倍 (差{diffSign}
+          {(dur - masterDurMean).toFixed(1)} s)
+        </Box>
+      </Box>
+      <Box>
+        (熟練者の平均時間: {masterDurMean.toFixed(1)} s)
+      </Box>
+    </Box>
+  );
+};
 
 RecordDetailMainPane.displayName = "RecordDetailMainPane";
