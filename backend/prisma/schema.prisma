@@ -21,6 +21,7 @@ model User {
 
 model Subject {
   id   String @id @default(cuid())
+  slug String @unique
   name String
 
   created_at DateTime @default(now())
