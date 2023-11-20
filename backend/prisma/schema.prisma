@@ -32,7 +32,7 @@ model Subject {
 }
 
 model Action {
-  id         String  @id // 工程番号ではないので注意
+  id         String  @id @default(cuid()) // 工程番号ではないので注意
   seq        Int // 工程番号
   subject_id String
   subject    Subject @relation(fields: [subject_id], references: [id])
