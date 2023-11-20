@@ -5,3 +5,15 @@ export const fmtRecordName = (record: schema.Record): string => {
   const d = new Date(record.startedAt);
   return `収録 ${record.seq} - ${fmtDatetime(d)}`;
 };
+
+export const frameIndexToTimestamp = (frameIndex: number, fps: number): string => {
+  const secs = frameIndex / fps | 0;
+  const m = secs / 60 | 0;
+  const s = secs % 60;
+  return `${m}:${s.toString().padStart(2, "0")}`;
+};
+
+export const frameDiffToSecDuration = (frameBegin: number, frameEnd: number, fps: number): string => {
+  const secs = (frameEnd - frameBegin) / fps;
+  return secs.toFixed(1);
+};

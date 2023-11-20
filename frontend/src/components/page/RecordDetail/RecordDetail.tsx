@@ -1,6 +1,7 @@
 import { ActionId } from "@/components/domain/records/ActionId";
 import * as schema from "@/gen/oapi/backend/v1/schema";
 import { ActionMetaDict } from "@/model/subjects";
+import { frameDiffToSecDuration, frameIndexToTimestamp } from "@/usecase/records";
 import { Box, Flex, Heading, Text, useCallbackRef } from "@chakra-ui/react";
 import { forwardRef, useEffect, useImperativeHandle, useMemo, useRef, useState } from "react";
 import { SegmentsSidebar } from "./SegmentsSidebar";
@@ -120,9 +121,9 @@ const RecordDetailMainPane = forwardRef<RecordDetailMainPaneMethods, RecordDetai
       color="teal.900"
       px={4}
       py={4}
-      bg="white"
+      bg="gray.50"
     >
-      <Flex justifyContent="space-between">
+      <Flex justifyContent="space-between" minH="4rem">
         <Box>
           <Heading as="h2" fontSize="lg">
             工程番号
@@ -133,11 +134,29 @@ const RecordDetailMainPane = forwardRef<RecordDetailMainPaneMethods, RecordDetai
           </Heading>
         </Box>
         <Box>
-          X:XX (xx.x s)
+          {currentSeg == null || currentSeg.type === "missing" ? "-:-- (--- s)" : (
+            <>
+              <Text as="span">
+                {frameIndexToTimestamp(currentSeg.begin, record.foreheadVideoFps)}
+                {" - "}
+                {frameIndexToTimestamp(currentSeg.end, record.foreheadVideoFps)}
+                {` (${frameDiffToSecDuration(currentSeg.begin, currentSeg.end, record.foreheadVideoFps)} s)`}
+              </Text>
+            </>
+          )}
         </Box>
       </Flex>
 
-      <Box as="video" ref={videoRef} controls w="full" my={4} onTimeUpdate={handleVideoTimeUpdate}>
+      <Box
+        as="video"
+        ref={videoRef}
+        controls
+        w="full"
+        maxW="70vw"
+        mx="auto"
+        my={4}
+        onTimeUpdate={handleVideoTimeUpdate}
+      >
         <source src={record.foreheadVideoUrl} />
       </Box>
     </Box>

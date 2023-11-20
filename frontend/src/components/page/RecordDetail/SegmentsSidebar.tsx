@@ -3,6 +3,7 @@ import { SegmentStatusBadge } from "@/components/domain/records/SegmentTypeBadge
 import * as schema from "@/gen/oapi/backend/v1/schema";
 import { ActionMetaDict } from "@/model/subjects";
 import utilStyle from "@/styles/util.module.css";
+import { frameDiffToSecDuration, frameIndexToTimestamp } from "@/usecase/records";
 import { Box, BoxProps, Flex, Heading, Text } from "@chakra-ui/react";
 import { useEffect, useMemo, useRef } from "react";
 
@@ -127,16 +128,4 @@ export const SegmentsSidebar = ({
       </Flex>
     </Flex>
   );
-};
-
-const frameIndexToTimestamp = (frameIndex: number, fps: number): string => {
-  const secs = frameIndex / fps | 0;
-  const m = secs / 60 | 0;
-  const s = secs % 60;
-  return `${m}:${s.toString().padStart(2, "0")}`;
-};
-
-const frameDiffToSecDuration = (frameBegin: number, frameEnd: number, fps: number): string => {
-  const secs = (frameEnd - frameBegin) / fps;
-  return secs.toFixed(1);
 };
