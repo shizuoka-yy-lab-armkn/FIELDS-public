@@ -1,10 +1,10 @@
 import fire
 
-from proficiv.domain.record_eval.worker import RecordEvalJobConsumer
+from proficiv.domain.record_eval.worker import RecordEvalWorker
 
 
 def main() -> None:
-    worker = RecordEvalJobConsumer()
+    worker = RecordEvalWorker()
     worker.loop()
 
 

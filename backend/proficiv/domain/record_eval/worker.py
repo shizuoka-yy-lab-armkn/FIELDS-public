@@ -30,7 +30,7 @@ ACTIONS = [0] + list(range(5, 39 + 1))
 assert len(ACTIONS) == 36
 
 
-class RecordEvalJobConsumer:
+class RecordEvalWorker:
     def __init__(self) -> None:
         self.cfg = get_config()
         self.redis = kvs.get_redis_client(
