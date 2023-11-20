@@ -3,8 +3,8 @@ services:
   nginx:
     image: tiangolo/nginx-rtmp:latest-2023-11-13
     ports:
-      - "80:80"
-      - "21935:21935"
+      - "8080:80"
+      - "21935:1935"
     volumes:
       - ./nginx/nginx.conf:/etc/nginx/nginx.conf
       - ./nginx/conf.d:/etc/nginx/conf.d
