@@ -6,7 +6,6 @@
  */
 
 export type ActionMeta = {
-  actionId: number;
   longName: string;
   manualMarkdown: string;
   /** 最大値 (sec) */
@@ -19,5 +18,6 @@ export type ActionMeta = {
   masterDurMin: number;
   /** 標準偏差 (sec) */
   masterDurStd: number;
+  seq: number;
   shortName: string;
 };

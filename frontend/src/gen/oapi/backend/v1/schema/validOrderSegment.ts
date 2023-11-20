@@ -4,11 +4,11 @@
  * Proficiv Backend API
  * OpenAPI spec version: 0.1.0
  */
-import type { ExtraSegmentType } from './extraSegmentType';
+import type { ValidOrderSegmentType } from './validOrderSegmentType';
 
-export type ExtraSegment = {
-  actionId: number;
+export type ValidOrderSegment = {
+  actionSeq: number;
   begin: number;
   end: number;
-  type: ExtraSegmentType;
+  type: ValidOrderSegmentType;
 };

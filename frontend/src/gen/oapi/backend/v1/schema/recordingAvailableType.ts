@@ -5,10 +5,10 @@
  * OpenAPI spec version: 0.1.0
  */
 
-export type ExtraSegmentType = typeof ExtraSegmentType[keyof typeof ExtraSegmentType];
+export type RecordingAvailableType = typeof RecordingAvailableType[keyof typeof RecordingAvailableType];
 
 
 // eslint-disable-next-line @typescript-eslint/no-redeclare
-export const ExtraSegmentType = {
-  extra: 'extra',
+export const RecordingAvailableType = {
+  available: 'available',
 } as const;

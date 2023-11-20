@@ -5,10 +5,10 @@
  * OpenAPI spec version: 0.1.0
  */
 
-export type WrongSegmentType = typeof WrongSegmentType[keyof typeof WrongSegmentType];
+export type ValidOrderSegmentType = typeof ValidOrderSegmentType[keyof typeof ValidOrderSegmentType];
 
 
 // eslint-disable-next-line @typescript-eslint/no-redeclare
-export const WrongSegmentType = {
-  wrong: 'wrong',
+export const ValidOrderSegmentType = {
+  valid: 'valid',
 } as const;

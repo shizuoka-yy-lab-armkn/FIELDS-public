@@ -5,10 +5,10 @@
  * OpenAPI spec version: 0.1.0
  */
 
-export type ValidSegmentType = typeof ValidSegmentType[keyof typeof ValidSegmentType];
+export type NowRecordingType = typeof NowRecordingType[keyof typeof NowRecordingType];
 
 
 // eslint-disable-next-line @typescript-eslint/no-redeclare
-export const ValidSegmentType = {
-  valid: 'valid',
+export const NowRecordingType = {
+  recording: 'recording',
 } as const;

@@ -6,12 +6,12 @@
  */
 
 export type Record = {
-  /** Frames per second; 一秒間あたりのサンプリングレート */
-  fps: number;
-  headCameraVideoUrl: string;
-  recordAt: string;
+  finishedAt: string;
+  foreheadVideoFps: number;
+  foreheadVideoUrl: string;
   recordId: string;
-  /** 何回目の収録か */
+  /** このユーザの中で何回目の収録か */
   seq: number;
+  startedAt: string;
   subjectId: string;
 };

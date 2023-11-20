@@ -4,9 +4,8 @@
  * Proficiv Backend API
  * OpenAPI spec version: 0.1.0
  */
-import type { ValidSegment } from './validSegment';
-import type { ExtraSegment } from './extraSegment';
+import type { ValidOrderSegment } from './validOrderSegment';
+import type { WrongOrderSegment } from './wrongOrderSegment';
 import type { MissingSegment } from './missingSegment';
-import type { WrongSegment } from './wrongSegment';
 
-export type Segment = ValidSegment | ExtraSegment | MissingSegment | WrongSegment;
+export type Segment = ValidOrderSegment | WrongOrderSegment | MissingSegment;

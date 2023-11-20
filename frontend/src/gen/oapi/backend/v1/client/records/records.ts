@@ -139,9 +139,9 @@ export const useGetRecord = <TData = Awaited<ReturnType<typeof getRecord>>, TErr
 };
 
 /**
- * @summary Get Evaluation
+ * @summary Get Record Evaluation
  */
-export const getEvaluation = (
+export const getRecordEvaluation = (
   recordId: string,
   options?: SecondParameter<typeof customAxios>,
   signal?: AbortSignal,
@@ -152,49 +152,49 @@ export const getEvaluation = (
   );
 };
 
-export const getGetEvaluationQueryKey = (recordId: string) => {
+export const getGetRecordEvaluationQueryKey = (recordId: string) => {
   return [`/api/v1/records/${recordId}/evaluation`] as const;
 };
 
-export const getGetEvaluationQueryOptions = <
-  TData = Awaited<ReturnType<typeof getEvaluation>>,
+export const getGetRecordEvaluationQueryOptions = <
+  TData = Awaited<ReturnType<typeof getRecordEvaluation>>,
   TError = ErrorType<HTTPValidationError>,
 >(
   recordId: string,
   options?: {
-    query?: Partial<UseQueryOptions<Awaited<ReturnType<typeof getEvaluation>>, TError, TData>>;
+    query?: Partial<UseQueryOptions<Awaited<ReturnType<typeof getRecordEvaluation>>, TError, TData>>;
     request?: SecondParameter<typeof customAxios>;
   },
 ) => {
   const { query: queryOptions, request: requestOptions } = options ?? {};
 
-  const queryKey = queryOptions?.queryKey ?? getGetEvaluationQueryKey(recordId);
+  const queryKey = queryOptions?.queryKey ?? getGetRecordEvaluationQueryKey(recordId);
 
-  const queryFn: QueryFunction<Awaited<ReturnType<typeof getEvaluation>>> = ({ signal }) =>
-    getEvaluation(recordId, requestOptions, signal);
+  const queryFn: QueryFunction<Awaited<ReturnType<typeof getRecordEvaluation>>> = ({ signal }) =>
+    getRecordEvaluation(recordId, requestOptions, signal);
 
   return { queryKey, queryFn, enabled: !!recordId, ...queryOptions } as
-    & UseQueryOptions<Awaited<ReturnType<typeof getEvaluation>>, TError, TData>
+    & UseQueryOptions<Awaited<ReturnType<typeof getRecordEvaluation>>, TError, TData>
     & { queryKey: QueryKey };
 };
 
-export type GetEvaluationQueryResult = NonNullable<Awaited<ReturnType<typeof getEvaluation>>>;
-export type GetEvaluationQueryError = ErrorType<HTTPValidationError>;
+export type GetRecordEvaluationQueryResult = NonNullable<Awaited<ReturnType<typeof getRecordEvaluation>>>;
+export type GetRecordEvaluationQueryError = ErrorType<HTTPValidationError>;
 
 /**
- * @summary Get Evaluation
+ * @summary Get Record Evaluation
  */
-export const useGetEvaluation = <
-  TData = Awaited<ReturnType<typeof getEvaluation>>,
+export const useGetRecordEvaluation = <
+  TData = Awaited<ReturnType<typeof getRecordEvaluation>>,
   TError = ErrorType<HTTPValidationError>,
 >(
   recordId: string,
   options?: {
-    query?: Partial<UseQueryOptions<Awaited<ReturnType<typeof getEvaluation>>, TError, TData>>;
+    query?: Partial<UseQueryOptions<Awaited<ReturnType<typeof getRecordEvaluation>>, TError, TData>>;
     request?: SecondParameter<typeof customAxios>;
   },
 ): UseQueryResult<TData, TError> & { queryKey: QueryKey } => {
-  const queryOptions = getGetEvaluationQueryOptions(recordId, options);
+  const queryOptions = getGetRecordEvaluationQueryOptions(recordId, options);
 
   const query = useQuery(queryOptions) as UseQueryResult<TData, TError> & { queryKey: QueryKey };
 

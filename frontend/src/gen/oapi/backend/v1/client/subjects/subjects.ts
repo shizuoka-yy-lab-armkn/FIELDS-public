@@ -8,7 +8,7 @@ import { useQuery } from "@tanstack/react-query";
 import type { QueryFunction, QueryKey, UseQueryOptions, UseQueryResult } from "@tanstack/react-query";
 import { customAxios } from "../../../../../../config/orval/backend";
 import type { ErrorType } from "../../../../../../config/orval/backend";
-import type { HTTPValidationError, Subject } from "../../schema";
+import type { HTTPValidationError, Subject, SubjectBrief } from "../../schema";
 
 // eslint-disable-next-line
 type SecondParameter<T extends (...args: any) => any> = T extends (
@@ -16,6 +16,65 @@ type SecondParameter<T extends (...args: any) => any> = T extends (
   args: infer P,
 ) => any ? P
   : never;
+
+/**
+ * @summary Get Subject List
+ */
+export const getSubjectList = (
+  options?: SecondParameter<typeof customAxios>,
+  signal?: AbortSignal,
+) => {
+  return customAxios<SubjectBrief[]>(
+    { url: `/api/v1/subjects`, method: "get", signal },
+    options,
+  );
+};
+
+export const getGetSubjectListQueryKey = () => {
+  return [`/api/v1/subjects`] as const;
+};
+
+export const getGetSubjectListQueryOptions = <
+  TData = Awaited<ReturnType<typeof getSubjectList>>,
+  TError = ErrorType<unknown>,
+>(
+  options?: {
+    query?: Partial<UseQueryOptions<Awaited<ReturnType<typeof getSubjectList>>, TError, TData>>;
+    request?: SecondParameter<typeof customAxios>;
+  },
+) => {
+  const { query: queryOptions, request: requestOptions } = options ?? {};
+
+  const queryKey = queryOptions?.queryKey ?? getGetSubjectListQueryKey();
+
+  const queryFn: QueryFunction<Awaited<ReturnType<typeof getSubjectList>>> = ({ signal }) =>
+    getSubjectList(requestOptions, signal);
+
+  return { queryKey, queryFn, ...queryOptions } as
+    & UseQueryOptions<Awaited<ReturnType<typeof getSubjectList>>, TError, TData>
+    & { queryKey: QueryKey };
+};
+
+export type GetSubjectListQueryResult = NonNullable<Awaited<ReturnType<typeof getSubjectList>>>;
+export type GetSubjectListQueryError = ErrorType<unknown>;
+
+/**
+ * @summary Get Subject List
+ */
+export const useGetSubjectList = <TData = Awaited<ReturnType<typeof getSubjectList>>, TError = ErrorType<unknown>>(
+  options?: {
+    query?: Partial<UseQueryOptions<Awaited<ReturnType<typeof getSubjectList>>, TError, TData>>;
+    request?: SecondParameter<typeof customAxios>;
+  },
+): UseQueryResult<TData, TError> & { queryKey: QueryKey } => {
+  const queryOptions = getGetSubjectListQueryOptions(options);
+
+  const query = useQuery(queryOptions) as UseQueryResult<TData, TError> & { queryKey: QueryKey };
+
+  query.queryKey = queryOptions.queryKey;
+
+  return query;
+};
 
 /**
  * @summary Get Subject
