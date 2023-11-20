@@ -17,7 +17,7 @@ export const RecordDetail = ({
   evaluation,
 }: RecordDetailProps) => {
   const actionMetaDict = useMemo((): ActionMetaDict => {
-    return Object.fromEntries(subject.actions.map((a) => [a.actionId, a]));
+    return Object.fromEntries(subject.actions.map((a) => [a.seq, a]));
   }, [subject.actions]);
 
   const [currentSegIndex, setCurrentSegIndex] = useState<number | undefined>(undefined);
@@ -29,7 +29,7 @@ export const RecordDetail = ({
 
     const seg = evaluation.segs[segIdx]!;
     if (seg.type !== "missing") {
-      mainPaneRef.current?.seek(seg.begin / record.fps + 0.1);
+      mainPaneRef.current?.seek(seg.begin / record.foreheadVideoFps + 0.1);
     }
   };
 
@@ -39,7 +39,7 @@ export const RecordDetail = ({
         segs={evaluation.segs}
         currentSegIndex={currentSegIndex}
         actionMetaDict={actionMetaDict}
-        fps={record.fps}
+        fps={record.foreheadVideoFps}
         onSegmentClick={handleSegmentClick}
       />
       <RecordDetailMainPane
@@ -87,12 +87,12 @@ const RecordDetailMainPane = forwardRef<RecordDetailMainPaneMethods, RecordDetai
 
   useEffect(() => {
     if (videoRef.current != null) videoRef.current.load();
-  }, [record.headCameraVideoUrl]);
+  }, [record.foreheadVideoUrl]);
 
   const handleVideoTimeUpdate = useCallbackRef(() => {
     if (videoRef.current == null) return;
     const video = videoRef.current;
-    const videoFrame = video.currentTime * record.fps | 0;
+    const videoFrame = video.currentTime * record.foreheadVideoFps | 0;
 
     // 現在のセグメントが動画のシーク位置を包含しているなら探索しない
     if (currentSegIndex != null) {
@@ -126,9 +126,9 @@ const RecordDetailMainPane = forwardRef<RecordDetailMainPaneMethods, RecordDetai
         <Box>
           <Heading as="h2" fontSize="lg">
             工程番号
-            <ActionId actionId={currentSeg?.actionId} ml={1} mr={3} />
+            <ActionId actionId={currentSeg?.actionSeq} ml={1} mr={3} />
             <Text as="span" fontWeight="bold">
-              {currentSeg != null && actionMetaDict[currentSeg.actionId]!.longName}
+              {currentSeg != null && actionMetaDict[currentSeg.actionSeq]!.longName}
             </Text>
           </Heading>
         </Box>
@@ -138,7 +138,7 @@ const RecordDetailMainPane = forwardRef<RecordDetailMainPaneMethods, RecordDetai
       </Flex>
 
       <Box as="video" ref={videoRef} controls w="full" my={4} onTimeUpdate={handleVideoTimeUpdate}>
-        <source src={record.headCameraVideoUrl} />
+        <source src={record.foreheadVideoUrl} />
       </Box>
     </Box>
   );

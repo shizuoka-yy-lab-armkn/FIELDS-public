@@ -14,8 +14,6 @@ export const SegmentStatusBadge = ({ typ }: SegmentStatusBadgeProps) => {
     switch (typ) {
       case "missing":
         return "工程抜け";
-      case "extra":
-        return "工程順序間違い";
       case "wrong":
         return "工程順序間違い";
       case "tooLong2x":

@@ -29,7 +29,7 @@ export const useGetRecord = (recordId: string | undefined) => {
 };
 
 export const useGetEvaluation = (recordId: string | undefined) => {
-  const { data: evaluation, isLoading, isError } = client.useGetEvaluation(recordId ?? "", {
+  const { data: evaluation, isLoading, isError } = client.useGetRecordEvaluation(recordId ?? "", {
     query: {
       staleTime: Infinity,
     },

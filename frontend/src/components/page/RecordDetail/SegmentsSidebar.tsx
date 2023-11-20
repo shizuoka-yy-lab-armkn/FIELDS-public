@@ -70,7 +70,7 @@ export const SegmentsSidebar = ({
       >
         {segs.map((seg, segIdx) => {
           const tooLong = seg.type !== "missing"
-            && actionMetaDict[seg.actionId]!.masterDurMean * fps * 2 < seg.end - seg.begin;
+            && actionMetaDict[seg.actionSeq]!.masterDurMean * fps * 2 < seg.end - seg.begin;
 
           const highlightProps: BoxProps = {
             boxShadow: "0 0 6px 2px inset darkturquoise",
@@ -93,13 +93,13 @@ export const SegmentsSidebar = ({
                 _hover={{ backdropFilter: "brightness(0.95)" }}
               >
                 <Box>
-                  <ActionId actionId={seg.actionId} mr={1} />
+                  <ActionId actionId={seg.actionSeq} mr={1} />
                   <Text
                     as="span"
                     fontWeight="semibold"
                     className={segIdx === currentSegIndex ? utilStyle.opacityBlink : ""}
                   >
-                    {actionMetaDict[seg.actionId]!.shortName}
+                    {actionMetaDict[seg.actionSeq]!.shortName}
                   </Text>
                 </Box>
                 <Box ml={8}>

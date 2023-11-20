@@ -5,7 +5,7 @@ export const dummySubject: schema.Subject = {
   name: "バイク外装取り付け",
   actions: [
     {
-      "actionId": 5,
+      "seq": 5,
       "shortName": "開始スイッチ",
       "longName": "開始スイッチ押す",
       "manualMarkdown": "",
@@ -16,7 +16,7 @@ export const dummySubject: schema.Subject = {
       "masterDurMedian": 2.2333333333333334,
     },
     {
-      "actionId": 6,
+      "seq": 6,
       "shortName": "リード線引出し",
       "longName": "メーター等リード線引出し",
       "manualMarkdown": "",
@@ -27,7 +27,7 @@ export const dummySubject: schema.Subject = {
       "masterDurMedian": 5.133333333333333,
     },
     {
-      "actionId": 7,
+      "seq": 7,
       "shortName": "パイプ径測定",
       "longName": "フレームパイプ径測定",
       "manualMarkdown": "",
@@ -38,7 +38,7 @@ export const dummySubject: schema.Subject = {
       "masterDurMedian": 2.6333333333333333,
     },
     {
-      "actionId": 8,
+      "seq": 8,
       "shortName": "レギュレータ仮付け",
       "longName": "レギュレター取出向き合わせ/レギュレターボルト取出差し孔位置合わせ仮付",
       "manualMarkdown": "",
@@ -49,7 +49,7 @@ export const dummySubject: schema.Subject = {
       "masterDurMedian": 14.566666666666666,
     },
     {
-      "actionId": 9,
+      "seq": 9,
       "shortName": "レギュレータ締付け",
       "longName": "レギュレターボルト締付",
       "manualMarkdown": "",
@@ -60,7 +60,7 @@ export const dummySubject: schema.Subject = {
       "masterDurMedian": 5.0,
     },
     {
-      "actionId": 10,
+      "seq": 10,
       "shortName": "レギュレータコード取付け",
       "longName": "レギュレーターにコードを取り付ける",
       "manualMarkdown": "",
@@ -71,7 +71,7 @@ export const dummySubject: schema.Subject = {
       "masterDurMedian": 2.05,
     },
     {
-      "actionId": 11,
+      "seq": 11,
       "shortName": "サイド1潤滑材塗布",
       "longName": "カバータンクサイドASSY1取付用グロメット部潤滑剤塗布(前後)",
       "manualMarkdown": "",
@@ -82,7 +82,7 @@ export const dummySubject: schema.Subject = {
       "masterDurMedian": 3.2333333333333334,
     },
     {
-      "actionId": 12,
+      "seq": 12,
       "shortName": "サイド1カバー取付け",
       "longName": "カバータンクサイドASSY1取出取付",
       "manualMarkdown": "",
@@ -93,7 +93,7 @@ export const dummySubject: schema.Subject = {
       "masterDurMedian": 6.983333333333333,
     },
     {
-      "actionId": 13,
+      "seq": 13,
       "shortName": "サイド1プラスリベット差込み",
       "longName": "カバータンクサイド1ASSY プラスリベット取出 位置合わせ 差込",
       "manualMarkdown": "",
@@ -104,7 +104,7 @@ export const dummySubject: schema.Subject = {
       "masterDurMedian": 4.133333333333333,
     },
     {
-      "actionId": 14,
+      "seq": 14,
       "shortName": "サイド1上側ボルト仮付け",
       "longName": "カバータンクサイド1ASSY 上側ボルト取出(シル バー小) 仮付",
       "manualMarkdown": "",
@@ -115,7 +115,7 @@ export const dummySubject: schema.Subject = {
       "masterDurMedian": 6.966666666666667,
     },
     {
-      "actionId": 15,
+      "seq": 15,
       "shortName": "サイド1上側ボルト締付け",
       "longName": "カバータンクサイド1ASSY 上側ボルト締付",
       "manualMarkdown": "",
@@ -126,7 +126,7 @@ export const dummySubject: schema.Subject = {
       "masterDurMedian": 4.3,
     },
     {
-      "actionId": 16,
+      "seq": 16,
       "shortName": "サイド1側面ボルト仮付け",
       "longName": "カバータンクサイド1ASSY 側面ボルト(黒 )取 出仮付",
       "manualMarkdown": "",
@@ -137,7 +137,7 @@ export const dummySubject: schema.Subject = {
       "masterDurMedian": 3.8166666666666664,
     },
     {
-      "actionId": 17,
+      "seq": 17,
       "shortName": "サイド1後側ボルト仮付け",
       "longName": "カバータンクサイド1ASSY 後側ボルト取出 (黒) 仮付",
       "manualMarkdown": "",
@@ -148,7 +148,7 @@ export const dummySubject: schema.Subject = {
       "masterDurMedian": 5.816666666666666,
     },
     {
-      "actionId": 18,
+      "seq": 18,
       "shortName": "サイド1リベット確認",
       "longName": "リベット差し込み確認",
       "manualMarkdown": "",
@@ -159,7 +159,7 @@ export const dummySubject: schema.Subject = {
       "masterDurMedian": 2.0666666666666664,
     },
     {
-      "actionId": 19,
+      "seq": 19,
       "shortName": "サイド1グロメット確認",
       "longName": "カバータンクサイドASSY1 後側グロメット 差 込確認チェック",
       "manualMarkdown": "",
@@ -170,7 +170,7 @@ export const dummySubject: schema.Subject = {
       "masterDurMedian": 2.6833333333333336,
     },
     {
-      "actionId": 20,
+      "seq": 20,
       "shortName": "サイド2潤滑剤塗布",
       "longName": "カバータンクサイドASSY2 取付用グロメット部 潤滑剤塗布(前後)",
       "manualMarkdown": "",
@@ -181,7 +181,7 @@ export const dummySubject: schema.Subject = {
       "masterDurMedian": 5.516666666666667,
     },
     {
-      "actionId": 21,
+      "seq": 21,
       "shortName": "サイド2カバー取り付け",
       "longName": "カバータンクサイドASSY2 取出取付",
       "manualMarkdown": "",
@@ -192,7 +192,7 @@ export const dummySubject: schema.Subject = {
       "masterDurMedian": 7.283333333333333,
     },
     {
-      "actionId": 22,
+      "seq": 22,
       "shortName": "サイド2プラスリベット差込み",
       "longName": "カバータンクサイド2ASSY プラスリベット取出 位置合わせ 差込",
       "manualMarkdown": "",
@@ -203,7 +203,7 @@ export const dummySubject: schema.Subject = {
       "masterDurMedian": 4.0,
     },
     {
-      "actionId": 23,
+      "seq": 23,
       "shortName": "上側ボルト仮付け",
       "longName": "カバータンクサイド2ASSY 上側ボルト取出(シル バー小) 仮付",
       "manualMarkdown": "",
@@ -214,7 +214,7 @@ export const dummySubject: schema.Subject = {
       "masterDurMedian": 5.816666666666666,
     },
     {
-      "actionId": 24,
+      "seq": 24,
       "shortName": "上側ボルト締付け",
       "longName": "カバータンクサイド2ASSY 上側ボルト締付",
       "manualMarkdown": "",
@@ -225,7 +225,7 @@ export const dummySubject: schema.Subject = {
       "masterDurMedian": 4.383333333333333,
     },
     {
-      "actionId": 25,
+      "seq": 25,
       "shortName": "トップリベット差し込み",
       "longName": "カバータンクサイド2・カバータンクサイド1ASSY リ ベット取出 位置合わせ 差込",
       "manualMarkdown": "",
@@ -236,7 +236,7 @@ export const dummySubject: schema.Subject = {
       "masterDurMedian": 4.233333333333333,
     },
     {
-      "actionId": 26,
+      "seq": 26,
       "shortName": "側面ボルト仮付け",
       "longName": "カバータンクサイド2ASSY 側面ボルト取出 (黒) 仮付",
       "manualMarkdown": "",
@@ -247,7 +247,7 @@ export const dummySubject: schema.Subject = {
       "masterDurMedian": 4.5,
     },
     {
-      "actionId": 27,
+      "seq": 27,
       "shortName": "後側ボルト取付け",
       "longName": "カバータンクサイド2ASSY 後側ボルト取出 (黒) 仮付",
       "manualMarkdown": "",
@@ -258,7 +258,7 @@ export const dummySubject: schema.Subject = {
       "masterDurMedian": 5.483333333333333,
     },
     {
-      "actionId": 28,
+      "seq": 28,
       "shortName": "リベット確認",
       "longName": "後ろと前のリベット差し込み確認",
       "manualMarkdown": "",
@@ -269,7 +269,7 @@ export const dummySubject: schema.Subject = {
       "masterDurMedian": 3.5833333333333335,
     },
     {
-      "actionId": 29,
+      "seq": 29,
       "shortName": "トップリベット確認",
       "longName": "カバータンクサイド2・カバータンクサイド1ASSY リベット差込確認チェック",
       "manualMarkdown": "",
@@ -280,7 +280,7 @@ export const dummySubject: schema.Subject = {
       "masterDurMedian": 2.916666666666667,
     },
     {
-      "actionId": 30,
+      "seq": 30,
       "shortName": "カバートップ取付け",
       "longName": "カバートップ 取出取付",
       "manualMarkdown": "",
@@ -291,7 +291,7 @@ export const dummySubject: schema.Subject = {
       "masterDurMedian": 8.033333333333333,
     },
     {
-      "actionId": 31,
+      "seq": 31,
       "shortName": "カバートップボルト1仮付け",
       "longName": "カバートップ ボルト取出 仮付<1つ目>",
       "manualMarkdown": "",
@@ -302,7 +302,7 @@ export const dummySubject: schema.Subject = {
       "masterDurMedian": 7.083333333333333,
     },
     {
-      "actionId": 32,
+      "seq": 32,
       "shortName": "カバートップボルト2仮付け",
       "longName": "カバートップ ボルト取出 仮付<2つ目>",
       "manualMarkdown": "",
@@ -313,7 +313,7 @@ export const dummySubject: schema.Subject = {
       "masterDurMedian": 8.25,
     },
     {
-      "actionId": 33,
+      "seq": 33,
       "shortName": "サイド1側面ボルト締付け",
       "longName": "カバータンクサイド1ASSY 側面ボルト締付",
       "manualMarkdown": "",
@@ -324,7 +324,7 @@ export const dummySubject: schema.Subject = {
       "masterDurMedian": 2.6833333333333336,
     },
     {
-      "actionId": 34,
+      "seq": 34,
       "shortName": "サイド1後側ボルト締付け",
       "longName": "カバータンクサイド1ASSY 後側ボルト締付",
       "manualMarkdown": "",
@@ -335,7 +335,7 @@ export const dummySubject: schema.Subject = {
       "masterDurMedian": 1.95,
     },
     {
-      "actionId": 35,
+      "seq": 35,
       "shortName": "カバートップボルト1締付け",
       "longName": "カバートップ ボルト締付1",
       "manualMarkdown": "",
@@ -346,7 +346,7 @@ export const dummySubject: schema.Subject = {
       "masterDurMedian": 1.5166666666666666,
     },
     {
-      "actionId": 36,
+      "seq": 36,
       "shortName": "カバートップボルト2締付け",
       "longName": "カバートップ ボルト締付2",
       "manualMarkdown": "",
@@ -357,7 +357,7 @@ export const dummySubject: schema.Subject = {
       "masterDurMedian": 1.6333333333333333,
     },
     {
-      "actionId": 37,
+      "seq": 37,
       "shortName": "サイド2後側ボルト締付け",
       "longName": "カバータンクサイド2ASSY 後側ボルト締付",
       "manualMarkdown": "",
@@ -368,7 +368,7 @@ export const dummySubject: schema.Subject = {
       "masterDurMedian": 1.3666666666666667,
     },
     {
-      "actionId": 38,
+      "seq": 38,
       "shortName": "サイド2側面ボルト締付け",
       "longName": "カバータンクサイド2ASSY 側面ボルト締付",
       "manualMarkdown": "",
@@ -379,7 +379,7 @@ export const dummySubject: schema.Subject = {
       "masterDurMedian": 9.133333333333333,
     },
     {
-      "actionId": 39,
+      "seq": 39,
       "shortName": "終了スイッチ",
       "longName": "終了スイッチ押す",
       "manualMarkdown": "",
