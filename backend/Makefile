@@ -20,6 +20,11 @@ serve/dev:
 	$(PROFICIV_CMD).serve --reload
 
 
+.PHONY: run/worker
+run/worker:
+	$(PROFICIV_CMD).worker
+
+
 .PHONY:	gen/oapi/stdout
 gen/oapi/stdout:
 	$(PROFICIV_CMD).gen_oapi --indent=2
