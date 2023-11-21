@@ -44,9 +44,7 @@ class RecordEvalWorker(RecordEvalWorkerBase):
 
     @override
     async def eval(self, job: kvs.RecordEvalJob, prisma: Prisma) -> RecordEvalResult:
-        progress = kvs.RecordEvalProgress(
-            record_id=job.record_id, progress_percentage=0
-        )
+        progress = kvs.RecordEvalProgress(record_id=job.record_id, percentage=0)
         progress.save(self.redis)
 
         # 拍手までの時間を求める
@@ -56,33 +54,43 @@ class RecordEvalWorker(RecordEvalWorkerBase):
         prelude_dur_secs = usecase.detect_triple_clap_timepoint_in_sec(
             video_path=job.forehead_video_path, tmp_wav_save_path=wav_path
         )
-        progress.progress_percentage = _PROGRESS_WEIGHT_DETECTING_CLAP_TIME
+        progress.percentage = _PROGRESS_WEIGHT_DETECTING_CLAP_TIME
         progress.save(self.redis)
 
         # 動画のメタデータ取得
         video = cv2.VideoCapture(str(job.forehead_video_path))
+        assert video.isOpened
+
         fps = video.get(cv2.CAP_PROP_FPS)
         total_frames = int(video.get(cv2.CAP_PROP_FRAME_COUNT))
         prelude_frames = int(prelude_dur_secs * fps)
+        _log.info(f"{fps=}, {total_frames=}, {prelude_frames=}")
 
         # 動画の埋め込みを生成する
         blip2_npy_path = resolve_forehead_camera_blip2_npy_path(
             self.cfg, job.username, job.record_seq, job.recording_start_at
         )
-        video_embed = usecase.extract_video_feature(
+        _log.info(f"{blip2_npy_path=}")
+
+        _log.info("-------------------------------------")
+
+        def blip2_batch_done_callback(processed_frame_count: int) -> None:
+            progress.percentage = _PROGRESS_WEIGHT_DETECTING_CLAP_TIME + (
+                processed_frame_count * _PROGRESS_WEIGHT_VIDEO_FEATURE_EXTRACTION
+            ) // (total_frames - prelude_frames)
+            progress.save(self.redis)
+
+        video_embedding = usecase.extract_video_feature(
             self.blip2,
             video,
+            batch_size=self.cfg.blip2_batch_size,
             skip_prefix_frames=prelude_frames,
+            batch_done_callback=blip2_batch_done_callback,
         )
         video.release()
         del video
 
-        np.save(blip2_npy_path, video_embed)
-        progress.progress_percentage = (
-            _PROGRESS_WEIGHT_DETECTING_CLAP_TIME
-            + _PROGRESS_WEIGHT_VIDEO_FEATURE_EXTRACTION
-        )
-        progress.save(self.redis)
+        np.save(blip2_npy_path, video_embedding)
 
         master_actions = await prisma.action.find_many(
             where={"subject_id": job.subject_id}, order={"seq": "asc"}
@@ -91,7 +99,7 @@ class RecordEvalWorker(RecordEvalWorkerBase):
 
         # 行動分節
         _log.info("Start mstcn prediction")
-        preds = self.mstcn.predict(video_embed, self.device)
+        preds = self.mstcn.predict(video_embedding, self.device)
         segs: list[types.RecordSegmentCreateWithoutRelationsInput] = [
             {
                 "action_id": aseq2aid[ACTIONS[seg.val]],

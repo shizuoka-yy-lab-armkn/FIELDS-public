@@ -57,9 +57,7 @@ async def get_record_evaluation(
             _log.warn("Cannot find RecordEvalProgress in Redis")
         return RecordEvaluation(
             segs=[],
-            job_progress_percentage=progress.progress_percentage
-            if progress is not None
-            else 0,
+            job_progress_percentage=progress.percentage if progress is not None else 0,
         )
 
     record = await prisma_client.record.find_unique({"id": record_id})

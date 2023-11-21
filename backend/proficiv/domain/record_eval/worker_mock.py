@@ -17,14 +17,12 @@ class RecordEvalMockWorker(RecordEvalWorkerBase):
 
     @override
     async def eval(self, job: kvs.RecordEvalJob, prisma: Prisma) -> RecordEvalResult:
-        progress = kvs.RecordEvalProgress(
-            record_id=job.record_id, progress_percentage=0
-        )
-        while progress.progress_percentage < 90:
+        progress = kvs.RecordEvalProgress(record_id=job.record_id, percentage=0)
+        while progress.percentage < 90:
             progress.save(self.redis)
             sleep(0.2)
-            progress.progress_percentage += 5
-        progress.progress_percentage = 90
+            progress.percentage += 5
+        progress.percentage = 90
         progress.save(self.redis)
 
         video = cv2.VideoCapture(str(job.forehead_video_path))

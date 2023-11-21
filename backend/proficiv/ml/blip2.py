@@ -40,16 +40,27 @@ class Blip2FeatureExtractor:
             device=device,
         )
         _log.info("Loading BLIP-2 feature extractor done.")
+        assert model is not None
+        assert vis_processors is not None
         self.feature_extractor: FeatureExtractor = model
-        self.vis_processors: dict[Literal["eval"], _FnVisionProcessor] = vis_processors
+        self.prerprocess_image: _FnVisionProcessor = vis_processors["eval"]
         self.device = device
+
+    def extract_image_feature_from_preproecessed_img_batch(
+        self, img_tensor: torch.Tensor
+    ) -> torch.Tensor:
+        batch_size = img_tensor.size(0)
+        f = self.feature_extractor.extract_features(
+            {"image": img_tensor.to(self.device)}, mode="image"
+        )
+        embeds = f.image_embeds_proj[:, 0, :]
+        assert embeds.shape == (batch_size, 256)
+        return embeds
 
     def extract_image_feature(
         self,
         img: Image,
     ) -> np.ndarray:
-        img_tensor = self.vis_processors["eval"](img).unsqueeze(0).to(self.device)
-        f = self.feature_extractor.extract_features({"image": img_tensor}, mode="image")
-        embeds = f.image_embeds_proj[0, 0]
-        assert embeds.shape == (256,)
-        return np.array(embeds.cpu())
+        img_tensor = self.prerprocess_image(img).unsqueeze_(0)
+        embeds = self.extract_image_feature_from_preproecessed_img_batch(img_tensor)
+        return embeds.cpu().numpy()

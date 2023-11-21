@@ -36,6 +36,7 @@ class Config(BaseSettings):
     rtmp_port: int
 
     pretrained_mstcn_path: Path
+    blip2_batch_size: int = 512
 
     # ffmpeg での RTMPストリーム保存をせずに，既存の適当な動画ファイルを保存する
     mock_recording: bool = False

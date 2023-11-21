@@ -86,7 +86,7 @@ class RecordEvalJob(BaseModel):
 
 class RecordEvalProgress(BaseModel):
     record_id: RecordID
-    progress_percentage: int
+    percentage: int
 
     @staticmethod
     def _redis_key(record_id: RecordID) -> str:

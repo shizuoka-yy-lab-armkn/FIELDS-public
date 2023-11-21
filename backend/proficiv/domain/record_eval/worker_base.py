@@ -45,7 +45,7 @@ class RecordEvalWorkerBase(metaclass=abc.ABCMeta):
         )
         await prisma.recordsegment.create_many(data=res.segs)
 
-        res.progress.progress_percentage = 100
+        res.progress.percentage = 100
         res.progress.save(self.redis)
 
         sleep(1)
