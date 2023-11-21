@@ -21,7 +21,10 @@ class AuthUser(BaseModel):
 
 def extract_auth_user_or_none(req: Request, cfg: Config) -> AuthUser | None:
     a = req.headers.get("Authorization")
-    if a is None or not a.startswith("Bearer "):
+    if a is None:
+        return None
+    if not a.startswith("Bearer "):
+        _log.info("Authorization value does not start with 'Bearer '")
         return None
 
     token = a.removeprefix("Bearer ")
