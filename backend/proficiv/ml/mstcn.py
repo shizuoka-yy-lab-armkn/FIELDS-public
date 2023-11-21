@@ -66,7 +66,7 @@ class MsTcn(nn.Module):
             input_x = torch.tensor(input, dtype=torch.float)
             input_x.unsqueeze_(0)
             input_x = input_x.to(device)
-            output = self.model(input_x, torch.ones(input_x.size(), device=device))
+            output = self(input_x, torch.ones(input_x.size(), device=device))
             _log.info(f"{type(output)=}, {output.size()=}")
             _, pred = torch.max(output[-1].data, 1)
             pred.squeeze_()
