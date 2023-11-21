@@ -39,7 +39,7 @@ class Config(BaseSettings):
 
     # ffmpeg での RTMPストリーム保存をせずに，既存の適当な動画ファイルを保存する
     mock_recording: bool = False
-    mock_record_video_path: Path = Path("static/dummy.mp4")
+    mock_record_video_path: Path = Path("static/public/dummy.mp4")
 
     # 収録評価のWorkerでモック版を使うか
     mock_record_eval_worker: bool = False
