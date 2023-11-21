@@ -1,16 +1,21 @@
 import fire
 
 from proficiv.config import get_config
-from proficiv.domain.record_eval.mock_worker import RecordEvalMockWorker
-from proficiv.domain.record_eval.worker import IRecordEvalWorker, RecordEvalWorker
+from proficiv.domain.record_eval.worker_base import RecordEvalWorkerBase
 
 
 def main() -> None:
-    worker: IRecordEvalWorker
     cfg = get_config()
+
+    worker: RecordEvalWorkerBase
+
     if cfg.mock_record_eval_worker:
+        from proficiv.domain.record_eval.worker_mock import RecordEvalMockWorker
+
         worker = RecordEvalMockWorker(cfg)
     else:
+        from proficiv.domain.record_eval.worker_impl import RecordEvalWorker
+
         worker = RecordEvalWorker(cfg)
 
     worker.loop()

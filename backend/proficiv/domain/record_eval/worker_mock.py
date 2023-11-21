@@ -8,10 +8,10 @@ from prisma import Prisma, types
 from proficiv import kvs
 from proficiv.config import Config
 
-from .worker import IRecordEvalWorker, RecordEvalResult
+from .worker_base import RecordEvalResult, RecordEvalWorkerBase
 
 
-class RecordEvalMockWorker(IRecordEvalWorker):
+class RecordEvalMockWorker(RecordEvalWorkerBase):
     def __init__(self, cfg: Config) -> None:
         super().__init__(cfg)
 
