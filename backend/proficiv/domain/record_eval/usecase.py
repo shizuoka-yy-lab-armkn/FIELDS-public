@@ -33,7 +33,7 @@ def extract_video_feature(
     skip_prefix_frames: int = 0,
 ) -> np.ndarray:
     """(256, SeqLen) の形状の ndarray を返す"""
-    _log.info(f"Start extracting video feature...")
+    _log.info("Start extracting video feature...")
     frame_wise_embeds: list[np.ndarray] = []
 
     video.set(cv2.CAP_PROP_POS_FRAMES, skip_prefix_frames)

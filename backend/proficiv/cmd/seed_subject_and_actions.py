@@ -25,7 +25,7 @@ async def _upsert_subject(db: Prisma) -> models.Subject:
     )
 
 
-async def _upsert_actions(db: Prisma, subject_id: str):
+async def _upsert_actions(db: Prisma, subject_id: str) -> None:
     master_durs_csv = PYPROJECT_ROOT / "db_seed" / "action" / "master_durs.csv"
     name_tsv = PYPROJECT_ROOT / "db_seed" / "action" / "names.tsv"
 
@@ -96,26 +96,26 @@ async def _print_actions_briefly(db: Prisma, subject_id: str) -> list[models.Act
     return actions
 
 
-async def main():
+async def main() -> None:
     async with Prisma() as db:
         print(f"{SUBJCT_SLUG=}")
         print(f"{SUBJECT_NAME=}")
 
-        print(f"Currently stored subjects:")
+        print("Currently stored subjects:")
         pprint(await db.subject.find_many())
 
         subj = await _upsert_subject(db)
 
-        print(f"Upserted subject:")
+        print("Upserted subject:")
         all_subjects = await db.subject.find_many()
         pprint(all_subjects)
 
-        print(f"Currently stored actions related to the subject:")
+        print("Currently stored actions related to the subject:")
         await _print_actions_briefly(db, subj.id)
 
         await _upsert_actions(db, subj.id)
 
-        print(f"Upserted actions:")
+        print("Upserted actions:")
         await _print_actions_briefly(db, subj.id)
 
         print(f"{len(all_subjects)=}")

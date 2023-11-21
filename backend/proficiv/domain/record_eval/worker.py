@@ -88,7 +88,7 @@ class IRecordEvalWorker(metaclass=abc.ABCMeta):
             _log.info(f"Got a job: {job=}")
             try:
                 self.process(job)
-            except Exception as e:
+            except Exception as e:  # noqa: BLE001 Do not catch blind exception
                 _log.error(e)
 
 
@@ -149,7 +149,7 @@ class RecordEvalWorker(IRecordEvalWorker):
         aseq2aid = {a.seq: ActionID(a.id) for a in master_actions}
 
         # 行動分節
-        _log.info(f"Start mstcn prediction")
+        _log.info("Start mstcn prediction")
         preds = self.mstcn.predict(video_embed, self.device)
         segs: list[types.RecordSegmentCreateWithoutRelationsInput] = [
             {

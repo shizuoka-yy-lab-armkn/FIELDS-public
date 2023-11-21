@@ -7,7 +7,7 @@ import numpy as np
 
 def detect_triple_clap_timepoint_in_sec(
     wav_path: str | Path, threshold: float = 0.5, load_duration: float | None = None
-):
+) -> float:
     """動画開始から拍手3回までの時間 [sec] を求める"""
     a, sr = librosa.load(wav_path, sr=44100, duration=load_duration)
     assert isinstance(a, np.ndarray)
@@ -41,13 +41,13 @@ def detect_triple_clap_timepoint_in_sec(
                 l = 0
 
         ## ここ変えたほうがいいかも（次に手を叩くまでの時間）
-        if k < z2 and flag == True:
+        if k < z2 and flag:
             k += 1
         else:
             flag = False
             k = 0
 
-        if aai < threshold and flag == False:
+        if aai < threshold and not flag:
             m += 1
             if m > sr:
                 flag = False
