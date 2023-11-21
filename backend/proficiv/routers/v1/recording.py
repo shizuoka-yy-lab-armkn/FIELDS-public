@@ -117,7 +117,7 @@ async def finish_recording(
     if rec is None:
         raise HTTPException(HTTP_400_BAD_REQUEST, detail="Not recording")
 
-    _log.info(f"{rec=}")
+    _log.info(f"Fetched a running recording: {rec=}")
 
     if user.user_id != rec.user_id:
         raise HTTPException(HTTP_401_UNAUTHORIZED, detail="Not recording owner")
@@ -145,7 +145,7 @@ async def finish_recording(
         }
     )
 
-    task = kvs.RecordEvalJob(
+    job = kvs.RecordEvalJob(
         record_id=RecordID(record.id),
         subject_id=rec.subject_id,
         user_id=rec.user_id,
@@ -155,6 +155,7 @@ async def finish_recording(
         eval_start_at=now,
         forehead_video_path=rec.forehead_video_path,
     )
-    task.enqueue(redis)
+    _log.info(f"{job=}")
+    job.enqueue(redis)
 
     return FinishRecordingResp(record_id=RecordID(record.id))
