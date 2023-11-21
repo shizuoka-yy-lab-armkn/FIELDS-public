@@ -20,7 +20,9 @@ async def get_subject_list() -> list[SubjectBrief]:
 async def get_subject(subject_id: SubjectID) -> Subject:
     subj = await prisma_client.subject.find_unique(
         where={"id": subject_id},
-        include={"actions": True},
+        include={
+            "actions": {"order_by": {"seq": "asc"}},
+        },
     )
 
     if subj is None:
