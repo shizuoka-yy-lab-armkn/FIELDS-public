@@ -1,7 +1,11 @@
+from typing import TYPE_CHECKING
+
 import fire
 
 from proficiv.config import get_config
-from proficiv.domain.record_eval.worker_base import RecordEvalWorkerBase
+
+if TYPE_CHECKING:
+    from proficiv.domain.record_eval.worker_base import RecordEvalWorkerBase
 
 
 def main() -> None:

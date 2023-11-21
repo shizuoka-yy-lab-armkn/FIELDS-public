@@ -70,13 +70,13 @@ class RecordEvalJob(BaseModel):
     def enqueue(self, redis: Redis) -> None:
         key = self._redis_key()
         value = self.model_dump_json()
-        _log.info(f"Enqueueing a job")
+        _log.info("Enqueueing a job")
         redis.lpush(key, value)
 
     @classmethod
     def dequeue_blocking(cls, redis: Redis) -> "RecordEvalJob":
         res = redis.brpop([cls._redis_key()])
-        _log.info(f"Popped a job")
+        _log.info("Popped a job")
 
         assert isinstance(res, tuple)
         _, serialized = res
