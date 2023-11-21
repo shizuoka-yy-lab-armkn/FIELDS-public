@@ -1,13 +1,16 @@
+import abc
 import asyncio
 from time import sleep
 
 import cv2
 import numpy as np
 import torch
+from pydantic import BaseModel
+from typing_extensions import override
 
 from prisma import Prisma, types
 from proficiv import kvs
-from proficiv.config import get_config
+from proficiv.config import Config
 from proficiv.domain.records.usecase import (
     resolve_forehead_camera_blip2_npy_path,
     resolve_forehead_camera_prelude_wav_path,
@@ -30,23 +33,76 @@ ACTIONS = [0] + list(range(5, 39 + 1))
 assert len(ACTIONS) == 36
 
 
-class RecordEvalWorker:
-    def __init__(self) -> None:
-        self.cfg = get_config()
+class RecordEvalResult(BaseModel):
+    segs: list[types.RecordSegmentCreateWithoutRelationsInput]
+    forehead_camera_fps: float
+    forehead_camera_total_frames: int
+    forehead_camera_prelude_frames: int
+    progress: kvs.RecordEvalProgress
+
+
+class IRecordEvalWorker(metaclass=abc.ABCMeta):
+    def __init__(self, cfg: Config) -> None:
+        self.cfg = cfg
         self.redis = kvs.get_redis_client(
             host=self.cfg.redis_host, port=self.cfg.redis_port, db=self.cfg.redis_db
         )
+
+    @abc.abstractmethod
+    async def eval(self, job: kvs.RecordEvalJob, prisma: Prisma) -> RecordEvalResult:
+        ...
+
+    async def __eval_and_save(self, job: kvs.RecordEvalJob, prisma: Prisma) -> None:
+        res = await self.eval(job, prisma)
+        _log.info(f"Predicted segs: {len(res.segs)=}")
+
+        await prisma.record.update(
+            data={
+                "forehead_camera_fps": res.forehead_camera_fps,
+                "forehead_camera_total_frames": res.forehead_camera_total_frames,
+                "forehead_camera_prelude_frames": res.forehead_camera_prelude_frames,
+            },
+            where={"id": job.record_id},
+        )
+        await prisma.recordsegment.create_many(data=res.segs)
+
+        res.progress.progress_percentage = 100
+        res.progress.save(self.redis)
+
+        sleep(1)
+        _log.info("Deleting progress from kvs")
+        res.progress.delete(self.redis)
+
+    async def process_async(self, job: kvs.RecordEvalJob) -> None:
+        async with Prisma() as db:
+            await self.__eval_and_save(job, db)
+
+    def process(self, job: kvs.RecordEvalJob) -> None:
+        asyncio.run(self.process_async(job))
+
+    def loop(self) -> None:
+        _log.info("Start job subscribing loop")
+        while True:
+            _log.info("Waiting job...")
+            job = kvs.RecordEvalJob.dequeue_blocking(self.redis)
+            _log.info(f"Got a job: {job=}")
+            try:
+                self.process(job)
+            except Exception as e:
+                _log.error(e)
+
+
+class RecordEvalWorker(IRecordEvalWorker):
+    def __init__(self, cfg: Config) -> None:
+        super().__init__(cfg)
         self.device = torch.device("cuda" if torch.cuda.is_available() else "cpu")
         self.blip2 = Blip2FeatureExtractor(self.device)
         self.mstcn = MsTcn.from_file(
             self.cfg.pretrained_mstcn_path, features_dim=256, num_classes=len(ACTIONS)
         )
 
-    async def consume_async(self, job: kvs.RecordEvalJob) -> None:
-        async with Prisma() as db:
-            await self._comsume_async(job, db)
-
-    async def _comsume_async(self, job: kvs.RecordEvalJob, prisma: Prisma) -> None:
+    @override
+    async def eval(self, job: kvs.RecordEvalJob, prisma: Prisma) -> RecordEvalResult:
         progress = kvs.RecordEvalProgress(
             record_id=job.record_id, progress_percentage=0
         )
@@ -79,6 +135,7 @@ class RecordEvalWorker:
         )
         video.release()
         del video
+
         np.save(blip2_npy_path, video_embed)
         progress.progress_percentage = (
             _PROGRESS_WEIGHT_DETECTING_CLAP_TIME
@@ -87,7 +144,7 @@ class RecordEvalWorker:
         progress.save(self.redis)
 
         master_actions = await prisma.action.find_many(
-            where={"subject_id": job.subject_id}
+            where={"subject_id": job.subject_id}, order={"seq": "asc"}
         )
         aseq2aid = {a.seq: ActionID(a.id) for a in master_actions}
 
@@ -102,37 +159,13 @@ class RecordEvalWorker:
                 "end_frame": prelude_frames + seg.begin + seg.len,
             }
             for seg in runlength(preds)
-            if seg.val != 0  # 添字0の予測結果は無視 (action_seq = 0 となるが，これはダミー工程)
+            if seg.val != 0  # 添字0は action_seq = 0 となるが，これはダミー工程
         ]
-        _log.info(f"Predicted segs: {len(segs)=}")
 
-        # RDBMS へ保存
-        await prisma.record.update(
-            data={
-                "forehead_camera_fps": fps,
-                "forehead_camera_total_frames": total_frames,
-                "forehead_camera_prelude_frames": prelude_frames,
-            },
-            where={"id": job.record_id},
+        return RecordEvalResult(
+            segs=segs,
+            forehead_camera_fps=fps,
+            forehead_camera_total_frames=total_frames,
+            forehead_camera_prelude_frames=prelude_frames,
+            progress=progress,
         )
-        await prisma.recordsegment.create_many(data=segs)
-
-        progress.progress_percentage = 100
-        progress.save(self.redis)
-
-        sleep(1)
-        _log.info("Deleting progress from kvs")
-        progress.delete(self.redis)
-
-    def consume(self, job: kvs.RecordEvalJob) -> None:
-        asyncio.run(self.consume_async(job))
-
-    def loop(self) -> None:
-        while True:
-            _log.info("Waiting job...")
-            job = kvs.RecordEvalJob.dequeue_blocking(self.redis)
-            _log.info(f"Got a job: {job=}")
-            try:
-                self.consume(job)
-            except Exception as e:
-                _log.error(e)
