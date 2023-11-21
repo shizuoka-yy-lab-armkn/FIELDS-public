@@ -41,8 +41,8 @@ class Config(BaseSettings):
     mock_recording: bool = False
     mock_record_video_path: Path = Path("static/dummy.mp4")
 
-    # 機械学習モデルの行動分節を実行せずに，適当な分節を実施する．
-    mock_action_segmentation: bool = False
+    # 収録評価のWorkerでモック版を使うか
+    mock_record_eval_worker: bool = False
 
     redis_host: str
     redis_port: int
