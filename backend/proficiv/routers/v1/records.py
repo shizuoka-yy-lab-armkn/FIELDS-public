@@ -15,11 +15,14 @@ from proficiv.domain.records.schema import (
 )
 from proficiv.domain.records.usecase import compare_action_seq_by_lcs
 from proficiv.entity import RecordID
+from proficiv.utils.logging import get_colored_logger
 
 router = APIRouter(
     prefix="/records",
     tags=["records"],
 )
+
+_log = get_colored_logger(__name__)
 
 
 @router.get("")
@@ -51,9 +54,12 @@ async def get_record_evaluation(
     if len(recog_segs) == 0:
         progress = kvs.RecordEvalProgress.get_or_none(record_id, redis)
         if progress is None:
-            raise HTTPException(404)
+            _log.warn("Cannot find RecordEvalProgress in Redis")
         return RecordEvaluation(
-            segs=[], job_progress_percentage=progress.progress_percentage
+            segs=[],
+            job_progress_percentage=progress.progress_percentage
+            if progress is not None
+            else 0,
         )
 
     record = await prisma_client.record.find_unique({"id": record_id})
