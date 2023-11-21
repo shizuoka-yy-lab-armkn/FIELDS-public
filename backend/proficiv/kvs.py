@@ -75,8 +75,8 @@ class RecordEvalJob(BaseModel):
 
     @classmethod
     def dequeue_blocking(cls, redis: Redis) -> "RecordEvalJob":
-        _log.info(f"Popping a job")
         res = redis.brpop([cls._redis_key()])
+        _log.info(f"Popped a job")
 
         assert isinstance(res, tuple)
         _, serialized = res
