@@ -7,6 +7,7 @@ from prisma import models
 from proficiv.base.schema import CamelizedPydanticModel
 from proficiv.config import Config
 from proficiv.entity import RecordID, SubjectID
+from proficiv.utils.string import prepend_slash_if_not_exists
 
 
 class Record(CamelizedPydanticModel):
@@ -20,13 +21,15 @@ class Record(CamelizedPydanticModel):
 
     @staticmethod
     def from_db_entity(r: models.Record, cfg: Config) -> "Record":
+        forehead_video_path = prepend_slash_if_not_exists(
+            r.forehead_camera_public_video_path
+        )
+
         return Record(
             record_id=RecordID(r.id),
             subject_id=SubjectID(r.subject_id),
             forehead_video_fps=r.forehead_camera_fps,
-            forehead_video_url=HttpUrl(
-                cfg.static_base_url + r.forehead_camera_public_video_path
-            ),
+            forehead_video_url=HttpUrl(cfg.static_base_url + forehead_video_path),
             started_at=r.recording_started_at,
             finished_at=r.recording_finished_at,
             seq=r.seq,
