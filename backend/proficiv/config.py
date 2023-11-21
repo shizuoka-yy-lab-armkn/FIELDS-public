@@ -45,6 +45,9 @@ class Config(BaseSettings):
     # 収録評価のWorkerでモック版を使うか
     mock_record_eval_worker: bool = False
 
+    mock_video_feature_extraction: bool = False
+    mock_video_feature_npy_path: Path = Path("static/private/dummy_video_feature.npy")
+
     redis_host: str
     redis_port: int
     redis_db: int = 0

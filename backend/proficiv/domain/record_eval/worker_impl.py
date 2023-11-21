@@ -72,21 +72,24 @@ class RecordEvalWorker(RecordEvalWorkerBase):
         )
         _log.info(f"{blip2_npy_path=}")
 
-        _log.info("-------------------------------------")
+        if self.cfg.mock_video_feature_extraction:
+            video_embedding = np.load(self.cfg.mock_video_feature_npy_path)
+        else:
+            _log.info("-------------------------------------")
 
-        def blip2_batch_done_callback(processed_frame_count: int) -> None:
-            progress.percentage = _PROGRESS_WEIGHT_DETECTING_CLAP_TIME + (
-                processed_frame_count * _PROGRESS_WEIGHT_VIDEO_FEATURE_EXTRACTION
-            ) // (total_frames - prelude_frames)
-            progress.save(self.redis)
+            def blip2_batch_done_callback(processed_frame_count: int) -> None:
+                progress.percentage = _PROGRESS_WEIGHT_DETECTING_CLAP_TIME + (
+                    processed_frame_count * _PROGRESS_WEIGHT_VIDEO_FEATURE_EXTRACTION
+                ) // (total_frames - prelude_frames)
+                progress.save(self.redis)
 
-        video_embedding = usecase.extract_video_feature(
-            self.blip2,
-            video,
-            batch_size=self.cfg.blip2_batch_size,
-            skip_prefix_frames=prelude_frames,
-            batch_done_callback=blip2_batch_done_callback,
-        )
+            video_embedding = usecase.extract_video_feature(
+                self.blip2,
+                video,
+                batch_size=self.cfg.blip2_batch_size,
+                skip_prefix_frames=prelude_frames,
+                batch_done_callback=blip2_batch_done_callback,
+            )
         video.release()
         del video
 
