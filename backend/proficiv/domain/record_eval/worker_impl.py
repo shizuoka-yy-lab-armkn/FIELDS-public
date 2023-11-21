@@ -6,7 +6,10 @@ from typing_extensions import override
 from prisma import Prisma, types
 from proficiv import kvs
 from proficiv.config import Config
-from proficiv.domain.record_eval.worker_base import RecordEvalWorkerBase, RecordEvalResult
+from proficiv.domain.record_eval.worker_base import (
+    RecordEvalResult,
+    RecordEvalWorkerBase,
+)
 from proficiv.domain.records.usecase import (
     resolve_forehead_camera_blip2_npy_path,
     resolve_forehead_camera_prelude_wav_path,

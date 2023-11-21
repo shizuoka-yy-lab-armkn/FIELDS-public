@@ -9,7 +9,6 @@ from proficiv import kvs
 from proficiv.config import Config
 from proficiv.utils.logging import get_colored_logger
 
-
 _log = get_colored_logger(__name__)
 
 
@@ -75,5 +74,3 @@ class RecordEvalWorkerBase(metaclass=abc.ABCMeta):
                 self.process(job)
             except Exception as e:  # noqa: BLE001 Do not catch blind exception
                 _log.error(e)
-
-
