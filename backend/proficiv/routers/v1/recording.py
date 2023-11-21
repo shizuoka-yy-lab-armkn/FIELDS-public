@@ -53,6 +53,15 @@ async def start_recording(
     if kvs.Recording.exists(redis):
         raise HTTPException(HTTP_423_LOCKED, detail="Now recording")
 
+    subject_exists = (
+        await prisma_client.subject.count(where={"id": payload.subject_id}) > 0
+    )
+    if not subject_exists:
+        raise HTTPException(
+            HTTP_400_BAD_REQUEST,
+            detail=f"No such subject (subject_id={payload.subject_id})",
+        )
+
     record_count = await prisma_client.record.count(
         where={"user_id": user.user_id, "subject_id": payload.subject_id}
     )
