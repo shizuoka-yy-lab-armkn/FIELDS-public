@@ -17,6 +17,7 @@ _log = get_colored_logger(__name__)
 def detect_triple_clap_timepoint_in_sec(
     video_path: Path, tmp_wav_save_path: Path
 ) -> float:
+    tmp_wav_save_path.parent.mkdir(exist_ok=True, parents=True)
     # 効率のため動画の最初の40秒だけを動画に変換して書き出し
     cmd = ["ffmpeg", "-i", video_path, "-t", "40s", tmp_wav_save_path]
     _log.info(f"Running {cmd}")

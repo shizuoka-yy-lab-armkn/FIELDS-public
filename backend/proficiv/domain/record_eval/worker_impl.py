@@ -90,6 +90,7 @@ class RecordEvalWorker(RecordEvalWorkerBase):
         video.release()
         del video
 
+        blip2_npy_path.parent.mkdir(exist_ok=True, parents=True)
         np.save(blip2_npy_path, video_embedding)
 
         master_actions = await prisma.action.find_many(
