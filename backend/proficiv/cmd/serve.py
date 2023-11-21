@@ -14,10 +14,10 @@ def serve(
 ) -> None:
     """HTTP サーバを起動する"""
     cfg = get_config()
-    if cfg.mock_recording and not cfg.mock_record_video_path.is_file():
+    if cfg.mock_recording and not cfg.mock_record_video_path.exists():
         print(f"File not found: {cfg.mock_record_video_path=}")
         exit(1)
-    if not cfg.mock_record_eval_worker and cfg.pretrained_mstcn_path.is_file():
+    if not cfg.mock_record_eval_worker and not cfg.pretrained_mstcn_path.exists():
         print(f"File not found: {cfg.pretrained_mstcn_path=}")
         exit(1)
 
