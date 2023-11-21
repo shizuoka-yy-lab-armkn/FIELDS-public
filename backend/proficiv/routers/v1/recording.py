@@ -1,4 +1,5 @@
 import os
+import shutil
 import subprocess
 
 from fastapi import APIRouter, BackgroundTasks, HTTPException
@@ -77,9 +78,10 @@ async def start_recording(
 
     # 動画ストリームを private data storage へ保存
     if cfg.mock_recording:
-        os.symlink(
-            src=cfg.mock_record_video_path.absolute(), dst=forehead_video_save_path
-        )
+        # abspath で symlink すると，nginx のセキュリティ機構
+        # により document root 外扱いされて 404 になってしまう
+        # TODO relative path の計算が少し複雑だったので symlink ではなく copy で代用
+        shutil.copy(src=cfg.mock_record_video_path, dst=forehead_video_save_path)
         pid = -1
     else:
         proc = subprocess.Popen(
