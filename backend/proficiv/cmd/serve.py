@@ -17,6 +17,9 @@ def serve(
     if cfg.mock_recording and not cfg.mock_record_video_path.is_file():
         print(f"File not found: {cfg.mock_record_video_path=}")
         exit(1)
+    if not cfg.mock_record_eval_worker and cfg.pretrained_mstcn_path.is_file():
+        print(f"File not found: {cfg.pretrained_mstcn_path=}")
+        exit(1)
 
     uvicorn.run(
         "proficiv.server:api",
