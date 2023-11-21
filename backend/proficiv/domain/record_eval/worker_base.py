@@ -1,5 +1,6 @@
 import abc
 import asyncio
+import traceback
 from time import sleep
 
 from pydantic import BaseModel
@@ -74,3 +75,4 @@ class RecordEvalWorkerBase(metaclass=abc.ABCMeta):
                 self.process(job)
             except Exception as e:  # noqa: BLE001 Do not catch blind exception
                 _log.error(e)
+                traceback.format_exc()
