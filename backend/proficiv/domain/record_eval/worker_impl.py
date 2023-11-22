@@ -1,3 +1,4 @@
+import asyncio
 import gc
 
 import cv2
@@ -48,6 +49,9 @@ class RecordEvalWorker(RecordEvalWorkerBase):
     async def eval(self, job: kvs.RecordEvalJob, prisma: Prisma) -> RecordEvalResult:
         progress = kvs.RecordEvalProgress(record_id=job.record_id, percentage=0)
         progress.save(self.redis)
+
+        # kill されるのを待つ
+        await asyncio.sleep(17)
 
         # 拍手までの時間を求める
         wav_path = resolve_forehead_camera_prelude_wav_path(
