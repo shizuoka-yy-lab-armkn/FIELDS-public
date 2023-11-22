@@ -14,4 +14,5 @@ export type Record = {
   seq: number;
   startedAt: string;
   subjectId: string;
+  username: string;
 };

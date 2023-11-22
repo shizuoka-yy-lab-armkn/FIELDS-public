@@ -4,6 +4,7 @@ import { dummySubject } from "./subject";
 export const dummyRecord: schema.Record = {
   recordId: "r1",
   subjectId: dummySubject.id,
+  username: "test1",
   foreheadVideoUrl: "/_static/dummy.mp4",
   foreheadVideoFps: 29.97,
   startedAt: "2023-11-14T01:52:31.174Z",

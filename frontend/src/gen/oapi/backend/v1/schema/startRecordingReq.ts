@@ -6,5 +6,6 @@
  */
 
 export type StartRecordingReq = {
-  subjectId: string;
+  subjectSlug: string;
+  username: string;
 };
