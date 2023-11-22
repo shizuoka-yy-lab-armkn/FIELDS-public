@@ -79,6 +79,14 @@ async def get_record_evaluation(
 
     recog_action_seqs = [aid2a[s.action_id].seq for s in recog_segs]
     master_action_seqs = [m.seq for m in master_actions]
+
+    # NOTE: 工程19, 18 は模範の順番が逆転している
+    p18 = master_action_seqs.index(18)
+    p19 = master_action_seqs.index(19)
+    master_action_seqs[p18], master_action_seqs[p19] = (
+        master_action_seqs[p19],
+        master_action_seqs[p18],
+    )
     matchings = compare_action_seq_by_lcs(src=recog_action_seqs, tgt=master_action_seqs)
 
     eval_segs: list[Segment] = []
