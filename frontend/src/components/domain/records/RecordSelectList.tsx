@@ -41,7 +41,7 @@ export const RecordSelectList = ({ records, currentRecordId, ...props }: RecordS
           <Text
             as="span"
             display="inline-block"
-            w="24ch"
+            w="30ch"
             whiteSpace="nowrap"
             overflow="hidden"
             textOverflow="ellipsis"

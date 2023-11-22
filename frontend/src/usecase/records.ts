@@ -3,7 +3,7 @@ import { fmtDatetime } from "@/utils/datetime";
 
 export const fmtRecordName = (record: schema.Record): string => {
   const d = new Date(record.startedAt);
-  return `収録 ${record.seq} - ${fmtDatetime(d)}`;
+  return `[${record.username}] 収録 ${record.seq} - ${fmtDatetime(d)}`;
 };
 
 export const frameIndexToTimestamp = (frameIndex: number, fps: number): string => {
