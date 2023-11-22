@@ -1,3 +1,5 @@
+import gc
+
 import cv2
 import numpy as np
 import torch
@@ -92,6 +94,7 @@ class RecordEvalWorker(RecordEvalWorkerBase):
             )
         video.release()
         del video
+        gc.collect()
 
         blip2_npy_path.parent.mkdir(exist_ok=True, parents=True)
         np.save(blip2_npy_path, video_embedding)

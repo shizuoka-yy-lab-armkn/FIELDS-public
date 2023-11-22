@@ -1,5 +1,6 @@
 import abc
 import asyncio
+import gc
 import traceback
 from time import sleep
 
@@ -64,6 +65,7 @@ class RecordEvalWorkerBase(metaclass=abc.ABCMeta):
         _log.info("Start job subscribing loop")
         while True:
             _log.info("\n\nWaiting job...")
+            gc.collect()
 
             try:
                 job = kvs.RecordEvalJob.dequeue_blocking(self.redis)
