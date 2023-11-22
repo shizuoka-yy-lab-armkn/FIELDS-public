@@ -4,7 +4,7 @@ from fastapi import APIRouter, HTTPException
 
 from proficiv import kvs
 from proficiv.db import prisma_client
-from proficiv.depes import ConfigDep, RedisDep, UserDep
+from proficiv.depes import ConfigDep, RedisDep
 from proficiv.domain.records.schema import (
     MissingSegment,
     Record,
@@ -26,20 +26,27 @@ _log = get_colored_logger(__name__)
 
 
 @router.get("")
-async def get_record_list(user: UserDep, cfg: ConfigDep) -> list[Record]:
+async def get_record_list(cfg: ConfigDep) -> list[Record]:
     records = await prisma_client.record.find_many(
-        where={"user_id": user.user_id}, order={"id": "desc"}
+        order={"id": "desc"},
+        include={"user": True},
     )
     res = [Record.from_db_entity(r, cfg) for r in records]
     return res
 
 
 @router.get("/{record_id}")
-async def get_record(record_id: RecordID, user: UserDep, cfg: ConfigDep) -> Record:
-    record = await prisma_client.record.find_unique({"id": record_id})
-
-    if record is None or record.user_id != user.user_id:
+async def get_record(record_id: RecordID, cfg: ConfigDep) -> Record:
+    record = await prisma_client.record.find_unique(
+        {"id": record_id}, include={"user": True}
+    )
+    if record is None:
         raise HTTPException(404)
+
+    assert record.user is not None
+
+    # if record is None or record.user_id != record.user.id:
+    #     raise HTTPException(404)
 
     return Record.from_db_entity(record, cfg)
 

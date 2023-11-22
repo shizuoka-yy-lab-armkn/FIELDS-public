@@ -13,6 +13,7 @@ from proficiv.utils.string import prepend_slash_if_not_exists
 class Record(CamelizedPydanticModel):
     record_id: RecordID
     subject_id: SubjectID
+    username: str
     forehead_video_fps: float
     forehead_video_url: HttpUrl
     started_at: datetime
@@ -24,10 +25,12 @@ class Record(CamelizedPydanticModel):
         forehead_video_path = prepend_slash_if_not_exists(
             r.forehead_camera_public_video_path
         )
+        assert r.user is not None
 
         return Record(
             record_id=RecordID(r.id),
             subject_id=SubjectID(r.subject_id),
+            username=r.user.username,
             forehead_video_fps=r.forehead_camera_fps,
             forehead_video_url=HttpUrl(cfg.static_base_url + forehead_video_path),
             started_at=r.recording_started_at,
