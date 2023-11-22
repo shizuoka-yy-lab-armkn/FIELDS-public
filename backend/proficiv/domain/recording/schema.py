@@ -1,4 +1,5 @@
 from datetime import datetime
+from pathlib import Path
 from typing import Literal
 
 from pydantic import Field, RootModel
@@ -30,3 +31,9 @@ class StartRecordingReq(CamelizedPydanticModel):
 
 class FinishRecordingResp(CamelizedPydanticModel):
     record_id: RecordID
+
+
+class PostRecordingFromLocalVideoReq(CamelizedPydanticModel):
+    subject_slug: SubjectID
+    username: str
+    local_video_abs_path: Path

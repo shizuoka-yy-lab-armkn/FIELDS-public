@@ -10,6 +10,7 @@ from proficiv.depes import ConfigDep, RedisDep
 from proficiv.domain.recording.schema import (
     FinishRecordingResp,
     NowRecording,
+    PostRecordingFromLocalVideoReq,
     RecordingAvailability,
     RecordingAvailable,
     StartRecordingReq,
@@ -152,6 +153,77 @@ async def finish_recording(
         recording_start_at=rec.start_at,
         eval_start_at=now,
         forehead_video_path=rec.forehead_video_path,
+    )
+    _log.info(f"{job=}")
+    job.enqueue(redis)
+
+    return FinishRecordingResp(record_id=RecordID(record.id))
+
+
+@router.post("/local_video")
+async def post_record(
+    payload: PostRecordingFromLocalVideoReq,
+    cfg: ConfigDep,
+    redis: RedisDep,
+) -> FinishRecordingResp:
+    subj = await prisma_client.subject.find_unique({"slug": payload.subject_slug})
+    if subj is None:
+        raise HTTPException(400, "Subject not found")
+
+    user = await prisma_client.user.find_unique({"username": payload.username})
+    if user is None:
+        raise HTTPException(400, "User not found")
+
+    if not payload.local_video_abs_path.is_absolute():
+        raise HTTPException(400, "Local video path is not absolute")
+
+    if not payload.local_video_abs_path.exists():
+        raise HTTPException(400, "Local video not found")
+
+    now = jst_now()
+
+    record_count = await prisma_client.record.count(
+        where={"user_id": user.id, "subject_id": subj.id}
+    )
+    seq = record_count + 1
+
+    forehead_video_save_path = resolve_forehead_camera_video_path(
+        cfg, user.username, seq, now
+    )
+    _log.info(f"{forehead_video_save_path=}")
+    forehead_video_save_path.parent.mkdir(exist_ok=True, parents=True)
+
+    _log.info(
+        f"Copying:\n  {payload.local_video_abs_path}\n  -> {forehead_video_save_path}"
+    )
+    shutil.copy(src=payload.local_video_abs_path, dst=forehead_video_save_path)
+
+    forehead_video_rel_path = str(
+        forehead_video_save_path.relative_to(cfg.public_static_dir)
+    )
+
+    record = await prisma_client.record.create(
+        data={
+            "subject_id": subj.id,
+            "user_id": user.id,
+            "recording_started_at": now,
+            "recording_finished_at": now,
+            "seq": seq,
+            "forehead_camera_fps": 29.97,
+            "forehead_camera_orig_video_path": forehead_video_rel_path,
+            "forehead_camera_public_video_path": forehead_video_rel_path,
+        }
+    )
+
+    job = kvs.RecordEvalJob(
+        record_id=RecordID(record.id),
+        subject_id=SubjectID(subj.id),
+        user_id=UserID(user.id),
+        username=payload.username,
+        record_seq=seq,
+        recording_start_at=now,
+        eval_start_at=now,
+        forehead_video_path=forehead_video_save_path,
     )
     _log.info(f"{job=}")
     job.enqueue(redis)
