@@ -2,15 +2,11 @@ import shutil
 import subprocess
 
 from fastapi import APIRouter, BackgroundTasks, HTTPException
-from starlette.status import (
-    HTTP_400_BAD_REQUEST,
-    HTTP_401_UNAUTHORIZED,
-    HTTP_423_LOCKED,
-)
+from starlette.status import HTTP_400_BAD_REQUEST, HTTP_423_LOCKED
 
 from proficiv import kvs
 from proficiv.db import prisma_client
-from proficiv.depes import ConfigDep, RedisDep, UserDep
+from proficiv.depes import ConfigDep, RedisDep
 from proficiv.domain.recording.schema import (
     FinishRecordingResp,
     NowRecording,
@@ -20,7 +16,7 @@ from proficiv.domain.recording.schema import (
 )
 from proficiv.domain.recording.usecase import kill_ffmpeg_process_later
 from proficiv.domain.records.usecase import resolve_forehead_camera_video_path
-from proficiv.entity import RecordID
+from proficiv.entity import RecordID, SubjectID, UserID
 from proficiv.utils.datetime import jst_now
 from proficiv.utils.logging import get_colored_logger
 
@@ -46,24 +42,26 @@ async def get_recording_availability(redis: RedisDep) -> RecordingAvailability:
 @router.post("/start")
 async def start_recording(
     payload: StartRecordingReq,
-    user: UserDep,
     cfg: ConfigDep,
     redis: RedisDep,
 ) -> None:
     if kvs.Recording.exists(redis):
         raise HTTPException(HTTP_423_LOCKED, detail="Now recording")
 
-    subject_exists = (
-        await prisma_client.subject.count(where={"id": payload.subject_id}) > 0
+    subject = await prisma_client.subject.find_unique(
+        where={"slug": payload.subject_slug}
     )
-    if not subject_exists:
+    if subject is None:
         raise HTTPException(
             HTTP_400_BAD_REQUEST,
-            detail=f"No such subject (subject_id={payload.subject_id})",
+            f"No such subject (subject_slug={payload.subject_slug})",
         )
+    user = await prisma_client.user.find_unique({"username": payload.username})
+    if user is None:
+        raise HTTPException(HTTP_400_BAD_REQUEST, "User not found")
 
     record_count = await prisma_client.record.count(
-        where={"user_id": user.user_id, "subject_id": payload.subject_id}
+        where={"user_id": user.id, "subject_id": subject.id}
     )
     seq = record_count + 1
 
@@ -94,8 +92,8 @@ async def start_recording(
         pid = proc.pid
 
     rec = kvs.Recording(
-        subject_id=payload.subject_id,
-        user_id=user.user_id,
+        subject_id=SubjectID(subject.id),
+        user_id=UserID(user.id),
         username=user.username,
         seq=seq,
         start_at=now,
@@ -109,7 +107,6 @@ async def start_recording(
 
 @router.post("/finish")
 async def finish_recording(
-    user: UserDep,
     cfg: ConfigDep,
     redis: RedisDep,
     background_tasks: BackgroundTasks,
@@ -120,8 +117,8 @@ async def finish_recording(
 
     _log.info(f"Fetched a running recording: {rec=}")
 
-    if user.user_id != rec.user_id:
-        raise HTTPException(HTTP_401_UNAUTHORIZED, detail="Not recording owner")
+    # if user.user_id != rec.user_id:
+    #     raise HTTPException(HTTP_401_UNAUTHORIZED, detail="Not recording owner")
 
     background_tasks.add_task(kill_ffmpeg_process_later, rec.forehead_video_ffmpeg_pid)
 

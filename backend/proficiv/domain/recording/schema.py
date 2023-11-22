@@ -24,7 +24,8 @@ class RecordingAvailability(RootModel):
 
 
 class StartRecordingReq(CamelizedPydanticModel):
-    subject_id: SubjectID
+    subject_slug: SubjectID
+    username: str
 
 
 class FinishRecordingResp(CamelizedPydanticModel):
