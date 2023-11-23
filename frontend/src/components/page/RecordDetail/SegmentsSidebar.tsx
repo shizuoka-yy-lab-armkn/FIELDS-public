@@ -71,7 +71,7 @@ export const SegmentsSidebar = ({
       >
         {segs.map((seg, segIdx) => {
           const tooLong = seg.type !== "missing"
-            && actionMetaDict[seg.actionSeq]!.masterDurMean * fps * 2 < seg.end - seg.begin;
+            && actionMetaDict[seg.actionSeq]!.masterDurMean * fps * 1.5 < seg.end - seg.begin;
 
           const highlightProps: BoxProps = {
             boxShadow: "0 0 6px 2px inset darkturquoise",

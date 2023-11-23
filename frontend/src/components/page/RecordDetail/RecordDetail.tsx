@@ -169,7 +169,7 @@ const SegmentDurInfo = ({ seg, fps, actionMetaDict }: {
   const dur = (seg.end - seg.begin) / fps;
   const masterDurMean = actionMetaDict[seg.actionSeq]!.masterDurMean;
   const diffSign = dur > masterDurMean ? "+" : "";
-  const tooLong = masterDurMean * 2 < dur;
+  const tooLong = masterDurMean * 1.5 < dur;
   const short = dur < masterDurMean * 1.3;
   const color: Color = tooLong ? "red.500" : short ? "green.500" : "teal.800";
 
