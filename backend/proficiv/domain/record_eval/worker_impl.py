@@ -51,7 +51,7 @@ class RecordEvalWorker(RecordEvalWorkerBase):
         progress.save(self.redis)
 
         # kill されるのを待つ
-        await asyncio.sleep(17)
+        #await asyncio.sleep(17)
 
         # 拍手までの時間を求める
         wav_path = resolve_forehead_camera_prelude_wav_path(
