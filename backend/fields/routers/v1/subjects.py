@@ -13,7 +13,7 @@ router = APIRouter(
 @router.get("")
 async def get_subject_list() -> list[SubjectBrief]:
     subjs = await prisma_client.subject.find_many()
-    return [SubjectBrief(id=SubjectID(s.id), name=s.name) for s in subjs]
+    return [SubjectBrief(id=SubjectID(s.id), slug=s.slug, name=s.name) for s in subjs]
 
 
 @router.get("/{subject_id}")

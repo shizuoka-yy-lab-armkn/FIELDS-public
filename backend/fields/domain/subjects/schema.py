@@ -24,4 +24,5 @@ class Subject(CamelizedPydanticModel):
 
 class SubjectBrief(CamelizedPydanticModel):
     id: SubjectID
+    slug: str
     name: str

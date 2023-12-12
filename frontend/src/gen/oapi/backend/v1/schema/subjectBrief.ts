@@ -8,4 +8,5 @@
 export type SubjectBrief = {
   id: string;
   name: string;
+  slug: string;
 };
