@@ -64,26 +64,32 @@ exclude = [
   "**/node_modules",
   "**/__pycache__",
   "**/.*",
-  "tmp",
   "data",
-  "fake_db",
+  "db_seed",
+  "migrations",
+  "models",
   "static",
+  "tmp",
 ]
 [tool.isort]
 profile = "black"
 extend_skip = [
-  "tmp",
   "data",
-  "fake_db",
+  "db_seed",
+  "migrations",
+  "models",
   "static",
+  "tmp",
 ]
 
 [tool.ruff]
 extend-exclude = [
-  "tmp",
   "data",
-  "fake_db",
+  "db_seed",
+  "migrations",
+  "models",
   "static",
+  "tmp",
 ]
 [tool.ruff.lint]
 # see: https://docs.astral.sh/ruff/rules/
@@ -110,4 +116,3 @@ ignore = [
 ]
 [tool.ruff.lint.per-file-ignores]
 "**/cmd/*.py" = ["T201", "T203"]  # allow print(), pprint()
-
