@@ -8,3 +8,12 @@ export const useGetSubject = (subjectId: string | undefined) => {
   });
   return { subject, isLoading, isError };
 };
+
+export const useGetSubjectList = () => {
+  const { data: subjects, isLoading, isError } = client.useGetSubjectList({
+    query: {
+      staleTime: Infinity,
+    },
+  });
+  return { subjects, isLoading, isError };
+};

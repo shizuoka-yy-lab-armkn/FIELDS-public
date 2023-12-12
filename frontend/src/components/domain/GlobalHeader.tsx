@@ -49,10 +49,9 @@ export const GlobalHeader = ({
         color={FG_COLOR}
       >
         <Flex as="ul" listStyleType="none">
-          <NavItemLink href="/" px="1.25rem">REVS</NavItemLink>
+          <NavItemLink href="/" px="1.25rem">FIELDS</NavItemLink>
           <NavItemLink href="/recording">収録を始める</NavItemLink>
           <NavItemLink href="/records">収録履歴</NavItemLink>
-          <NavItemLink href="/manual">マニュアル書</NavItemLink>
         </Flex>
         {records != null && (
           <>
