@@ -3,7 +3,8 @@ from pathlib import Path
 import numpy as np
 import torch
 import torch.nn as nn
-import torch.nn.functional as F
+import torch.nn.functional as F  # noqa: N812 Lowercase `functional` imported as non-lowercase `F`
+from torch import Tensor
 
 from proficiv.utils.logging import get_colored_logger
 
@@ -23,7 +24,7 @@ class MsTcn(nn.Module):
         num_f_maps: int,
         input_feat_dim: int,
         num_classes: int,
-    ):
+    ) -> None:
         super().__init__()
         self.input_feat_dim = input_feat_dim
 
@@ -35,7 +36,7 @@ class MsTcn(nn.Module):
             for _ in range(num_stages - 1)
         )
 
-    def forward(self, x, mask):
+    def forward(self, x: Tensor, mask: Tensor) -> Tensor:
         out = self.stage1(x, mask)
         outputs = out.unsqueeze(0)
         for s in self.stages:
@@ -76,7 +77,9 @@ class MsTcn(nn.Module):
 
 
 class _SingleStageModel(nn.Module):
-    def __init__(self, num_layers, num_f_maps, dim, num_classes):
+    def __init__(
+        self, num_layers: int, num_f_maps: int, dim: int, num_classes: int
+    ) -> None:
         super().__init__()
         self.conv_1x1 = nn.Conv1d(dim, num_f_maps, 1)
         self.layers = nn.ModuleList(
@@ -85,7 +88,7 @@ class _SingleStageModel(nn.Module):
         )
         self.conv_out = nn.Conv1d(num_f_maps, num_classes, 1)
 
-    def forward(self, x, mask):
+    def forward(self, x: Tensor, mask: Tensor) -> Tensor:
         out = self.conv_1x1(x)
         for layer in self.layers:
             out = layer(out, mask)
@@ -94,7 +97,7 @@ class _SingleStageModel(nn.Module):
 
 
 class _DilatedResidualLayer(nn.Module):
-    def __init__(self, dilation, in_channels, out_channels):
+    def __init__(self, dilation: int, in_channels: int, out_channels: int) -> None:
         super().__init__()
         self.conv_dilated = nn.Conv1d(
             in_channels, out_channels, 3, padding=dilation, dilation=dilation
@@ -102,7 +105,7 @@ class _DilatedResidualLayer(nn.Module):
         self.conv_1x1 = nn.Conv1d(out_channels, out_channels, 1)
         self.dropout = nn.Dropout()
 
-    def forward(self, x, mask):
+    def forward(self, x: Tensor, mask: Tensor) -> Tensor:
         out = F.relu(self.conv_dilated(x))
         out = self.conv_1x1(out)
         out = self.dropout(out)
