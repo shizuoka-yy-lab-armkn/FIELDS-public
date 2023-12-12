@@ -10,4 +10,5 @@ export type Subject = {
   actions: ActionMeta[];
   id: string;
   name: string;
+  slug: string;
 };

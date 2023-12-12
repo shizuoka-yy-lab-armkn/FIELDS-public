@@ -44,4 +44,6 @@ async def get_subject(subject_id: SubjectID) -> Subject:
         for a in subj.actions
     ]
 
-    return Subject(id=SubjectID(subj.id), name=subj.name, actions=actions)
+    return Subject(
+        id=SubjectID(subj.id), slug=subj.slug, name=subj.name, actions=actions
+    )

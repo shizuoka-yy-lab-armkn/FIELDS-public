@@ -18,6 +18,7 @@ class ActionMeta(CamelizedPydanticModel):
 
 class Subject(CamelizedPydanticModel):
     id: SubjectID
+    slug: str
     name: str
     actions: list[ActionMeta]
 
