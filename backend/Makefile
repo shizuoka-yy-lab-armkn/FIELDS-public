@@ -1,7 +1,7 @@
 .DEFAULT_GOAL := help
 SHELL         := /usr/bin/env bash -Eeuo pipefail
 OS            := $(shell uname -s)
-PROFICIV_CMD  := poetry run python3 -m proficiv.cmd
+FIELDS_CMD  := poetry run python3 -m fields.cmd
 
 .PHONY:	$(.DEFAULT_GOAL) $(MAKECMDGOALS)
 
@@ -16,16 +16,16 @@ install:
 	poetry install
 
 run/server/dev:
-	$(PROFICIV_CMD).serve --reload
+	$(FIELDS_CMD).serve --reload
 
 run/worker:
-	$(PROFICIV_CMD).worker
+	$(FIELDS_CMD).worker
 
 gen/oapi/stdout:
-	$(PROFICIV_CMD).gen_oapi --indent=2
+	$(FIELDS_CMD).gen_oapi --indent=2
 
 gen/oapi:
-	$(PROFICIV_CMD).gen_oapi --only-version v1 --out ../docs/backend.v1.openapi.json
+	$(FIELDS_CMD).gen_oapi --only-version v1 --out ../docs/backend.v1.openapi.json
 
 chk: chk/lint chk/type chk/fmt
 

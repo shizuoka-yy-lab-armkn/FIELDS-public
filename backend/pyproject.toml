@@ -1,7 +1,7 @@
 [tool.poetry]
-name = "proficiv"
+name = "fields"
 version = "0.1.0"
-description = "Assembly operation proficiency visualizer for YMC"
+description = "FIELDS (Feedback Integrated Expert Level Display System)"
 authors = ["arumakan1727 <33191176+arumakan1727@users.noreply.github.com>"]
 license = "MIT"
 readme = "README.md"
