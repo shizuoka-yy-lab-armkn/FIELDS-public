@@ -5,7 +5,8 @@
  * OpenAPI spec version: 0.1.0
  */
 
-export type PingResponse = {
-  message: string;
-  serverTime: string;
+export type PostRecordingFromLocalVideoReq = {
+  localVideoAbsPath: string;
+  subjectSlug: string;
+  username: string;
 };
