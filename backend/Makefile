@@ -1,56 +1,47 @@
-SHELL := /usr/bin/env bash -Eeuo pipefail
-OS := $(shell uname -s)
+.DEFAULT_GOAL := help
+SHELL         := /usr/bin/env bash -Eeuo pipefail
+OS            := $(shell uname -s)
+PROFICIV_CMD  := poetry run python3 -m proficiv.cmd
 
-PROFICIV_CMD := poetry run python3 -m proficiv.cmd
+.PHONY:	$(.DEFAULT_GOAL) $(MAKECMDGOALS)
 
+help:
+	bat Makefile || cat Makefile
 
-.PHONY:	dev/setup
 dev/setup:
 	ln -sf poetry.$(OS).lock poetry.lock
 
-
-.PHONY:	install
 install:
 	poetry lock --no-update
 	poetry install
 
-
-.PHONY:	serve/dev
-serve/dev:
+run/server/dev:
 	$(PROFICIV_CMD).serve --reload
 
-
-.PHONY: run/worker
 run/worker:
 	$(PROFICIV_CMD).worker
 
-
-.PHONY:	gen/oapi/stdout
 gen/oapi/stdout:
 	$(PROFICIV_CMD).gen_oapi --indent=2
 
-
-.PHONY:	gen/oapi
 gen/oapi:
 	$(PROFICIV_CMD).gen_oapi --only-version v1 --out ../docs/backend.v1.openapi.json
 
+chk: chk/lint chk/type chk/fmt
 
-.PHONY:	fmt
+chk/lint:
+	poetry run ruff check .
+
+chk/type:
+	poetry run pyright .
+
+chk/fmt:
+	poetry run black --check .
+	poetry run isort --check-only .
+
 fmt:
 	poetry run black .
 	poetry run isort .
 
-
-.PHONY:	lint
-lint:
-	poetry run ruff check .
-
-
-.PHONY:	lint/fix
-lint/fix:
+fix/lint:
 	poetry run ruff check --fix-only --show-fixes .
-
-
-.PHONY: typecheck
-typecheck:
-	poetry run pyright .
