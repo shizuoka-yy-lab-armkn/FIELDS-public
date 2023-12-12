@@ -2,6 +2,7 @@ import functools
 import os
 from pathlib import Path
 
+from pydantic import Field
 from pydantic_settings import BaseSettings, SettingsConfigDict
 
 
@@ -37,6 +38,8 @@ class Config(BaseSettings):
 
     pretrained_mstcn_path: Path
     blip2_batch_size: int = 512
+
+    ffmpeg_recording_kill_delay_sec: float = 8
 
     # ffmpeg での RTMPストリーム保存をせずに，既存の適当な動画ファイルを保存する
     mock_recording: bool = False

@@ -1,3 +1,4 @@
+import asyncio
 import gc
 
 import cv2
@@ -46,8 +47,8 @@ class RecordEvalWorker(RecordEvalWorkerBase):
         progress = kvs.RecordEvalProgress(record_id=job.record_id, percentage=0)
         progress.save(self.redis)
 
-        # kill されるのを待つ
-        # await asyncio.sleep(17)
+        # 収録用の ffmpeg が kill されるのを待つ
+        await asyncio.sleep(self.cfg.ffmpeg_recording_kill_delay_sec + 1.5)
 
         # 拍手までの時間を求める
         wav_path = resolve_forehead_camera_prelude_wav_path(

@@ -121,7 +121,11 @@ async def finish_recording(
     # if user.user_id != rec.user_id:
     #     raise HTTPException(HTTP_401_UNAUTHORIZED, detail="Not recording owner")
 
-    background_tasks.add_task(kill_ffmpeg_process_later, rec.forehead_video_ffmpeg_pid)
+    background_tasks.add_task(
+        kill_ffmpeg_process_later,
+        rec.forehead_video_ffmpeg_pid,
+        cfg.ffmpeg_recording_kill_delay_sec,
+    )
 
     rec.delete(redis)
 
