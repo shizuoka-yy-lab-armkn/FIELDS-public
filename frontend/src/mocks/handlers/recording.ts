@@ -1,6 +1,6 @@
 import { FinishRecordingResp, RecordingAvailability, StartRecordingReq } from "@/gen/oapi/backend/v1/schema";
 import { http, HttpHandler } from "msw";
-import { dummyRecord } from "../data/record";
+import { dummyRecordInProgress } from "../data/record";
 
 let currentRecoringInfo: { username: string; startAt: Date } | null = null;
 
@@ -37,7 +37,7 @@ export const mockRecordingHandlers: HttpHandler[] = [
     currentRecoringInfo = null;
     return Response.json(
       {
-        recordId: dummyRecord.recordId,
+        recordId: dummyRecordInProgress.recordId,
       } satisfies FinishRecordingResp,
     );
   }),

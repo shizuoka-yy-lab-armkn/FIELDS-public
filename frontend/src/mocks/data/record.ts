@@ -1,7 +1,7 @@
 import * as schema from "@/gen/oapi/backend/v1/schema";
 import { dummySubject } from "./subject";
 
-export const dummyRecord: schema.Record = {
+const dummyRecord: schema.Record = {
   recordId: "r1",
   subjectId: dummySubject.id,
   username: "test1",
@@ -11,6 +11,22 @@ export const dummyRecord: schema.Record = {
   finishedAt: "2023-11-14T01:55:47.0Z",
   seq: 1,
 };
+
+export const dummyRecords: readonly schema.Record[] = [
+  dummyRecord,
+  {
+    ...dummyRecord,
+    recordId: "r2",
+    seq: 2,
+  },
+  {
+    ...dummyRecord,
+    recordId: "r3",
+    seq: 3,
+  },
+];
+
+export const dummyRecordInProgress = dummyRecords.at(-1)!;
 
 export const dummyRecordEvaluation: schema.RecordEvaluation = {
   jobProgressPercentage: 100,
