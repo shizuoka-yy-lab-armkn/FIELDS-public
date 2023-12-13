@@ -57,7 +57,7 @@ class Config(BaseSettings):
 
     # to get a string like this run:
     # openssl rand -hex 32
-    jwt_secret_key: str = Field(min_length=32, max_length=32)
+    jwt_secret_key: str = Field(min_length=32, max_length=64)
     jwt_algo: str = "HS256"
     jwt_expire_minutes: int = 60
 
