@@ -97,7 +97,7 @@ export const RecordingStartPane = () => {
         px={12}
       >
         <Heading as="h1" fontSize="3xl" mb={4}>収録を開始する</Heading>
-        <Text>下記フォームで収録の設定をしてから「{CONFIRM_BTN_TEXT}」ボタンを押してください。</Text>
+        <Text>下記フォームで収録の設定をしてからボタンを押してください。</Text>
         <Box as="form" my={8}>
           <FormControl mb={6}>
             <FormLabel>作業</FormLabel>
