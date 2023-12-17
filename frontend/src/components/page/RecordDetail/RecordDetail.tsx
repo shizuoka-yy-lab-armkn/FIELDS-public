@@ -3,7 +3,7 @@ import { SegmentStatusBadge } from "@/components/domain/records/SegmentTypeBadge
 import * as schema from "@/gen/oapi/backend/v1/schema";
 import { ActionMetaDict } from "@/model/subjects";
 import { frameDiffToSecDuration, frameIndexToTimestamp } from "@/usecase/records";
-import { Box, BoxProps, Flex, Heading, Text, useCallbackRef } from "@chakra-ui/react";
+import { Box, BoxProps, Center, Flex, Heading, Progress, Text, useCallbackRef } from "@chakra-ui/react";
 import { forwardRef, useEffect, useImperativeHandle, useMemo, useRef, useState } from "react";
 import { SegmentsSidebar } from "./SegmentsSidebar";
 
@@ -37,24 +37,56 @@ export const RecordDetail = ({
     }
   };
 
+  const progress = evaluation.jobProgressPercentage;
+
   return (
     <Flex minH="full" h="1px">
-      <SegmentsSidebar
-        segs={evaluation.segs}
-        currentSegIndex={currentSegIndex}
-        actionMetaDict={actionMetaDict}
-        fps={record.foreheadVideoFps}
-        onSegmentClick={handleSegmentClick}
-      />
-      <RecordDetailMainPane
-        ref={mainPaneRef}
-        record={record}
-        subject={subject}
-        actionMetaDict={actionMetaDict}
-        segs={evaluation.segs}
-        currentSegIndex={currentSegIndex}
-        onSegIndexChange={setCurrentSegIndex}
-      />
+      {(evaluation.jobProgressPercentage < 100)
+        ? (
+          <Center flexDir="column" w="100%" py={20} px={20}>
+            <Heading as="h1" fontSize="5xl">工程認識中...</Heading>
+            <Progress
+              my={4}
+              w="full"
+              maxW="560px"
+              min={0}
+              max={100}
+              value={progress}
+              size="lg"
+              colorScheme="teal"
+              hasStripe
+              isAnimated
+              sx={{
+                "& > div:first-child": {
+                  transitionProperty: "width",
+                  transitionDuration: "2500ms",
+                },
+              }}
+            />
+            <Text fontSize="2xl">{progress} %</Text>
+            <Text fontSize="2xl" mt={12}>解体作業やカメラの発熱・充電チェック等をしてお待ちください</Text>
+          </Center>
+        )
+        : (
+          <>
+            <SegmentsSidebar
+              segs={evaluation.segs}
+              currentSegIndex={currentSegIndex}
+              actionMetaDict={actionMetaDict}
+              fps={record.foreheadVideoFps}
+              onSegmentClick={handleSegmentClick}
+            />
+            <RecordDetailMainPane
+              ref={mainPaneRef}
+              record={record}
+              subject={subject}
+              actionMetaDict={actionMetaDict}
+              segs={evaluation.segs}
+              currentSegIndex={currentSegIndex}
+              onSegIndexChange={setCurrentSegIndex}
+            />
+          </>
+        )}
     </Flex>
   );
 };
