@@ -2,7 +2,8 @@ import * as schema from "@/gen/oapi/backend/v1/schema";
 
 export const dummySubject: schema.Subject = {
   id: "s1",
-  name: "バイク外装取り付け",
+  name: "バイク外装取り付け v2023.06.001",
+  slug: "2023-06-001-bikeframe",
   actions: [
     {
       "seq": 5,
