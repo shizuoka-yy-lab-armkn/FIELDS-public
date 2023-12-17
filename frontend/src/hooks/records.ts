@@ -32,6 +32,10 @@ export const useGetEvaluation = (recordId: string | undefined) => {
   const { data: evaluation, isLoading, isError } = client.useGetRecordEvaluation(recordId ?? "", {
     query: {
       staleTime: Infinity,
+      refetchInterval: (query): number | false => {
+        const progress = query.state.data?.jobProgressPercentage ?? 0;
+        return progress < 100 && 1500;
+      },
     },
   });
   return { evaluation, isLoading, isError };
