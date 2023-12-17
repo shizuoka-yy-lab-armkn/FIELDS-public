@@ -177,6 +177,8 @@ const RecordDetailMainPane = forwardRef<RecordDetailMainPaneMethods, RecordDetai
         as="video"
         ref={videoRef}
         controls
+        autoPlay
+        muted // mutedが指定されていないとautoPlayは有効にならない
         w="full"
         maxW="70vw"
         mx="auto"
