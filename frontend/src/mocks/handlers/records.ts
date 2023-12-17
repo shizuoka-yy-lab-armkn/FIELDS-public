@@ -32,7 +32,7 @@ export const mockRecordsHandlers: HttpHandler[] = [
       evaluationProgress = 0;
 
       evaluationProgressLoopId = window.setInterval(() => {
-        evaluationProgress += 7 + Math.random() * 5;
+        evaluationProgress += 7 + Math.random() * 5 ^ 0;
         if (evaluationProgress >= 99) {
           evaluationProgress = 100;
           clearInterval(evaluationProgressLoopId);
@@ -50,7 +50,7 @@ export const mockRecordsHandlers: HttpHandler[] = [
     return Response.json(
       {
         jobProgressPercentage: p,
-        segs: [],
+        segs: p >= 100 ? dummyRecordEvaluation.segs : [],
       } satisfies RecordEvaluation,
     );
   }),
