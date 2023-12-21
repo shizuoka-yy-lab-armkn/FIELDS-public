@@ -13,7 +13,8 @@ export type RecordSelectListProps = {
 export const RecordSelectList = ({ records, currentRecordId, ...props }: RecordSelectListProps) => {
   const currentRecordIndex = useMemo(() => {
     if (currentRecordId == null) return null;
-    return records.findIndex((r) => r.recordId === currentRecordId);
+    const i = records.findIndex((r) => r.recordId === currentRecordId);
+    return i < 0 ? null : i;
   }, [records, currentRecordId]);
 
   const router = useRouter();

@@ -2,6 +2,7 @@ import {
   getGetRecordingAvailabilityQueryKey,
   useFinishRecording,
 } from "@/gen/oapi/backend/v1/client/recording/recording";
+import { getGetRecordListQueryKey } from "@/gen/oapi/backend/v1/client/records/records";
 import { useGetRecordingAvailability } from "@/hooks/recording";
 import { getPageTitle } from "@/usecase/pagemeta";
 import { Duration } from "@/utils/datetime";
@@ -61,6 +62,8 @@ export const RecordingNowPane = () => {
   const { mutate, isPending } = useFinishRecording({
     mutation: {
       onSuccess: ({ recordId }) => {
+        queryClient.invalidateQueries({ queryKey: getGetRecordListQueryKey() });
+
         setTimeout(() => {
           queryClient.invalidateQueries({ queryKey: getGetRecordingAvailabilityQueryKey() });
         }, 100);
