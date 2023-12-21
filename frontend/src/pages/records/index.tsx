@@ -8,8 +8,8 @@ export default function RecordListPage() {
   const { records } = useGetRecordList();
   return (
     <WithHeader>
-      <Container maxW="720px" minH="full">
-        <Heading as="h1" mt={8} mb={4} color="teal.900">収録履歴</Heading>
+      <Container maxW="720px" minH="100%" pt={8} pb={16} px={4}>
+        <Heading as="h1" my={4} color="teal.900">収録履歴</Heading>
         <Box
           as="ul"
           listStyleType="none"
