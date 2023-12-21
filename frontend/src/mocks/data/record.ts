@@ -12,19 +12,11 @@ const dummyRecord: schema.Record = {
   seq: 1,
 };
 
-export const dummyRecords: readonly schema.Record[] = [
-  dummyRecord,
-  {
-    ...dummyRecord,
-    recordId: "r2",
-    seq: 2,
-  },
-  {
-    ...dummyRecord,
-    recordId: "r3",
-    seq: 3,
-  },
-];
+export const dummyRecords: readonly schema.Record[] = new Array(20).fill(dummyRecord).map((r, i) => ({
+  ...r,
+  recordId: `r${i + 1}`,
+  seq: i + 1,
+}));
 
 export const dummyRecordInProgress = dummyRecords.at(-1)!;
 

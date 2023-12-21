@@ -1,4 +1,4 @@
-import { RecordEvaluation } from "@/gen/oapi/backend/v1/schema";
+import * as schema from "@/gen/oapi/backend/v1/schema";
 import { http, HttpHandler } from "msw";
 import { dummyRecordEvaluation, dummyRecordInProgress, dummyRecords } from "../data/record";
 
@@ -51,7 +51,7 @@ export const mockRecordsHandlers: HttpHandler[] = [
       {
         jobProgressPercentage: p,
         segs: p >= 100 ? dummyRecordEvaluation.segs : [],
-      } satisfies RecordEvaluation,
+      } satisfies schema.RecordEvaluation,
     );
   }),
 ];
