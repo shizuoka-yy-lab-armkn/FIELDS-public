@@ -57,7 +57,7 @@ export const RecordDetail = ({
               hasStripe
               isAnimated
               sx={{
-                "& > div:first-child": {
+                "& > div:first-of-type": {
                   transitionProperty: "width",
                   transitionDuration: "2500ms",
                 },
