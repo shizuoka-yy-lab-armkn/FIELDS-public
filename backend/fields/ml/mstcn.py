@@ -68,7 +68,10 @@ class MsTcn(nn.Module):
             input_x.unsqueeze_(0)
             input_x = input_x.to(device)
             output = self(input_x, torch.ones(input_x.size(), device=device))
+
+            # size() will be torch.Size([num_stage, batch_size, num_classes, seq_len])
             _log.info(f"{type(output)=}, {output.size()=}")
+
             _, pred = torch.max(output[-1].data, 1)
             pred.squeeze_()
             _log.info(f"{type(pred)=}, {pred.size()=}")
