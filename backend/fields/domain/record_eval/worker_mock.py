@@ -20,7 +20,7 @@ class RecordEvalMockWorker(RecordEvalWorkerBase):
         progress = kvs.RecordEvalProgress(record_id=job.record_id, percentage=0)
         while progress.percentage < 90:
             progress.save(self.redis)
-            sleep(0.2)
+            sleep(1)
             progress.percentage += 5
         progress.percentage = 90
         progress.save(self.redis)
