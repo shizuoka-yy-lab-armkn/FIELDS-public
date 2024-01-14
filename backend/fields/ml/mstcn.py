@@ -94,7 +94,7 @@ class MsTcn(nn.Module):
             _, preds = torch.max(output, dim=0)
             assert preds.size() == (seq_len,)
 
-            return preds.tolist(), output.cpu()
+            return preds.tolist(), F.softmax(output, dim=0).cpu()
 
 
 class _SingleStageModel(nn.Module):
