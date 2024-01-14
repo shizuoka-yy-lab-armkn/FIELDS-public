@@ -12,6 +12,7 @@ from fields.domain.record_eval.worker_base import RecordEvalResult, RecordEvalWo
 from fields.domain.records.usecase import (
     resolve_forehead_camera_blip2_npy_path,
     resolve_forehead_camera_prelude_wav_path,
+    resolve_tas_likelihood_npy_path,
 )
 from fields.entity import ActionID
 from fields.ml.blip2 import Blip2FeatureExtractor
@@ -108,6 +109,14 @@ class RecordEvalWorker(RecordEvalWorkerBase):
         # 行動分節
         _log.info("Start mstcn prediction")
         preds, likelihoods = self.mstcn.predict(video_embedding, self.device)
+
+        np.save(
+            resolve_tas_likelihood_npy_path(
+                self.cfg, job.username, job.record_seq, job.recording_start_at
+            ),
+            likelihoods,
+        )
+
         segs: list[types.RecordSegmentCreateWithoutRelationsInput] = [
             {
                 "action_id": aseq2aid[ACTIONS[seg.val]],
