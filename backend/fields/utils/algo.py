@@ -8,6 +8,10 @@ class RunlengthBlock(NamedTuple, Generic[_T]):
     begin: int
     len: int
 
+    @property
+    def end(self) -> int:
+        return self.begin + self.len
+
 
 def runlength(xs: Sequence[_T]) -> Generator[RunlengthBlock[_T], None, None]:
     if len(xs) == 0:

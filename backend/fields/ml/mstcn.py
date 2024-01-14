@@ -27,6 +27,7 @@ class MsTcn(nn.Module):
     ) -> None:
         super().__init__()
         self.input_feat_dim = input_feat_dim
+        self.num_classes = num_classes
 
         self.stage1 = _SingleStageModel(
             num_layers, num_f_maps, input_feat_dim, num_classes
@@ -56,7 +57,20 @@ class MsTcn(nn.Module):
         model.load_state_dict(torch.load(path))
         return model
 
-    def predict(self, input: np.ndarray, device: torch.device) -> list[int]:
+    def predict(
+        self, input: np.ndarray, device: torch.device
+    ) -> tuple[list[int], torch.Tensor]:
+        """
+        Returns pair of (preds, likelihoods)
+        input のフレーム数を T とすると、
+
+        preds: フレームごとのクラスインデックスの配列
+        - 配列の長さは T
+        - 配列の各要素は 0 以上 num_classes 未満
+
+        likelihoods: 尤度の torch.Tensor
+        - 形状は torch.Size([num_classes, T])
+        """
         _log.info(f"{type(input)=}, {input.shape=}")
         seq_len = len(input[0])
         assert input.shape == (self.input_feat_dim, seq_len)
@@ -71,12 +85,16 @@ class MsTcn(nn.Module):
 
             # size() will be torch.Size([num_stage, batch_size, num_classes, seq_len])
             _log.info(f"{type(output)=}, {output.size()=}")
+            assert isinstance(output, torch.Tensor)
 
-            _, pred = torch.max(output[-1].data, 1)
-            pred.squeeze_()
-            _log.info(f"{type(pred)=}, {pred.size()=}")
-            assert pred.size() == (seq_len,)
-            return pred.tolist()
+            # Size([num_classes, seq_len])
+            output = output[-1].squeeze_()
+            assert output.size() == (self.num_classes, seq_len)
+
+            _, preds = torch.max(output, dim=0)
+            assert preds.size() == (seq_len,)
+
+            return preds.tolist(), output.cpu()
 
 
 class _SingleStageModel(nn.Module):
