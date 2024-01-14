@@ -110,12 +110,11 @@ class RecordEvalWorker(RecordEvalWorkerBase):
         _log.info("Start mstcn prediction")
         preds, likelihoods = self.mstcn.predict(video_embedding, self.device)
 
-        np.save(
-            resolve_tas_likelihood_npy_path(
-                self.cfg, job.username, job.record_seq, job.recording_start_at
-            ),
-            likelihoods,
+        tas_likelihood_path = resolve_tas_likelihood_npy_path(
+            self.cfg, job.username, job.record_seq, job.recording_start_at
         )
+        tas_likelihood_path.parent.mkdir(exist_ok=True, parents=True)
+        np.save(tas_likelihood_path, likelihoods)
 
         segs: list[types.RecordSegmentCreateWithoutRelationsInput] = [
             {
