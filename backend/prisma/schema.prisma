@@ -85,4 +85,6 @@ model RecordSegment {
 
   begin_frame Int // 開始フレーム (0-indexed)
   end_frame   Int // 終了フレーム (0-indexed); 半開区間なのでこの点は含めない
+
+  tas_likelihood Float @default(0) // TAS (Temporal Action Segmentation) の尤度
 }
