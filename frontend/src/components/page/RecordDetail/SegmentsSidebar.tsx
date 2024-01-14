@@ -114,6 +114,9 @@ export const SegmentsSidebar = ({
                           {` (${frameDiffToSecDuration(seg.begin, seg.end, fps)} s)`}
                           {tooLong ? " Long" : ""}
                         </Text>
+                        <Box>
+                          尤度: {seg.likelihood.toFixed(2)}
+                        </Box>
                       </Text>
                     </>
                   )}
