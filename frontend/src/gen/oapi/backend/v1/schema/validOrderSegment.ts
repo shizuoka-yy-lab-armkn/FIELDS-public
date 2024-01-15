@@ -10,5 +10,6 @@ export type ValidOrderSegment = {
   actionSeq: number;
   begin: number;
   end: number;
+  likelihood: number;
   type: ValidOrderSegmentType;
 };

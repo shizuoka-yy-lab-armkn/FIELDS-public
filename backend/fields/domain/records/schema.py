@@ -44,6 +44,7 @@ class ValidOrderSegment(CamelizedPydanticModel):
     action_seq: int
     begin: int
     end: int
+    likelihood: float
 
 
 class WrongOrderSegment(CamelizedPydanticModel):
@@ -51,6 +52,7 @@ class WrongOrderSegment(CamelizedPydanticModel):
     action_seq: int
     begin: int
     end: int
+    likelihood: float
 
 
 class MissingSegment(CamelizedPydanticModel):

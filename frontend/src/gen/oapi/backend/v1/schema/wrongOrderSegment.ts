@@ -10,5 +10,6 @@ export type WrongOrderSegment = {
   actionSeq: number;
   begin: number;
   end: number;
+  likelihood: number;
   type: WrongOrderSegmentType;
 };

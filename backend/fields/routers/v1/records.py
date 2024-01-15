@@ -97,11 +97,17 @@ async def get_record_evaluation(
         recog = recog_segs[m.src_idx]
         if m.type == "matched":
             seg = ValidOrderSegment(
-                action_seq=m.action, begin=recog.begin_frame, end=recog.end_frame
+                action_seq=m.action,
+                begin=recog.begin_frame,
+                end=recog.end_frame,
+                likelihood=recog.tas_likelihood,
             )
         elif m.type == "wrong":
             seg = WrongOrderSegment(
-                action_seq=m.action, begin=recog.begin_frame, end=recog.end_frame
+                action_seq=m.action,
+                begin=recog.begin_frame,
+                end=recog.end_frame,
+                likelihood=recog.tas_likelihood,
             )
         elif m.type == "missing":
             seg = MissingSegment(action_seq=m.action)

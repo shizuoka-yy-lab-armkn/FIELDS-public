@@ -12,11 +12,12 @@ from fields.domain.record_eval.worker_base import RecordEvalResult, RecordEvalWo
 from fields.domain.records.usecase import (
     resolve_forehead_camera_blip2_npy_path,
     resolve_forehead_camera_prelude_wav_path,
+    resolve_tas_likelihood_npy_path,
 )
 from fields.entity import ActionID
 from fields.ml.blip2 import Blip2FeatureExtractor
 from fields.ml.mstcn import MsTcn
-from fields.utils.algo import runlength
+from fields.utils.algo import RunlengthBlock, runlength
 from fields.utils.logging import get_colored_logger
 from prisma import Prisma, types
 
@@ -107,13 +108,21 @@ class RecordEvalWorker(RecordEvalWorkerBase):
 
         # 行動分節
         _log.info("Start mstcn prediction")
-        preds = self.mstcn.predict(video_embedding, self.device)
+        preds, likelihoods = self.mstcn.predict(video_embedding, self.device)
+
+        tas_likelihood_path = resolve_tas_likelihood_npy_path(
+            self.cfg, job.username, job.record_seq, job.recording_start_at
+        )
+        tas_likelihood_path.parent.mkdir(exist_ok=True, parents=True)
+        np.save(tas_likelihood_path, likelihoods)
+
         segs: list[types.RecordSegmentCreateWithoutRelationsInput] = [
             {
                 "action_id": aseq2aid[ACTIONS[seg.val]],
                 "record_id": job.record_id,
                 "begin_frame": prelude_frames + seg.begin,
                 "end_frame": prelude_frames + seg.begin + seg.len,
+                "tas_likelihood": _calc_likelihood_mean(likelihoods, seg),
             }
             for seg in runlength(preds)
             if seg.val != 0  # 添字0は action_seq = 0 となるが，これはダミー工程
@@ -126,3 +135,15 @@ class RecordEvalWorker(RecordEvalWorkerBase):
             forehead_camera_prelude_frames=prelude_frames,
             progress=progress,
         )
+
+
+def _calc_likelihood_mean(likelihoods: torch.Tensor, seg: RunlengthBlock[int]) -> float:
+    # セグメントの境界の3フレームは除外する
+    class_idx = seg.val
+    begin = seg.begin + 3
+    end = seg.end - 3
+
+    if begin < end:
+        return float(torch.mean(likelihoods[class_idx, begin:end]))
+
+    return 0
