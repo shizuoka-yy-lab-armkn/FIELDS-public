@@ -12,9 +12,6 @@ export const dummySubject: schema.Subject = {
       "manualMarkdown": "",
       "masterDurMean": 2.2199999999999998,
       "masterDurStd": 0.2250925735484551,
-      "masterDurMin": 1.8333333333333333,
-      "masterDurMax": 2.6,
-      "masterDurMedian": 2.2333333333333334,
     },
     {
       "seq": 6,
@@ -23,9 +20,6 @@ export const dummySubject: schema.Subject = {
       "manualMarkdown": "",
       "masterDurMean": 5.570000000000001,
       "masterDurStd": 1.5303069973612615,
-      "masterDurMin": 4.233333333333333,
-      "masterDurMax": 9.3,
-      "masterDurMedian": 5.133333333333333,
     },
     {
       "seq": 7,
@@ -34,9 +28,6 @@ export const dummySubject: schema.Subject = {
       "manualMarkdown": "",
       "masterDurMean": 2.8466666666666667,
       "masterDurStd": 0.3392802839999859,
-      "masterDurMin": 2.5,
-      "masterDurMax": 3.3666666666666667,
-      "masterDurMedian": 2.6333333333333333,
     },
     {
       "seq": 8,
@@ -45,9 +36,6 @@ export const dummySubject: schema.Subject = {
       "manualMarkdown": "",
       "masterDurMean": 15.096666666666664,
       "masterDurStd": 2.2098796123849302,
-      "masterDurMin": 12.666666666666666,
-      "masterDurMax": 20.366666666666667,
-      "masterDurMedian": 14.566666666666666,
     },
     {
       "seq": 9,
@@ -56,9 +44,6 @@ export const dummySubject: schema.Subject = {
       "manualMarkdown": "",
       "masterDurMean": 5.023333333333333,
       "masterDurStd": 0.5328817532651713,
-      "masterDurMin": 4.266666666666667,
-      "masterDurMax": 5.766666666666667,
-      "masterDurMedian": 5.0,
     },
     {
       "seq": 10,
@@ -67,9 +52,6 @@ export const dummySubject: schema.Subject = {
       "manualMarkdown": "",
       "masterDurMean": 2.036666666666666,
       "masterDurStd": 0.34763752940649534,
-      "masterDurMin": 1.4666666666666666,
-      "masterDurMax": 2.6,
-      "masterDurMedian": 2.05,
     },
     {
       "seq": 11,
@@ -78,9 +60,6 @@ export const dummySubject: schema.Subject = {
       "manualMarkdown": "",
       "masterDurMean": 3.2266666666666666,
       "masterDurStd": 0.5546214369023297,
-      "masterDurMin": 2.2,
-      "masterDurMax": 4.066666666666666,
-      "masterDurMedian": 3.2333333333333334,
     },
     {
       "seq": 12,
@@ -89,9 +68,6 @@ export const dummySubject: schema.Subject = {
       "manualMarkdown": "",
       "masterDurMean": 7.413333333333334,
       "masterDurStd": 2.091322459504901,
-      "masterDurMin": 5.633333333333334,
-      "masterDurMax": 12.9,
-      "masterDurMedian": 6.983333333333333,
     },
     {
       "seq": 13,
@@ -100,9 +76,6 @@ export const dummySubject: schema.Subject = {
       "manualMarkdown": "",
       "masterDurMean": 4.140000000000001,
       "masterDurStd": 0.3767305747161039,
-      "masterDurMin": 3.3,
-      "masterDurMax": 4.6,
-      "masterDurMedian": 4.133333333333333,
     },
     {
       "seq": 14,
@@ -111,9 +84,6 @@ export const dummySubject: schema.Subject = {
       "manualMarkdown": "",
       "masterDurMean": 7.110000000000001,
       "masterDurStd": 1.2370863818058069,
-      "masterDurMin": 5.3,
-      "masterDurMax": 9.066666666666666,
-      "masterDurMedian": 6.966666666666667,
     },
     {
       "seq": 15,
@@ -122,9 +92,6 @@ export const dummySubject: schema.Subject = {
       "manualMarkdown": "",
       "masterDurMean": 4.316666666666667,
       "masterDurStd": 0.3450711145171007,
-      "masterDurMin": 3.7,
-      "masterDurMax": 4.966666666666667,
-      "masterDurMedian": 4.3,
     },
     {
       "seq": 16,
@@ -133,9 +100,6 @@ export const dummySubject: schema.Subject = {
       "manualMarkdown": "",
       "masterDurMean": 3.97,
       "masterDurStd": 0.6549809157525126,
-      "masterDurMin": 3.1333333333333333,
-      "masterDurMax": 5.266666666666667,
-      "masterDurMedian": 3.8166666666666664,
     },
     {
       "seq": 17,
@@ -144,9 +108,6 @@ export const dummySubject: schema.Subject = {
       "manualMarkdown": "",
       "masterDurMean": 6.139999999999999,
       "masterDurStd": 1.1811064074328832,
-      "masterDurMin": 5.0,
-      "masterDurMax": 8.666666666666666,
-      "masterDurMedian": 5.816666666666666,
     },
     {
       "seq": 18,
@@ -155,9 +116,6 @@ export const dummySubject: schema.Subject = {
       "manualMarkdown": "",
       "masterDurMean": 2.1399999999999997,
       "masterDurStd": 0.5113043113112113,
-      "masterDurMin": 1.4,
-      "masterDurMax": 2.9,
-      "masterDurMedian": 2.0666666666666664,
     },
     {
       "seq": 19,
@@ -166,9 +124,6 @@ export const dummySubject: schema.Subject = {
       "manualMarkdown": "",
       "masterDurMean": 2.6033333333333335,
       "masterDurStd": 1.061963008818464,
-      "masterDurMin": 0.0,
-      "masterDurMax": 4.066666666666666,
-      "masterDurMedian": 2.6833333333333336,
     },
     {
       "seq": 20,
@@ -177,9 +132,6 @@ export const dummySubject: schema.Subject = {
       "manualMarkdown": "",
       "masterDurMean": 5.636666666666667,
       "masterDurStd": 0.7895068002584406,
-      "masterDurMin": 4.7,
-      "masterDurMax": 7.4,
-      "masterDurMedian": 5.516666666666667,
     },
     {
       "seq": 21,
@@ -188,9 +140,6 @@ export const dummySubject: schema.Subject = {
       "manualMarkdown": "",
       "masterDurMean": 7.609999999999999,
       "masterDurStd": 1.698804953961737,
-      "masterDurMin": 5.333333333333333,
-      "masterDurMax": 10.833333333333334,
-      "masterDurMedian": 7.283333333333333,
     },
     {
       "seq": 22,
@@ -199,9 +148,6 @@ export const dummySubject: schema.Subject = {
       "manualMarkdown": "",
       "masterDurMean": 3.8466666666666667,
       "masterDurStd": 0.5491182606666171,
-      "masterDurMin": 3.0,
-      "masterDurMax": 4.866666666666666,
-      "masterDurMedian": 4.0,
     },
     {
       "seq": 23,
@@ -210,9 +156,6 @@ export const dummySubject: schema.Subject = {
       "manualMarkdown": "",
       "masterDurMean": 5.843333333333334,
       "masterDurStd": 0.6494156917881957,
-      "masterDurMin": 5.0,
-      "masterDurMax": 7.5,
-      "masterDurMedian": 5.816666666666666,
     },
     {
       "seq": 24,
@@ -221,9 +164,6 @@ export const dummySubject: schema.Subject = {
       "manualMarkdown": "",
       "masterDurMean": 4.486666666666666,
       "masterDurStd": 0.40861101669309285,
-      "masterDurMin": 4.0,
-      "masterDurMax": 5.166666666666667,
-      "masterDurMedian": 4.383333333333333,
     },
     {
       "seq": 25,
@@ -232,9 +172,6 @@ export const dummySubject: schema.Subject = {
       "manualMarkdown": "",
       "masterDurMean": 4.313333333333333,
       "masterDurStd": 0.8709580364372143,
-      "masterDurMin": 3.033333333333333,
-      "masterDurMax": 6.1,
-      "masterDurMedian": 4.233333333333333,
     },
     {
       "seq": 26,
@@ -243,9 +180,6 @@ export const dummySubject: schema.Subject = {
       "manualMarkdown": "",
       "masterDurMean": 4.836666666666666,
       "masterDurStd": 1.468807360319383,
-      "masterDurMin": 3.6333333333333333,
-      "masterDurMax": 8.766666666666666,
-      "masterDurMedian": 4.5,
     },
     {
       "seq": 27,
@@ -254,9 +188,6 @@ export const dummySubject: schema.Subject = {
       "manualMarkdown": "",
       "masterDurMean": 5.4799999999999995,
       "masterDurStd": 0.7151275462513016,
-      "masterDurMin": 4.333333333333333,
-      "masterDurMax": 7.0,
-      "masterDurMedian": 5.483333333333333,
     },
     {
       "seq": 28,
@@ -265,9 +196,6 @@ export const dummySubject: schema.Subject = {
       "manualMarkdown": "",
       "masterDurMean": 3.9666666666666663,
       "masterDurStd": 1.229071716357763,
-      "masterDurMin": 2.966666666666667,
-      "masterDurMax": 6.933333333333334,
-      "masterDurMedian": 3.5833333333333335,
     },
     {
       "seq": 29,
@@ -276,9 +204,6 @@ export const dummySubject: schema.Subject = {
       "manualMarkdown": "",
       "masterDurMean": 3.1799999999999997,
       "masterDurStd": 0.9272553419289654,
-      "masterDurMin": 2.033333333333333,
-      "masterDurMax": 4.633333333333334,
-      "masterDurMedian": 2.916666666666667,
     },
     {
       "seq": 30,
@@ -287,9 +212,6 @@ export const dummySubject: schema.Subject = {
       "manualMarkdown": "",
       "masterDurMean": 8.190000000000001,
       "masterDurStd": 1.0298088040211666,
-      "masterDurMin": 6.433333333333334,
-      "masterDurMax": 9.733333333333333,
-      "masterDurMedian": 8.033333333333333,
     },
     {
       "seq": 31,
@@ -298,9 +220,6 @@ export const dummySubject: schema.Subject = {
       "manualMarkdown": "",
       "masterDurMean": 6.789999999999999,
       "masterDurStd": 0.8909767147197728,
-      "masterDurMin": 5.333333333333333,
-      "masterDurMax": 8.133333333333333,
-      "masterDurMedian": 7.083333333333333,
     },
     {
       "seq": 32,
@@ -309,9 +228,6 @@ export const dummySubject: schema.Subject = {
       "manualMarkdown": "",
       "masterDurMean": 8.143333333333334,
       "masterDurStd": 1.1493476410555685,
-      "masterDurMin": 6.533333333333333,
-      "masterDurMax": 9.766666666666667,
-      "masterDurMedian": 8.25,
     },
     {
       "seq": 33,
@@ -320,9 +236,6 @@ export const dummySubject: schema.Subject = {
       "manualMarkdown": "",
       "masterDurMean": 3.1333333333333333,
       "masterDurStd": 1.6961102922442248,
-      "masterDurMin": 1.8,
-      "masterDurMax": 7.699999999999999,
-      "masterDurMedian": 2.6833333333333336,
     },
     {
       "seq": 34,
@@ -331,9 +244,6 @@ export const dummySubject: schema.Subject = {
       "manualMarkdown": "",
       "masterDurMean": 2.0433333333333334,
       "masterDurStd": 0.31113095174829924,
-      "masterDurMin": 1.6666666666666667,
-      "masterDurMax": 2.6,
-      "masterDurMedian": 1.95,
     },
     {
       "seq": 35,
@@ -342,9 +252,6 @@ export const dummySubject: schema.Subject = {
       "manualMarkdown": "",
       "masterDurMean": 1.5433333333333334,
       "masterDurStd": 0.16927587243211697,
-      "masterDurMin": 1.2,
-      "masterDurMax": 1.8,
-      "masterDurMedian": 1.5166666666666666,
     },
     {
       "seq": 36,
@@ -353,9 +260,6 @@ export const dummySubject: schema.Subject = {
       "manualMarkdown": "",
       "masterDurMean": 1.7566666666666666,
       "masterDurStd": 0.4037020047534757,
-      "masterDurMin": 1.3333333333333333,
-      "masterDurMax": 2.433333333333333,
-      "masterDurMedian": 1.6333333333333333,
     },
     {
       "seq": 37,
@@ -364,9 +268,6 @@ export const dummySubject: schema.Subject = {
       "manualMarkdown": "",
       "masterDurMean": 1.3166666666666667,
       "masterDurStd": 0.25300661192746,
-      "masterDurMin": 0.8,
-      "masterDurMax": 1.6,
-      "masterDurMedian": 1.3666666666666667,
     },
     {
       "seq": 38,
@@ -375,9 +276,6 @@ export const dummySubject: schema.Subject = {
       "manualMarkdown": "",
       "masterDurMean": 9.276666666666667,
       "masterDurStd": 0.6609103336579043,
-      "masterDurMin": 8.3,
-      "masterDurMax": 10.8,
-      "masterDurMedian": 9.133333333333333,
     },
     {
       "seq": 39,
@@ -386,9 +284,6 @@ export const dummySubject: schema.Subject = {
       "manualMarkdown": "",
       "masterDurMean": 0.82,
       "masterDurStd": 0.34217892944055806,
-      "masterDurMin": 0.0,
-      "masterDurMax": 1.2,
-      "masterDurMedian": 0.9,
     },
   ],
 };

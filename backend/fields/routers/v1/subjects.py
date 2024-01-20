@@ -37,9 +37,6 @@ async def get_subject(subject_id: SubjectID) -> Subject:
             manual_markdown="",
             master_dur_mean=a.master_dur_mean,
             master_dur_std=a.master_dur_std,
-            master_dur_min=a.master_dur_min,
-            master_dur_max=a.master_dur_max,
-            master_dur_median=a.master_dur_median,
         )
         for a in subj.actions
     ]
