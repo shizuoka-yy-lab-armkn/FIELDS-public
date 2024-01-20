@@ -41,9 +41,6 @@ model Action {
 
   master_dur_mean   Float
   master_dur_std    Float
-  master_dur_min    Float
-  master_dur_max    Float
-  master_dur_median Float
 
   created_at DateTime @default(now())
   updated_at DateTime @default(now()) @updatedAt
