@@ -33,21 +33,22 @@ model Subject {
 
 model Action {
   id         String  @id @default(cuid()) // 工程番号ではないので注意
-  seq        Int // 工程番号
+  ord_serial Int // 順序付けに使う連番。1スタートでなくても良いが、飛び飛びの値になってはならない。
+  display_no Int     @default(0) // 表示する工程番号。ソート順には関与しない。
   subject_id String
   subject    Subject @relation(fields: [subject_id], references: [id])
   short_name String
   long_name  String
 
-  master_dur_mean   Float
-  master_dur_std    Float
+  master_dur_mean Float
+  master_dur_std  Float
 
   created_at DateTime @default(now())
   updated_at DateTime @default(now()) @updatedAt
 
   record_segments RecordSegment[]
 
-  @@unique([subject_id, seq])
+  @@unique([subject_id, ord_serial])
 }
 
 model Record {
