@@ -1,4 +1,4 @@
-import { ActionId } from "@/components/domain/records/ActionId";
+import { ProcessDisplayNo } from "@/components/domain/records/ProcessDisplayNo";
 import { SegmentStatusBadge } from "@/components/domain/records/SegmentTypeBadge";
 import * as schema from "@/gen/oapi/backend/v1/schema";
 import { ActionMetaDict } from "@/model/subjects";
@@ -71,7 +71,7 @@ export const SegmentsSidebar = ({
       >
         {segs.map((seg, segIdx) => {
           const tooLong = seg.type !== "missing"
-            && actionMetaDict[seg.actionSeq]!.masterDurMean * fps * 1.5 < seg.end - seg.begin;
+            && actionMetaDict[seg.actionId]!.masterDurMean * fps * 1.5 < seg.end - seg.begin;
 
           const highlightProps: BoxProps = {
             boxShadow: "0 0 6px 2px inset darkturquoise",
@@ -94,13 +94,13 @@ export const SegmentsSidebar = ({
                 _hover={{ backdropFilter: "brightness(0.95)" }}
               >
                 <Box>
-                  <ActionId actionId={seg.actionSeq} mr={1} />
+                  <ProcessDisplayNo value={seg.displayNo} mr={1} />
                   <Text
                     as="span"
                     fontWeight="semibold"
                     className={segIdx === currentSegIndex ? utilStyle.opacityBlink : ""}
                   >
-                    {actionMetaDict[seg.actionSeq]!.shortName}
+                    {actionMetaDict[seg.actionId]!.shortName}
                   </Text>
                 </Box>
                 <Box ml={8}>

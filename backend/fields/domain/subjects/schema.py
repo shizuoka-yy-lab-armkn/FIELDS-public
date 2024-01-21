@@ -1,11 +1,13 @@
 from pydantic import Field
 
 from fields.base.schema import CamelizedPydanticModel
-from fields.entity import SubjectID
+from fields.entity import ActionID, SubjectID
 
 
 class ActionMeta(CamelizedPydanticModel):
-    seq: int
+    id: ActionID
+    ord_serial: int
+    display_no: int
     short_name: str
     long_name: str
     manual_markdown: str

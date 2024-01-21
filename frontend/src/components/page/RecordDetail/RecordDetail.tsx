@@ -1,4 +1,4 @@
-import { ActionId } from "@/components/domain/records/ActionId";
+import { ProcessDisplayNo } from "@/components/domain/records/ProcessDisplayNo";
 import { SegmentStatusBadge } from "@/components/domain/records/SegmentTypeBadge";
 import * as schema from "@/gen/oapi/backend/v1/schema";
 import { ActionMetaDict } from "@/model/subjects";
@@ -21,7 +21,7 @@ export const RecordDetail = ({
   evaluation,
 }: RecordDetailProps) => {
   const actionMetaDict = useMemo((): ActionMetaDict => {
-    return Object.fromEntries(subject.actions.map((a) => [a.seq, a]));
+    return Object.fromEntries(subject.actions.map((a) => [a.id, a]));
   }, [subject.actions]);
 
   const [currentSegIndex, setCurrentSegIndex] = useState<number | undefined>(undefined);
@@ -163,9 +163,9 @@ const RecordDetailMainPane = forwardRef<RecordDetailMainPaneMethods, RecordDetai
         <Box>
           <Heading as="h2" fontSize="lg">
             工程番号
-            <ActionId actionId={currentSeg?.actionSeq} ml={1} mr={3} />
+            <ProcessDisplayNo value={currentSeg?.displayNo} ml={1} mr={3} />
             <Text as="span" fontWeight="bold">
-              {currentSeg != null && actionMetaDict[currentSeg.actionSeq]!.longName}
+              {currentSeg != null && actionMetaDict[currentSeg.actionId]!.longName}
             </Text>
           </Heading>
           {currentSeg != null && currentSeg.type !== "valid" && <SegmentStatusBadge typ={currentSeg.type} mt={2} />}
@@ -201,7 +201,7 @@ const SegmentDurInfo = ({ seg, fps, actionMetaDict }: {
   }
 
   const dur = (seg.end - seg.begin) / fps;
-  const masterDurMean = actionMetaDict[seg.actionSeq]!.masterDurMean;
+  const masterDurMean = actionMetaDict[seg.actionId]!.masterDurMean;
   const diffSign = dur > masterDurMean ? "+" : "";
   const tooLong = masterDurMean * 1.5 < dur;
   const short = dur < masterDurMean * 1.3;

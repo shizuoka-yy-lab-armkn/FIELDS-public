@@ -6,12 +6,14 @@
  */
 
 export type ActionMeta = {
+  displayNo: number;
+  id: string;
   longName: string;
   manualMarkdown: string;
   /** 平均値 (sec) */
   masterDurMean: number;
   /** 標準偏差 (sec) */
   masterDurStd: number;
-  seq: number;
+  ordSerial: number;
   shortName: string;
 };

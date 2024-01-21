@@ -7,8 +7,9 @@
 import type { ValidOrderSegmentType } from './validOrderSegmentType';
 
 export type ValidOrderSegment = {
-  actionSeq: number;
+  actionId: string;
   begin: number;
+  displayNo: number;
   end: number;
   likelihood: number;
   type: ValidOrderSegmentType;

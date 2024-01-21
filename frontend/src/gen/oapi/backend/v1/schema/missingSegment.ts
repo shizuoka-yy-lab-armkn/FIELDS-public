@@ -7,6 +7,7 @@
 import type { MissingSegmentType } from './missingSegmentType';
 
 export type MissingSegment = {
-  actionSeq: number;
+  actionId: string;
+  displayNo: number;
   type: MissingSegmentType;
 };

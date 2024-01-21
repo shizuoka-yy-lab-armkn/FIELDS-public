@@ -37,23 +37,31 @@ async def _upsert_actions(db: Prisma, subject_id: str) -> None:
             csv.reader(f_durs_csv), csv.reader(f_names_tsv, delimiter="\t")
         ):
             aid1, count, mean, std, dur_min, p25, p50, p75, dur_max = durs_line
-            aid2, short_name, long_name = names_line
+            ord_serial, display_no, short_name, long_name = names_line
             del count, p25, p75
-            assert aid1 == aid2, f"Differ: {aid1=}, {aid2=}"
+            assert aid1 == display_no, f"Differ: {aid1=}, {display_no=}"
 
-            seq = int(aid1)
             mean, std, dur_min, median, dur_max = map(
                 float, (mean, std, dur_min, p50, dur_max)
             )
             short_name = short_name.strip()
             long_name = long_name.strip()
 
+            ord_serial = int(ord_serial)
+            display_no = int(display_no)
+
             await db.action.upsert(
-                where={"subject_id_seq": {"subject_id": subject_id, "seq": seq}},
+                where={
+                    "subject_id_ord_serial": {
+                        "subject_id": subject_id,
+                        "ord_serial": ord_serial,
+                    }
+                },
                 data={
                     "create": {
                         "subject_id": subject_id,
-                        "seq": seq,
+                        "ord_serial": ord_serial,
+                        "display_no": display_no,
                         "short_name": short_name,
                         "long_name": long_name,
                         "master_dur_std": std,
@@ -64,6 +72,7 @@ async def _upsert_actions(db: Prisma, subject_id: str) -> None:
                         "long_name": long_name,
                         "master_dur_std": std,
                         "master_dur_mean": median,
+                        "display_no": display_no,
                     },
                 },
             )
@@ -73,13 +82,14 @@ async def _upsert_actions(db: Prisma, subject_id: str) -> None:
 
 async def _print_actions_briefly(db: Prisma, subject_id: str) -> list[models.Action]:
     actions = await db.action.find_many(
-        where={"subject_id": subject_id}, order={"seq": "asc"}
+        where={"subject_id": subject_id}, order={"ord_serial": "asc"}
     )
     pprint(
         [
             {
                 "id": a.id,
-                "seq": a.seq,
+                "ord_serial": a.ord_serial,
+                "display_no": a.display_no,
                 "short_name": a.short_name,
                 "long_name": a.long_name,
             }

@@ -14,7 +14,6 @@ from fields.domain.records.usecase import (
     resolve_forehead_camera_prelude_wav_path,
     resolve_tas_likelihood_npy_path,
 )
-from fields.entity import ActionID
 from fields.ml.blip2 import Blip2FeatureExtractor
 from fields.ml.mstcn import MsTcn
 from fields.utils.algo import RunlengthBlock, runlength
@@ -22,9 +21,6 @@ from fields.utils.logging import get_colored_logger
 from prisma import Prisma, types
 
 from . import usecase
-
-ACTIONS = [0] + list(range(5, 39 + 1))
-assert len(ACTIONS) == 36
 
 _PROGRESS_WEIGHT_DETECTING_CLAP_TIME = 10
 _PROGRESS_WEIGHT_VIDEO_FEATURE_EXTRACTION = 85
@@ -40,7 +36,7 @@ class RecordEvalWorker(RecordEvalWorkerBase):
         self.mstcn = MsTcn.from_file(
             self.cfg.pretrained_mstcn_path,
             features_dim=256,
-            num_classes=len(ACTIONS),
+            num_classes=36,  # FIXME: don't hard coding
         )
 
     @override
@@ -102,9 +98,8 @@ class RecordEvalWorker(RecordEvalWorkerBase):
         np.save(blip2_npy_path, video_embedding)
 
         master_actions = await prisma.action.find_many(
-            where={"subject_id": job.subject_id}, order={"seq": "asc"}
+            where={"subject_id": job.subject_id}, order={"ord_serial": "asc"}
         )
-        aseq2aid = {a.seq: ActionID(a.id) for a in master_actions}
 
         # 行動分節
         _log.info("Start mstcn prediction")
@@ -118,7 +113,7 @@ class RecordEvalWorker(RecordEvalWorkerBase):
 
         segs: list[types.RecordSegmentCreateWithoutRelationsInput] = [
             {
-                "action_id": aseq2aid[ACTIONS[seg.val]],
+                "action_id": master_actions[seg.val].id,
                 "record_id": job.record_id,
                 "begin_frame": prelude_frames + seg.begin,
                 "end_frame": prelude_frames + seg.begin + seg.len,

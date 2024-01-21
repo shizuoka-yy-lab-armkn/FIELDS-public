@@ -2,7 +2,7 @@ from fastapi import APIRouter, HTTPException
 
 from fields.db import prisma_client
 from fields.domain.subjects.schema import ActionMeta, Subject, SubjectBrief
-from fields.entity import SubjectID
+from fields.entity import ActionID, SubjectID
 
 router = APIRouter(
     prefix="/subjects",
@@ -21,7 +21,7 @@ async def get_subject(subject_id: SubjectID) -> Subject:
     subj = await prisma_client.subject.find_unique(
         where={"id": subject_id},
         include={
-            "actions": {"order_by": {"seq": "asc"}},
+            "actions": {"order_by": {"ord_serial": "asc"}},
         },
     )
 
@@ -31,7 +31,9 @@ async def get_subject(subject_id: SubjectID) -> Subject:
     assert subj.actions is not None
     actions = [
         ActionMeta(
-            seq=a.seq,
+            id=ActionID(a.id),
+            ord_serial=a.ord_serial,
+            display_no=a.display_no,
             short_name=a.short_name,
             long_name=a.long_name,
             manual_markdown="",
