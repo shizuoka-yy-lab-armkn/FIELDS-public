@@ -5,7 +5,7 @@ from pydantic import Field, HttpUrl, RootModel
 
 from fields.base.schema import CamelizedPydanticModel
 from fields.config import Config
-from fields.entity import RecordID, SubjectID
+from fields.entity import ActionID, RecordID, SubjectID
 from fields.utils.string import prepend_slash_if_not_exists
 from prisma import models
 
@@ -41,7 +41,8 @@ class Record(CamelizedPydanticModel):
 
 class ValidOrderSegment(CamelizedPydanticModel):
     type: Literal["valid"] = "valid"
-    action_seq: int
+    action_id: ActionID
+    display_no: int
     begin: int
     end: int
     likelihood: float
@@ -49,7 +50,8 @@ class ValidOrderSegment(CamelizedPydanticModel):
 
 class WrongOrderSegment(CamelizedPydanticModel):
     type: Literal["wrong"] = "wrong"
-    action_seq: int
+    action_id: ActionID
+    display_no: int
     begin: int
     end: int
     likelihood: float
@@ -57,7 +59,8 @@ class WrongOrderSegment(CamelizedPydanticModel):
 
 class MissingSegment(CamelizedPydanticModel):
     type: Literal["missing"] = "missing"
-    action_seq: int
+    action_id: ActionID
+    display_no: int
 
 
 class Segment(RootModel):

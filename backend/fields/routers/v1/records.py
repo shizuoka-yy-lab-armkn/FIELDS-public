@@ -14,7 +14,7 @@ from fields.domain.records.schema import (
     WrongOrderSegment,
 )
 from fields.domain.records.usecase import compare_action_seq_by_lcs
-from fields.entity import RecordID
+from fields.entity import ActionID, RecordID
 from fields.utils.logging import get_colored_logger
 
 router = APIRouter(
@@ -88,20 +88,25 @@ async def get_record_evaluation(
         recog = recog_segs[m.src_idx]
         if m.type == "matched":
             seg = ValidOrderSegment(
-                action_seq=m.action,
+                action_id=ActionID(recog.action_id),
+                display_no=aid2a[recog.action_id].display_no,
                 begin=recog.begin_frame,
                 end=recog.end_frame,
                 likelihood=recog.tas_likelihood,
             )
         elif m.type == "wrong":
             seg = WrongOrderSegment(
-                action_seq=m.action,
+                action_id=ActionID(recog.action_id),
+                display_no=aid2a[recog.action_id].display_no,
                 begin=recog.begin_frame,
                 end=recog.end_frame,
                 likelihood=recog.tas_likelihood,
             )
         elif m.type == "missing":
-            seg = MissingSegment(action_seq=m.action)
+            seg = MissingSegment(
+                action_id=ActionID(recog.action_id),
+                display_no=aid2a[recog.action_id].display_no,
+            )
         else:
             assert_never(m.type)
 
