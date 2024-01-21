@@ -2,7 +2,7 @@ from fastapi import APIRouter, HTTPException
 
 from fields.db import prisma_client
 from fields.domain.subjects.schema import ActionMeta, Subject, SubjectBrief
-from fields.entity import SubjectID
+from fields.entity import ActionID, SubjectID
 
 router = APIRouter(
     prefix="/subjects",
@@ -31,6 +31,7 @@ async def get_subject(subject_id: SubjectID) -> Subject:
     assert subj.actions is not None
     actions = [
         ActionMeta(
+            id=ActionID(a.id),
             ord_serial=a.ord_serial,
             display_no=a.display_no,
             short_name=a.short_name,
