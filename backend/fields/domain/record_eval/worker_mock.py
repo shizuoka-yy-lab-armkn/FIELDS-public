@@ -31,7 +31,7 @@ class RecordEvalMockWorker(RecordEvalWorkerBase):
         prelude_frames = int(total_frames * 0.02)
 
         master_actions = await prisma.action.find_many(
-            where={"subject_id": job.subject_id}, order={"seq": "asc"}
+            where={"subject_id": job.subject_id}, order={"ord_serial": "asc"}
         )
 
         rem_div_n = (total_frames - prelude_frames) // len(master_actions)

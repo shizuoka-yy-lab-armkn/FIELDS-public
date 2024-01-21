@@ -5,7 +5,8 @@ from fields.entity import SubjectID
 
 
 class ActionMeta(CamelizedPydanticModel):
-    seq: int
+    ord_serial: int
+    display_no: int
     short_name: str
     long_name: str
     manual_markdown: str

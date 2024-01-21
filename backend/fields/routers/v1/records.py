@@ -72,24 +72,15 @@ async def get_record_evaluation(
         raise HTTPException(404)
 
     master_actions = await prisma_client.action.find_many(
-        where={"subject_id": record.subject_id}, order={"seq": "asc"}
+        where={"subject_id": record.subject_id}, order={"ord_serial": "asc"}
     )
 
     aid2a = {a.id: a for a in master_actions}
 
-    recog_action_seqs = [aid2a[s.action_id].seq for s in recog_segs]
-    master_action_seqs = [m.seq for m in master_actions]
-    # NOTE: 工程19, 18 は模範の順番が逆転している
-    p18 = master_action_seqs.index(18)
-    p19 = master_action_seqs.index(19)
-    master_action_seqs[p18], master_action_seqs[p19] = (
-        master_action_seqs[p19],
-        master_action_seqs[p18],
-    )
-    _log.info(f"\n{recog_action_seqs=}")
-    _log.info(f"\n{master_action_seqs=}")
+    recog_seq = [aid2a[s.action_id].ord_serial for s in recog_segs]
+    master_seq = [m.ord_serial for m in master_actions]
 
-    matchings = compare_action_seq_by_lcs(src=recog_action_seqs, tgt=master_action_seqs)
+    matchings = compare_action_seq_by_lcs(src=recog_seq, tgt=master_seq)
     _log.info(f"\n{matchings=}")
 
     eval_segs: list[Segment] = []
