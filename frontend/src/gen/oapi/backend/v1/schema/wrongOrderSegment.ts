@@ -7,8 +7,9 @@
 import type { WrongOrderSegmentType } from './wrongOrderSegmentType';
 
 export type WrongOrderSegment = {
-  actionSeq: number;
+  actionId: string;
   begin: number;
+  displayNo: number;
   end: number;
   likelihood: number;
   type: WrongOrderSegmentType;

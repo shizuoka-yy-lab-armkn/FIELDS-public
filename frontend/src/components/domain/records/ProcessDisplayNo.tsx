@@ -1,7 +1,7 @@
 import { Text, TextProps } from "@chakra-ui/react";
 
-export const ActionId = ({ actionId, ...props }: {
-  actionId?: number;
+export const ProcessDisplayNo = ({ value, ...props }: {
+  value?: number;
 } & TextProps) => {
   return (
     <Text
@@ -15,7 +15,7 @@ export const ActionId = ({ actionId, ...props }: {
       borderRadius={4}
       {...props}
     >
-      {actionId ?? "-"}
+      {value ?? "-"}
     </Text>
   );
 };
