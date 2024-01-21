@@ -65,6 +65,9 @@ async def get_record_evaluation(
         return RecordEvaluation(
             segs=[],
             job_progress_percentage=progress.percentage if progress is not None else 0,
+            missing_process_count=0,
+            wrong_order_count=0,
+            maximum_speed_bonus_secs=0,
         )
 
     record = await prisma_client.record.find_unique({"id": record_id})
@@ -112,4 +115,11 @@ async def get_record_evaluation(
 
         eval_segs.append(Segment(root=seg))
 
-    return RecordEvaluation(segs=eval_segs, job_progress_percentage=100)
+    # TODO: missing_process_count, wrong_order_count, maximum_speed_bonus_secs
+    return RecordEvaluation(
+        segs=eval_segs,
+        job_progress_percentage=100,
+        missing_process_count=0,
+        wrong_order_count=0,
+        maximum_speed_bonus_secs=0,
+    )

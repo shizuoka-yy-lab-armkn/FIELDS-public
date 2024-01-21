@@ -72,3 +72,6 @@ class Segment(RootModel):
 class RecordEvaluation(CamelizedPydanticModel):
     segs: list[Segment]
     job_progress_percentage: int
+    missing_process_count: int
+    wrong_order_count: int
+    maximum_speed_bonus_secs: int
