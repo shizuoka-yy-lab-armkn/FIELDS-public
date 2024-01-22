@@ -22,6 +22,9 @@ export const dummyRecordInProgress = dummyRecords.at(-1)!;
 
 export const dummyRecordEvaluation: schema.RecordEvaluation = {
   jobProgressPercentage: 100,
+  "missingProcessCount": 2,
+  "wrongOrderCount": 7,
+  "maximumSpeedBonusSecs": 210,
   segs: [
     {
       type: "valid",
