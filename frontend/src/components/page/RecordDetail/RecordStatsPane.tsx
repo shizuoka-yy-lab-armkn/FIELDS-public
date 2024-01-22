@@ -17,7 +17,7 @@ export const RecordStatsPane = (props: {
   maximumSpeedBonusSecs: number;
 }) => {
   return (
-    <Center w="full">
+    <Center w="full" py={12} background="gray.200">
       <ScoreCard {...props} />
     </Center>
   );
@@ -52,17 +52,17 @@ const ScoreCard = (
   console.log(score);
 
   return (
-    <Center w="full" maxW="960px" px={4} py={12} bg="white" color="teal.900" boxShadow="lg">
+    <Center w="full" maxW="960px" px={4} py={12} bg="white" color="teal.900" boxShadow="lg" rounded="2xl">
       <VStack w="full" maxW="600px">
         <Center flexDirection="column">
-          <Heading as="h1">{userDisplayName} さんの {record.seq} 回目の収録</Heading>
-          <Box>
+          <Heading as="h1" mb={4}>{userDisplayName} さんの {record.seq} 回目の収録</Heading>
+          <Box pl={20}>
             <Text as="span" color="orange.500" fontSize="8xl" fontWeight="bold">{score.total.toFixed(0)}</Text>
-            <Text as="span">点</Text>
+            <Text as="span" fontSize="lg">点 / 100点</Text>
           </Box>
         </Center>
 
-        <Heading as="h2" mt={10} fontSize="3xl">ー スコア内訳 ー</Heading>
+        <Heading as="h2" mt={4} fontSize="3xl">ー スコア内訳 ー</Heading>
 
         <ScoreCheckPointSection title="ベースライン" unit={score.detail.baseline}>
           誰にでも付与される基本ポイントです。<br />
@@ -75,10 +75,10 @@ const ScoreCard = (
           count={score.input.missingProccesCount}
         >
           <UnorderedList>
-            {segs.map(s => {
+            {segs.map((s, i) => {
               if (s.type !== "missing") return null;
               return (
-                <ListItem mt={2}>
+                <ListItem mt={2} key={`${i}/${s.actionId}`}>
                   <ProcessDisplayNo value={s.displayNo} />
                   <Text as="span">{actionMetaDict[s.actionId]!.shortName}</Text>
                   <ChakraNextLink href="#">
@@ -96,10 +96,10 @@ const ScoreCard = (
           count={score.input.wrongOrderCount}
         >
           <UnorderedList>
-            {segs.map(s => {
+            {segs.map((s, i) => {
               if (s.type !== "wrong") return null;
               return (
-                <ListItem mt={2}>
+                <ListItem mt={2} key={`${i}/${s.actionId}`}>
                   <ProcessDisplayNo value={s.displayNo} />
                   <Text as="span">{actionMetaDict[s.actionId]!.shortName}</Text>
                   <ChakraNextLink href="#">
@@ -116,7 +116,7 @@ const ScoreCard = (
           unit={score.cfg.noMistakeBonus}
           disabled={score.detail.noMistakeBonus === 0}
         >
-          工程抜けも工程順ミスも無かった場合に付与される固定ポイントです。
+          工程抜けも工程順ミスも無かった場合に付与されるポイントです。
         </ScoreCheckPointSection>
 
         <ScoreCheckPointSection title="スピードボーナス" unit={score.detail.speedBonus}>
@@ -174,11 +174,15 @@ const ScoreDetailPoint = ({ unit, count, disabled }: {
   disabled?: boolean;
 }) => {
   const x = unit * (count ?? 1);
-  const s = (unit > 0 ? "+" : "") + x.toFixed(0);
-  const color: BoxProps["color"] = (disabled || count === 0) ? "gray.300" : unit > 0 ? BONUS_FG : PENALTY_FG;
+  const s = (unit >= 0 ? "+" : "") + x.toFixed(0);
+
+  disabled = disabled || count == 0;
+  const color: BoxProps["color"] = disabled ? "gray.300" : unit >= 0 ? BONUS_FG : PENALTY_FG;
+
+  const decor: BoxProps["textDecorationLine"] = disabled ? "line-through" : undefined;
 
   return (
-    <Text as="span" color={color}>
+    <Text as="span" color={color} textDecoration={decor}>
       {(count != null)
         ? (
           <>

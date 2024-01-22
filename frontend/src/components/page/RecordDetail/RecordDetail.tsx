@@ -84,14 +84,28 @@ export const RecordDetail = ({
     );
   }
 
+  const TAB_LIST_H = "60px";
+
   return (
-    <Tabs variant="soft-rounded" defaultIndex={1}>
-      <TabList>
+    <Tabs variant="line" defaultIndex={1} minH="full" h="1px">
+      <TabList
+        position="absolute"
+        top={0}
+        h={TAB_LIST_H}
+        w="full"
+        bg="gray.50"
+        border="gray.400"
+        borderTopWidth={1}
+        borderBottomWidth={2}
+        py={2}
+        px={4}
+        boxShadow="sm"
+      >
         <Tab>収録した動画</Tab>
         <Tab>スコア</Tab>
       </TabList>
-      <TabPanels>
-        <TabPanel display="flex" minH="full" h="1px">
+      <TabPanels minH="full" h="1px" pt={TAB_LIST_H}>
+        <TabPanel display="flex" p={0} minH="full" h="1px">
           <SegmentsSidebar
             segs={evaluation.segs}
             currentSegIndex={currentSegIndex}
@@ -109,7 +123,7 @@ export const RecordDetail = ({
             onSegIndexChange={setCurrentSegIndex}
           />
         </TabPanel>
-        <TabPanel>
+        <TabPanel p={0}>
           <RecordStatsPane
             record={record}
             actionMetaDict={actionMetaDict}
