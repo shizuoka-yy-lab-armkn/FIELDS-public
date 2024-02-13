@@ -51,6 +51,9 @@ export const mockRecordsHandlers: HttpHandler[] = [
       {
         jobProgressPercentage: p,
         segs: p >= 100 ? dummyRecordEvaluation.segs : [],
+        missingProcessCount: 2,
+        wrongOrderCount: 5,
+        maximumSpeedBonusSecs: 210,
       } satisfies schema.RecordEvaluation,
     );
   }),
