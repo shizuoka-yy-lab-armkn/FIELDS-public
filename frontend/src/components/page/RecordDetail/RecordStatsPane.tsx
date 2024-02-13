@@ -2,10 +2,22 @@ import { ProcessDisplayNo } from "@/components/domain/records/ProcessDisplayNo";
 import { ChakraNextLink } from "@/components/util/ChakraNextLink";
 import { Record, Segment } from "@/gen/oapi/backend/v1/schema";
 import { ActionMetaDict } from "@/model/subjects";
-import { calcScore } from "@/usecase/records";
+import { calcScore, isNotMissingSegment } from "@/usecase/records";
 import { Box, BoxProps, Center, Heading, Icon, ListItem, Text, UnorderedList, VStack } from "@chakra-ui/react";
 import { ReactNode, useMemo } from "react";
 import { IoCaretForwardCircle } from "react-icons/io5";
+import { Bar, BarChart, CartesianGrid, Legend, ResponsiveContainer, Tooltip, XAxis, YAxis } from "recharts";
+
+const CARD_COMMON_STYLE: BoxProps = {
+  w: "full",
+  maxW: "960px",
+  px: 4,
+  py: 12,
+  bg: "white",
+  color: "teal.900",
+  boxShadow: "lg",
+  rounded: "2xl",
+};
 
 export const RecordStatsPane = (props: {
   userDisplayName: string;
@@ -17,8 +29,9 @@ export const RecordStatsPane = (props: {
   maximumSpeedBonusSecs: number;
 }) => {
   return (
-    <Center w="full" py={12} background="gray.200">
+    <Center w="full" py={12} background="gray.200" flexDirection="column" rowGap={8}>
       <ScoreCard {...props} />
+      <TookTimeChartCard {...props} />
     </Center>
   );
 };
@@ -52,7 +65,7 @@ const ScoreCard = (
   console.log(score);
 
   return (
-    <Center w="full" maxW="960px" px={4} py={12} bg="white" color="teal.900" boxShadow="lg" rounded="2xl">
+    <Center {...CARD_COMMON_STYLE}>
       <VStack w="full" maxW="600px">
         <Center flexDirection="column">
           <Heading as="h1" mb={4}>{userDisplayName} さんの {record.seq} 回目の収録</Heading>
@@ -122,6 +135,55 @@ const ScoreCard = (
         <ScoreCheckPointSection title="スピードボーナス" unit={score.detail.speedBonus}>
         </ScoreCheckPointSection>
       </VStack>
+    </Center>
+  );
+};
+
+const TookTimeChartCard = (
+  { record, segs, actionMetaDict }: {
+    record: Record;
+    segs: Segment[];
+    actionMetaDict: ActionMetaDict;
+  },
+) => {
+  const KEY_YOU = "あなた";
+  const KEY_MASTER = "熟練者";
+
+  const data = segs.filter(isNotMissingSegment)
+    .filter((s) => (s.end - s.begin) / record.foreheadVideoFps > actionMetaDict[s.actionId]!.masterDurMean)
+    .slice(0, 3)
+    .sort((a, b) => (b.end - b.begin) - (a.end - a.begin))
+    .map((s) => {
+      const meta = actionMetaDict[s.actionId]!;
+      return {
+        name: `[${meta.displayNo}] ${meta.shortName}`,
+        [KEY_YOU]: (s.end - s.begin) / record.foreheadVideoFps,
+        [KEY_MASTER]: meta.masterDurMean,
+      };
+    });
+
+  console.log("TookTimeChartCard: data", data);
+
+  return (
+    <Center {...CARD_COMMON_STYLE} flexDirection="column">
+      <Heading as="h2" mb={3}>時間のかかっている工程 上位3件</Heading>
+      <Text mb={6}>以下の工程を意識すると時間短縮しやすいでしょう。</Text>
+      <ResponsiveContainer width="100%" minHeight="400px">
+        <BarChart
+          width={500}
+          height={900}
+          data={data}
+          layout="horizontal"
+        >
+          <CartesianGrid strokeDasharray="3 3" />
+          <XAxis dataKey="name" type="category" />
+          <YAxis type="number" domain={[0, (dataMax) => Math.ceil(dataMax / 5) * 5]} />
+          <Tooltip formatter={(v: number) => `${v.toFixed(1)} 秒`} />
+          <Legend />
+          <Bar dataKey={KEY_YOU} fill="hotpink" label={KEY_YOU} />
+          <Bar dataKey={KEY_MASTER} fill="royalblue" label={KEY_MASTER} />
+        </BarChart>
+      </ResponsiveContainer>
     </Center>
   );
 };

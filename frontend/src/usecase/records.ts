@@ -18,6 +18,12 @@ export const frameDiffToSecDuration = (frameBegin: number, frameEnd: number, fps
   return secs.toFixed(1);
 };
 
+export type NotMissingSegment = schema.ValidOrderSegment | schema.WrongOrderSegment;
+
+export const isNotMissingSegment = (s: schema.Segment): s is NotMissingSegment => {
+  return s.type !== "missing";
+};
+
 export const calcScore = (v: {
   missingProccesCount: number;
   wrongOrderCount: number;
