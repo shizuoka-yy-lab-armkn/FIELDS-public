@@ -53,6 +53,7 @@ pytest = "^7.4.3"
 
 [tool.poetry.group.dev-extra.dependencies]
 ipython = "^8.16.1"
+pip-licenses = "^4.3.4"
 
 [build-system]
 requires = ["poetry-core"]
