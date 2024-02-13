@@ -177,7 +177,26 @@ const TookTimeChartCard = (
         >
           <CartesianGrid strokeDasharray="3 3" />
           <XAxis dataKey="name" type="category" />
-          <YAxis type="number" domain={[0, (dataMax) => Math.ceil(dataMax / 5) * 5]} />
+          <YAxis
+            type="number"
+            label={
+              // NOTE: 縦書きにするオプションが無かったので
+              // ChromeDevTool の inspector で Outer HTML を以下にコピペ → writing-mode 属性を追加
+              // でゴリ押ししている
+              <text
+                offset="5"
+                x="35"
+                y="173"
+                class="recharts-text recharts-label"
+                text-anchor="middle"
+                fill="#808080"
+                writing-mode="vertical-lr"
+              >
+                <tspan x="35" dy="0.355em">時間 [秒]</tspan>
+              </text>
+            }
+            domain={[0, (dataMax) => Math.ceil(dataMax / 5) * 5]}
+          />
           <Tooltip formatter={(v: number) => `${v.toFixed(1)} 秒`} />
           <Legend />
           <Bar dataKey={KEY_YOU} fill="hotpink" label={KEY_YOU} />
