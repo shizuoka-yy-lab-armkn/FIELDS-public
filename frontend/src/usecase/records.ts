@@ -37,6 +37,7 @@ export const calcScore = (v: {
   const hasMistakes = v.missingProccesCount + v.wrongOrderCount > 0;
 
   const diff = Math.max(0, Math.min(cfg.speedBonusSpanSecs, v.userWorkSecs - v.maximumSpeedBonusSecs));
+
   const speedBonus = (1 - diff / cfg.speedBonusSpanSecs) * cfg.speedBonusMaxPoints;
 
   console.log("diff:", diff);
@@ -50,8 +51,10 @@ export const calcScore = (v: {
     speedBonus,
   };
 
-  const total = Object.values(detail).reduce((a, b) => a + b, 0);
-  console.log("total:", total);
+  let total = Object.values(detail).reduce((a, b) => a + b, 0);
+  if (isNaN(total)) {
+    total = 0;
+  }
 
   return {
     total: Math.max(0, Math.min(100, total)),
