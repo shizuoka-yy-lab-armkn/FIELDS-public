@@ -47,6 +47,7 @@ export const GlobalHeader = ({
         w="100%"
         bg={BG_COLOR}
         color={FG_COLOR}
+        boxShadow="md"
       >
         <Flex as="ul" listStyleType="none">
           <NavItemLink href="/" px="1.25rem">FIELDS</NavItemLink>

@@ -3,8 +3,23 @@ import { SegmentStatusBadge } from "@/components/domain/records/SegmentTypeBadge
 import * as schema from "@/gen/oapi/backend/v1/schema";
 import { ActionMetaDict } from "@/model/subjects";
 import { frameDiffToSecDuration, frameIndexToTimestamp } from "@/usecase/records";
-import { Box, BoxProps, Center, Flex, Heading, Progress, Text, useCallbackRef } from "@chakra-ui/react";
+import {
+  Box,
+  BoxProps,
+  Center,
+  Flex,
+  Heading,
+  Progress,
+  Tab,
+  TabList,
+  TabPanel,
+  TabPanels,
+  Tabs,
+  Text,
+  useCallbackRef,
+} from "@chakra-ui/react";
 import { forwardRef, useEffect, useImperativeHandle, useMemo, useRef, useState } from "react";
+import { RecordStatsPane } from "./RecordStatsPane";
 import { SegmentsSidebar } from "./SegmentsSidebar";
 
 export type RecordDetailProps = {
@@ -39,55 +54,88 @@ export const RecordDetail = ({
 
   const progress = evaluation.jobProgressPercentage;
 
+  if (evaluation.jobProgressPercentage < 100) {
+    return (
+      <Flex minH="full" h="1px">
+        <Center flexDir="column" w="100%" py={20} px={20}>
+          <Heading as="h1" fontSize="5xl">工程認識中...</Heading>
+          <Progress
+            my={4}
+            w="full"
+            maxW="560px"
+            min={0}
+            max={100}
+            value={progress}
+            size="lg"
+            colorScheme="teal"
+            hasStripe
+            isAnimated
+            sx={{
+              "& > div:first-of-type": {
+                transitionProperty: "width",
+                transitionDuration: "2500ms",
+              },
+            }}
+          />
+          <Text fontSize="2xl">{progress} %</Text>
+          <Text fontSize="2xl" mt={12}>解体作業やカメラの発熱・充電チェック等をしてお待ちください</Text>
+        </Center>
+      </Flex>
+    );
+  }
+
+  const TAB_LIST_H = "60px";
+
   return (
-    <Flex minH="full" h="1px">
-      {(evaluation.jobProgressPercentage < 100)
-        ? (
-          <Center flexDir="column" w="100%" py={20} px={20}>
-            <Heading as="h1" fontSize="5xl">工程認識中...</Heading>
-            <Progress
-              my={4}
-              w="full"
-              maxW="560px"
-              min={0}
-              max={100}
-              value={progress}
-              size="lg"
-              colorScheme="teal"
-              hasStripe
-              isAnimated
-              sx={{
-                "& > div:first-of-type": {
-                  transitionProperty: "width",
-                  transitionDuration: "2500ms",
-                },
-              }}
-            />
-            <Text fontSize="2xl">{progress} %</Text>
-            <Text fontSize="2xl" mt={12}>解体作業やカメラの発熱・充電チェック等をしてお待ちください</Text>
-          </Center>
-        )
-        : (
-          <>
-            <SegmentsSidebar
-              segs={evaluation.segs}
-              currentSegIndex={currentSegIndex}
-              actionMetaDict={actionMetaDict}
-              fps={record.foreheadVideoFps}
-              onSegmentClick={handleSegmentClick}
-            />
-            <RecordDetailMainPane
-              ref={mainPaneRef}
-              record={record}
-              subject={subject}
-              actionMetaDict={actionMetaDict}
-              segs={evaluation.segs}
-              currentSegIndex={currentSegIndex}
-              onSegIndexChange={setCurrentSegIndex}
-            />
-          </>
-        )}
-    </Flex>
+    <Tabs variant="line" defaultIndex={1} minH="full" h="1px">
+      <TabList
+        position="absolute"
+        top={0}
+        h={TAB_LIST_H}
+        w="full"
+        bg="gray.50"
+        border="gray.400"
+        borderTopWidth={1}
+        borderBottomWidth={2}
+        py={2}
+        px={4}
+        boxShadow="sm"
+      >
+        <Tab>収録した動画</Tab>
+        <Tab>スコア</Tab>
+      </TabList>
+      <TabPanels minH="full" h="1px" pt={TAB_LIST_H}>
+        <TabPanel display="flex" p={0} minH="full" h="1px">
+          <SegmentsSidebar
+            segs={evaluation.segs}
+            currentSegIndex={currentSegIndex}
+            actionMetaDict={actionMetaDict}
+            fps={record.foreheadVideoFps}
+            onSegmentClick={handleSegmentClick}
+          />
+          <RecordDetailMainPane
+            ref={mainPaneRef}
+            record={record}
+            subject={subject}
+            actionMetaDict={actionMetaDict}
+            segs={evaluation.segs}
+            currentSegIndex={currentSegIndex}
+            onSegIndexChange={setCurrentSegIndex}
+          />
+        </TabPanel>
+        <TabPanel p={0}>
+          <RecordStatsPane
+            record={record}
+            actionMetaDict={actionMetaDict}
+            segs={evaluation.segs}
+            userDisplayName={record.username}
+            missingProccesCount={evaluation.missingProcessCount}
+            wrongOrderCount={evaluation.wrongOrderCount}
+            maximumSpeedBonusSecs={evaluation.maximumSpeedBonusSecs}
+          />
+        </TabPanel>
+      </TabPanels>
+    </Tabs>
   );
 };
 

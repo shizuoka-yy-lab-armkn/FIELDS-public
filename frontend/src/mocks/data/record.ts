@@ -22,6 +22,9 @@ export const dummyRecordInProgress = dummyRecords.at(-1)!;
 
 export const dummyRecordEvaluation: schema.RecordEvaluation = {
   jobProgressPercentage: 100,
+  "missingProcessCount": 2,
+  "wrongOrderCount": 5,
+  "maximumSpeedBonusSecs": 210,
   segs: [
     {
       type: "valid",
@@ -125,7 +128,7 @@ export const dummyRecordEvaluation: schema.RecordEvaluation = {
       likelihood: 0.96,
     },
     {
-      type: "wrong",
+      type: "valid",
       displayNo: 19,
       actionId: "a19",
       begin: 5081,
@@ -133,7 +136,7 @@ export const dummyRecordEvaluation: schema.RecordEvaluation = {
       likelihood: 0.91,
     },
     {
-      type: "wrong",
+      type: "valid",
       displayNo: 18,
       actionId: "a18",
       begin: 5649,
