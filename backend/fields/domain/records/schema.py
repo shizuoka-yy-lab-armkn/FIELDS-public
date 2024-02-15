@@ -72,6 +72,3 @@ class Segment(RootModel):
 class RecordEvaluation(CamelizedPydanticModel):
     segs: list[Segment]
     job_progress_percentage: int
-    speed_bonus_max_point_secs: int = Field(
-        description="作業時間がこの時間以下ならスピードボーナスの最高得点を得られる"
-    )
