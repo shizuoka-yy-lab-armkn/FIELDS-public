@@ -58,7 +58,7 @@ model Record {
   user_id    String
   user       User    @relation(fields: [user_id], references: [id])
 
-  seq Int // (subject_id, user_id) の中で1から順にカウントアップ
+  daily_seq Int // (subject_id, user_id, 収録日) の中で1から順にカウントアップ
 
   recording_started_at  DateTime
   recording_finished_at DateTime
@@ -70,8 +70,6 @@ model Record {
   forehead_camera_public_video_path String
 
   segments RecordSegment[]
-
-  @@unique([subject_id, user_id, seq])
 }
 
 model RecordSegment {
