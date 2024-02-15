@@ -144,10 +144,11 @@ const TookTimeChartCard = ({ segs }: {
 }) => {
   const KEY_YOU = "あなた";
   const KEY_MASTER = "熟練者";
+  const TOP_K = 4;
 
   const data = segs
     .filter(s => s.type !== "missing" && s.durSec > s.referenceDurSec)
-    .slice(0, 4)
+    .slice(0, TOP_K)
     .sort((a, b) => b.durSec - a.durSec)
     .map((s) => ({
       name: `[${s.displayNo}] ${s.shortName}`,
@@ -159,9 +160,9 @@ const TookTimeChartCard = ({ segs }: {
 
   return (
     <Center {...CARD_COMMON_STYLE} flexDirection="column">
-      <Heading as="h2" mb={3}>時間のかかっている工程 上位3件</Heading>
+      <Heading as="h2" mb={3}>時間のかかっている工程 上位{TOP_K}件</Heading>
       <Text mb={6}>以下の工程を意識すると時間短縮しやすいでしょう。</Text>
-      <ResponsiveContainer width="100%" minHeight="400px">
+      <ResponsiveContainer width="100%" minHeight="440px">
         <BarChart
           width={500}
           height={900}
