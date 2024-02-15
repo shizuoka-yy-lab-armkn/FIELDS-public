@@ -8,8 +8,5 @@ import type { Segment } from './segment';
 
 export type RecordEvaluation = {
   jobProgressPercentage: number;
-  maximumSpeedBonusSecs: number;
-  missingProcessCount: number;
   segs: Segment[];
-  wrongOrderCount: number;
 };

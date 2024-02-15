@@ -3,11 +3,16 @@ import { fmtDatetime } from "@/utils/datetime";
 
 export const fmtRecordName = (record: schema.Record): string => {
   const d = new Date(record.startedAt);
-  return `[${record.username}] 収録 ${record.seq} - ${fmtDatetime(d)}`;
+  return `${record.username}: ${fmtDatetime(d)} 収録${record.dailySeq}`;
 };
 
 export const frameIndexToTimestamp = (frameIndex: number, fps: number): string => {
-  const secs = frameIndex / fps | 0;
+  const secs = frameIndex / fps;
+  return fmtSecsToMSS(secs);
+};
+
+export const fmtSecsToMSS = (secs: number): string => {
+  secs |= 0; // 小数点以下を切り捨て
   const m = secs / 60 | 0;
   const s = secs % 60;
   return `${m}:${s.toString().padStart(2, "0")}`;
@@ -25,10 +30,10 @@ export const isNotMissingSegment = (s: schema.Segment): s is NotMissingSegment =
 };
 
 export const calcScore = (v: {
-  missingProccesCount: number;
+  missingProcessCount: number;
   wrongOrderCount: number;
   userWorkSecs: number;
-  maximumSpeedBonusSecs: number;
+  speedBonusMaxPointSecs: number;
 }) => {
   const baseline = 60;
 
@@ -40,9 +45,9 @@ export const calcScore = (v: {
     speedBonusSpanSecs: 60,
   } as const;
 
-  const hasMistakes = v.missingProccesCount + v.wrongOrderCount > 0;
+  const hasMistakes = v.missingProcessCount + v.wrongOrderCount > 0;
 
-  const diff = Math.max(0, Math.min(cfg.speedBonusSpanSecs, v.userWorkSecs - v.maximumSpeedBonusSecs));
+  const diff = Math.max(0, Math.min(cfg.speedBonusSpanSecs, v.userWorkSecs - v.speedBonusMaxPointSecs));
 
   const speedBonus = (1 - diff / cfg.speedBonusSpanSecs) * cfg.speedBonusMaxPoints;
 
@@ -51,7 +56,7 @@ export const calcScore = (v: {
 
   const detail = {
     baseline,
-    missingProccesPenalty: cfg.missingProcessPenalty * v.missingProccesCount,
+    missingProccesPenalty: cfg.missingProcessPenalty * v.missingProcessCount,
     wrongOrderPenalty: cfg.wrongOrderPenalty * v.wrongOrderCount,
     noMistakeBonus: hasMistakes ? 0 : cfg.noMistakeBonus,
     speedBonus,

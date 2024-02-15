@@ -24,6 +24,20 @@ export const replaceAllIsoDateStrToJsDate = (body: unknown): void => {
   }
 };
 
+export const fmtDate = (d: Date) => {
+  const yyyy = d.getFullYear().toString();
+  const mm = (d.getMonth() + 1).toString().padStart(2, "0");
+  const dd = d.getDate().toString().padStart(2, "0");
+  const w = d.toLocaleDateString("ja", { weekday: "short" });
+  return `${yyyy}-${mm}-${dd} (${w})`;
+};
+
+export const fmtTime = (d: Date) => {
+  const HH = d.getHours().toString().padStart(2, "0");
+  const MM = d.getMinutes().toString().padStart(2, "0");
+  return `${HH}:${MM}`;
+};
+
 export const fmtDatetime = (d: Date) => {
   const yyyy = d.getFullYear().toString();
   const mm = (d.getMonth() + 1).toString().padStart(2, "0");

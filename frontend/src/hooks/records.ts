@@ -1,5 +1,8 @@
 import * as client from "@/gen/oapi/backend/v1/client/records/records";
+import { RecordSegmentAggr } from "@/model/RecordSegmentAggr";
 import { useRouter } from "next/router";
+import { useMemo } from "react";
+import { useGetSubject } from "./subjects";
 
 /**
  * URL から recordId を取得
@@ -39,4 +42,26 @@ export const useGetEvaluation = (recordId: string | undefined) => {
     },
   });
   return { evaluation, isLoading, isError };
+};
+
+export const useGetRecordDetail = (recordId: string) => {
+  const { record } = useGetRecord(recordId);
+  const { subject } = useGetSubject(record?.subjectId);
+  const { evaluation } = useGetEvaluation(recordId);
+
+  const segs = useMemo((): RecordSegmentAggr[] => {
+    if (record == null || subject == null || evaluation == null) {
+      return [];
+    }
+
+    const dic = Object.fromEntries(subject.actions.map((a) => [a.id, a]));
+
+    return evaluation.segs.map(s => {
+      return new RecordSegmentAggr(s, dic[s.actionId]!, record.foreheadVideoFps);
+    });
+  }, [record, subject, evaluation]);
+
+  const jobProgressPercentage = evaluation?.jobProgressPercentage;
+
+  return { record, subject, segs, jobProgressPercentage };
 };

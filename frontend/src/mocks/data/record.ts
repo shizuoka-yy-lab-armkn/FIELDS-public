@@ -9,7 +9,7 @@ const dummyRecord: schema.Record = {
   foreheadVideoFps: 29.97,
   startedAt: "2023-11-14T01:52:31.174Z",
   finishedAt: "2023-11-14T01:55:47.0Z",
-  seq: 1,
+  dailySeq: 1,
 };
 
 export const dummyRecords: readonly schema.Record[] = new Array(20).fill(dummyRecord).map((r, i) => ({
@@ -22,9 +22,6 @@ export const dummyRecordInProgress = dummyRecords.at(-1)!;
 
 export const dummyRecordEvaluation: schema.RecordEvaluation = {
   jobProgressPercentage: 100,
-  "missingProcessCount": 2,
-  "wrongOrderCount": 5,
-  "maximumSpeedBonusSecs": 210,
   segs: [
     {
       type: "valid",

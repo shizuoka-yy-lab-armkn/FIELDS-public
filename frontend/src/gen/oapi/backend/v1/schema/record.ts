@@ -6,12 +6,12 @@
  */
 
 export type Record = {
+  /** このユーザのこの日の中で何回目の収録か */
+  dailySeq: number;
   finishedAt: string;
   foreheadVideoFps: number;
   foreheadVideoUrl: string;
   recordId: string;
-  /** このユーザの中で何回目の収録か */
-  seq: number;
   startedAt: string;
   subjectId: string;
   username: string;

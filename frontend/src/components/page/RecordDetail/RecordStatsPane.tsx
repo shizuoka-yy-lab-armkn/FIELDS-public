@@ -1,8 +1,8 @@
 import { ProcessDisplayNo } from "@/components/domain/records/ProcessDisplayNo";
 import { ChakraNextLink } from "@/components/util/ChakraNextLink";
-import { Record, Segment } from "@/gen/oapi/backend/v1/schema";
-import { ActionMetaDict } from "@/model/subjects";
-import { calcScore, isNotMissingSegment } from "@/usecase/records";
+import { Record } from "@/gen/oapi/backend/v1/schema";
+import { RecordSegmentAggr } from "@/model/RecordSegmentAggr";
+import { calcScore } from "@/usecase/records";
 import { Box, BoxProps, Center, Heading, Icon, ListItem, Text, UnorderedList, VStack } from "@chakra-ui/react";
 import { ReactNode, useMemo } from "react";
 import { IoCaretForwardCircle } from "react-icons/io5";
@@ -22,11 +22,7 @@ const CARD_COMMON_STYLE: BoxProps = {
 export const RecordStatsPane = (props: {
   userDisplayName: string;
   record: Record;
-  segs: Segment[];
-  actionMetaDict: ActionMetaDict;
-  missingProccesCount: number;
-  wrongOrderCount: number;
-  maximumSpeedBonusSecs: number;
+  segs: RecordSegmentAggr[];
 }) => {
   return (
     <Center w="full" py={12} background="gray.200" flexDirection="column" rowGap={8}>
@@ -40,16 +36,15 @@ const BONUS_FG: BoxProps["color"] = "green.600";
 const PENALTY_FG: BoxProps["color"] = "red.600";
 
 const ScoreCard = (
-  { userDisplayName, record, segs, actionMetaDict, missingProccesCount, wrongOrderCount, maximumSpeedBonusSecs }: {
+  { userDisplayName, record, segs }: {
     userDisplayName: string;
     record: Record;
-    segs: Segment[];
-    actionMetaDict: ActionMetaDict;
-    missingProccesCount: number;
-    wrongOrderCount: number;
-    maximumSpeedBonusSecs: number;
+    segs: RecordSegmentAggr[];
   },
 ) => {
+  const missingSegs = segs.filter(s => s.type === "missing");
+  const wrongOrderSegs = segs.filter(s => s.type === "wrong");
+
   const score = useMemo(() => {
     const first = segs.find((s) => s.type !== "missing");
     const last = segs.findLast((s) => s.type !== "missing");
@@ -58,17 +53,24 @@ const ScoreCard = (
     if (first == null || last == null || first.type === "missing" || last.type === "missing") {
       userWorkSecs = 0;
     } else {
-      userWorkSecs = (last.end - first.begin) / record.foreheadVideoFps;
+      userWorkSecs = last.endSec - first.beginSec;
     }
-    return calcScore({ missingProccesCount, wrongOrderCount, userWorkSecs, maximumSpeedBonusSecs });
-  }, [segs, record.foreheadVideoFps, missingProccesCount, wrongOrderCount, maximumSpeedBonusSecs]);
+    const missingProcessCount = missingSegs.length;
+    const wrongOrderCount = wrongOrderSegs.length;
+    return calcScore({
+      missingProcessCount,
+      wrongOrderCount,
+      userWorkSecs,
+      speedBonusMaxPointSecs: 210, // 3m30s
+    });
+  }, [segs, missingSegs.length, wrongOrderSegs.length]);
   console.log(score);
 
   return (
     <Center {...CARD_COMMON_STYLE}>
       <VStack w="full" maxW="600px">
         <Center flexDirection="column">
-          <Heading as="h1" mb={4}>{userDisplayName} さんの {record.seq} 回目の収録</Heading>
+          <Heading as="h1" mb={4}>{userDisplayName} さんの {record.dailySeq} 回目の収録</Heading>
           <Box pl={20}>
             <Text as="span" color="orange.500" fontSize="8xl" fontWeight="bold">{score.total.toFixed(0)}</Text>
             <Text as="span" fontSize="lg">点 / 100点</Text>
@@ -85,15 +87,14 @@ const ScoreCard = (
         <ScoreCheckPointSection
           title="工程抜け"
           unit={score.cfg.missingProcessPenalty}
-          count={score.input.missingProccesCount}
+          count={score.input.missingProcessCount}
         >
           <UnorderedList>
-            {segs.map((s, i) => {
-              if (s.type !== "missing") return null;
+            {missingSegs.map((s, i) => {
               return (
-                <ListItem mt={2} key={`${i}/${s.actionId}`}>
+                <ListItem mt={2} key={`${i}/${s.opstepId}`}>
                   <ProcessDisplayNo value={s.displayNo} />
-                  <Text as="span">{actionMetaDict[s.actionId]!.shortName}</Text>
+                  <Text as="span">{s.shortName}</Text>
                   <ChakraNextLink href="#">
                     <Icon as={IoCaretForwardCircle} ml={2} /> 確認する
                   </ChakraNextLink>
@@ -109,12 +110,11 @@ const ScoreCard = (
           count={score.input.wrongOrderCount}
         >
           <UnorderedList>
-            {segs.map((s, i) => {
-              if (s.type !== "wrong") return null;
+            {wrongOrderSegs.map((s, i) => {
               return (
-                <ListItem mt={2} key={`${i}/${s.actionId}`}>
+                <ListItem mt={2} key={`${i}/${s.opstepId}`}>
                   <ProcessDisplayNo value={s.displayNo} />
-                  <Text as="span">{actionMetaDict[s.actionId]!.shortName}</Text>
+                  <Text as="span">{s.shortName}</Text>
                   <ChakraNextLink href="#">
                     <Icon as={IoCaretForwardCircle} ml={2} /> 確認する
                   </ChakraNextLink>
@@ -139,28 +139,21 @@ const ScoreCard = (
   );
 };
 
-const TookTimeChartCard = (
-  { record, segs, actionMetaDict }: {
-    record: Record;
-    segs: Segment[];
-    actionMetaDict: ActionMetaDict;
-  },
-) => {
+const TookTimeChartCard = ({ segs }: {
+  segs: RecordSegmentAggr[];
+}) => {
   const KEY_YOU = "あなた";
   const KEY_MASTER = "熟練者";
 
-  const data = segs.filter(isNotMissingSegment)
-    .filter((s) => (s.end - s.begin) / record.foreheadVideoFps > actionMetaDict[s.actionId]!.masterDurMean)
-    .slice(0, 3)
-    .sort((a, b) => (b.end - b.begin) - (a.end - a.begin))
-    .map((s) => {
-      const meta = actionMetaDict[s.actionId]!;
-      return {
-        name: `[${meta.displayNo}] ${meta.shortName}`,
-        [KEY_YOU]: (s.end - s.begin) / record.foreheadVideoFps,
-        [KEY_MASTER]: meta.masterDurMean,
-      };
-    });
+  const data = segs
+    .filter(s => s.type !== "missing" && s.durSec > s.referenceDurSec)
+    .slice(0, 4)
+    .sort((a, b) => b.durSec - a.durSec)
+    .map((s) => ({
+      name: `[${s.displayNo}] ${s.shortName}`,
+      [KEY_YOU]: s.durSec,
+      [KEY_MASTER]: s.referenceDurSec,
+    }));
 
   console.log("TookTimeChartCard: data", data);
 
@@ -183,19 +176,22 @@ const TookTimeChartCard = (
               // NOTE: 縦書きにするオプションが無かったので
               // ChromeDevTool の inspector で Outer HTML を以下にコピペ → writing-mode 属性を追加
               // でゴリ押ししている
-              <text
-                offset="5"
-                x="35"
-                y="173"
-                class="recharts-text recharts-label"
-                text-anchor="middle"
-                fill="#808080"
-                writing-mode="vertical-lr"
-              >
-                <tspan x="35" dy="0.355em">時間 [秒]</tspan>
-              </text>
+
+
+                <text
+                  offset="5"
+                  x="35"
+                  y="173"
+                  className="recharts-text recharts-label"
+                  text-anchor="middle"
+                  fill="#808080"
+                  writing-mode="vertical-lr"
+                >
+                  <tspan x="35" dy="0.355em">時間 [秒]</tspan>
+                </text>
+
             }
-            domain={[0, (dataMax) => Math.ceil(dataMax / 5) * 5]}
+            domain={[0, (dataMax: number) => Math.ceil(dataMax / 5) * 5]}
           />
           <Tooltip formatter={(v: number) => `${v.toFixed(1)} 秒`} />
           <Legend />

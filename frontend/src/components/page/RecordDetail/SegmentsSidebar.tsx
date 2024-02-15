@@ -1,31 +1,26 @@
 import { ProcessDisplayNo } from "@/components/domain/records/ProcessDisplayNo";
 import { SegmentStatusBadge } from "@/components/domain/records/SegmentTypeBadge";
-import * as schema from "@/gen/oapi/backend/v1/schema";
-import { ActionMetaDict } from "@/model/subjects";
+import { RecordSegmentAggr } from "@/model/RecordSegmentAggr";
 import utilStyle from "@/styles/util.module.css";
-import { frameDiffToSecDuration, frameIndexToTimestamp } from "@/usecase/records";
+import { fmtSecsToMSS } from "@/usecase/records";
 import { Box, BoxProps, Flex, Heading, Text } from "@chakra-ui/react";
-import { useEffect, useMemo, useRef } from "react";
+import { useEffect, useRef } from "react";
 
 type Color = BoxProps["bg"];
 const BORDER_COLOR: Color = "gray.400";
 
 type SegmentsSidebarProps = {
-  segs: schema.Segment[];
+  segs: RecordSegmentAggr[];
   currentSegIndex?: number;
-  actionMetaDict: ActionMetaDict;
-  fps: number;
   onSegmentClick: (segIdx: number) => void;
 };
 
 export const SegmentsSidebar = ({
   segs,
   currentSegIndex,
-  actionMetaDict,
-  fps,
   onSegmentClick,
 }: SegmentsSidebarProps) => {
-  const invalidCount = useMemo(() => segs.filter((s) => s.type !== "valid").length, [segs]);
+  const invalidCount = segs.filter((s) => s.type !== "valid").length;
 
   const segUListRef = useRef<HTMLUListElement | null>(null);
 
@@ -70,8 +65,7 @@ export const SegmentsSidebar = ({
         color="teal.900"
       >
         {segs.map((seg, segIdx) => {
-          const tooLong = seg.type !== "missing"
-            && actionMetaDict[seg.actionId]!.masterDurMean * fps * 1.5 < seg.end - seg.begin;
+          const tooLong = seg.type !== "missing" && seg.referenceDurSec * 1.5 < seg.durSec;
 
           const highlightProps: BoxProps = {
             boxShadow: "0 0 6px 2px inset darkturquoise",
@@ -100,18 +94,18 @@ export const SegmentsSidebar = ({
                     fontWeight="semibold"
                     className={segIdx === currentSegIndex ? utilStyle.opacityBlink : ""}
                   >
-                    {actionMetaDict[seg.actionId]!.shortName}
+                    {seg.shortName}
                   </Text>
                 </Box>
                 <Box ml={8}>
                   {seg.type === "missing" ? <Text as="span">---</Text> : (
                     <>
                       <Text as="span">
-                        {frameIndexToTimestamp(seg.begin, fps)}
+                        {fmtSecsToMSS(seg.beginSec)}
                         {" - "}
-                        {frameIndexToTimestamp(seg.end, fps)}
+                        {fmtSecsToMSS(seg.endSec)}
                         <Text as="span" {...(tooLong ? { color: "red.500", fontWeight: "bold" } : {})}>
-                          {` (${frameDiffToSecDuration(seg.begin, seg.end, fps)} s)`}
+                          {` (${seg.durSec.toFixed(1)} s)`}
                           {tooLong ? " Long" : ""}
                         </Text>
                         <Box>
