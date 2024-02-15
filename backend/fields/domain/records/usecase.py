@@ -142,19 +142,19 @@ def compare_action_seq_by_lcs(
 
 
 def mark_wrong_order_by_greedy(
-    src: Sequence[int],
+    procs: Sequence[int],
     correct_first_proc: int,
     correct_last_proc: int,
 ) -> list[SegmentMatchType]:
-    """貪欲法 (greedy) により工程順序間違いのマーキングをする
+    """貪欲法 (greedy) により工程順序間違いのマーキングをする。
     戻り値の list の長さは len(src) に等しい。
     """
     pos: dict[int, list[int]] = defaultdict(list)
 
-    for i, proc in reversed(list(enumerate(src))):
+    for i, proc in reversed(list(enumerate(procs))):
         pos[proc].append(i)
 
-    res: list[SegmentMatchType] = ["wrong" for _ in src]
+    res: list[SegmentMatchType] = ["wrong" for _ in procs]
 
     i = 0
     next_proc = correct_first_proc
@@ -171,5 +171,39 @@ def mark_wrong_order_by_greedy(
         i = stack.pop()
         res[i] = "ok"
         next_proc += 1
+
+    return res
+
+
+def merge_missings(
+    procs: Sequence[int],
+    marks: Sequence[SegmentMatchType],
+    correct_first_proc: int,
+    correct_last_proc: int,
+) -> list[SegmentMatching]:
+    """工程順間違いのマーキング結果に工程抜けの情報をマージした結果を生成する"""
+    all_collect_procs = set(range(correct_first_proc, correct_last_proc + 1))
+    missings = sorted(all_collect_procs - set(procs))
+
+    res: list[SegmentMatching] = []
+    i, j = 0, 0
+
+    while i < len(procs) and j < len(missings):
+        # 順序間違いの工程の直後には "missing" を挿入しないようにする
+        # 例: 認識結果が [1, 4, 2, 3, 6] の場合、5 は 4 の直後ではなく 3 の直後に入れる
+        if procs[i] < missings[j] or marks[i] == "wrong":
+            res.append(SegmentMatching(marks[i], procs[i], i))
+            i += 1
+        else:
+            res.append(SegmentMatching("missing", missings[j], -1))
+            j += 1
+
+    while i < len(procs):
+        res.append(SegmentMatching(marks[i], procs[i], i))
+        i += 1
+
+    while j < len(missings):
+        res.append(SegmentMatching("missing", missings[j], -1))
+        j += 1
 
     return res

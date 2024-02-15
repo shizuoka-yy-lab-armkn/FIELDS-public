@@ -13,7 +13,7 @@ from fields.domain.records.schema import (
     ValidOrderSegment,
     WrongOrderSegment,
 )
-from fields.domain.records.usecase import compare_action_seq_by_lcs
+from fields.domain.records.usecase import mark_wrong_order_by_greedy, merge_missings
 from fields.entity import ActionID, RecordID
 from fields.utils.logging import get_colored_logger
 
@@ -79,10 +79,19 @@ async def get_record_evaluation(
     aid2a = {a.id: a for a in master_actions}
 
     recog_seq = [aid2a[s.action_id].ord_serial for s in recog_segs]
-    master_seq = [m.ord_serial for m in master_actions]
+    correct_first_proc = master_actions[0].ord_serial
+    correct_last_proc = master_actions[-1].ord_serial
 
-    matchings = compare_action_seq_by_lcs(src=recog_seq, tgt=master_seq)
-    _log.info(f"\n{matchings=}")
+    wrong_order_marks = mark_wrong_order_by_greedy(
+        recog_seq, correct_first_proc, correct_last_proc
+    )
+
+    matchings = merge_missings(
+        recog_seq,
+        wrong_order_marks,
+        correct_first_proc,
+        correct_last_proc,
+    )
 
     eval_segs: list[Segment] = []
     for m in matchings:
