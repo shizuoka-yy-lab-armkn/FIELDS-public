@@ -1,5 +1,6 @@
 import shutil
 import subprocess
+from datetime import datetime
 
 from fastapi import APIRouter, BackgroundTasks, HTTPException
 from starlette.status import HTTP_400_BAD_REQUEST, HTTP_423_LOCKED
@@ -18,7 +19,7 @@ from fields.domain.recording.schema import (
 from fields.domain.recording.usecase import kill_ffmpeg_process_later
 from fields.domain.records.usecase import resolve_forehead_camera_video_path
 from fields.entity import RecordID, SubjectID, UserID
-from fields.utils.datetime import jst_now
+from fields.utils.datetime import calc_today, calc_tomorrow, jst_now
 from fields.utils.logging import get_colored_logger
 
 router = APIRouter(
@@ -38,6 +39,22 @@ async def get_recording_availability(redis: RedisDep) -> RecordingAvailability:
     return RecordingAvailability(
         root=NowRecording(username=rec.username, start_at=rec.start_at)
     )
+
+
+async def __calc_daily_seq(
+    user_id: UserID, subject_id: SubjectID, now: datetime
+) -> int:
+    today = calc_today(now)
+    tomorrow = calc_tomorrow(now)
+
+    daily_record_count = await prisma_client.record.count(
+        where={
+            "user_id": user_id,
+            "subject_id": subject_id,
+            "recording_started_at": {"gte": today, "lt": tomorrow},
+        }
+    )
+    return daily_record_count + 1
 
 
 @router.post("/start")
@@ -61,15 +78,11 @@ async def start_recording(
     if user is None:
         raise HTTPException(HTTP_400_BAD_REQUEST, "User not found")
 
-    record_count = await prisma_client.record.count(
-        where={"user_id": user.id, "subject_id": subject.id}
-    )
-    seq = record_count + 1
-
     now = jst_now()
+    daily_seq = await __calc_daily_seq(UserID(user.id), SubjectID(subject.id), now)
 
     forehead_video_save_path = resolve_forehead_camera_video_path(
-        cfg, user.username, seq, now
+        cfg, user.username, daily_seq, now
     )
     _log.info(f"{forehead_video_save_path=}")
     forehead_video_save_path.parent.mkdir(exist_ok=True, parents=True)
@@ -96,7 +109,7 @@ async def start_recording(
         subject_id=SubjectID(subject.id),
         user_id=UserID(user.id),
         username=user.username,
-        seq=seq,
+        daily_seq=daily_seq,
         start_at=now,
         forehead_video_path=forehead_video_save_path,
         forehead_video_ffmpeg_pid=pid,
@@ -141,7 +154,7 @@ async def finish_recording(
             "user_id": rec.user_id,
             "recording_started_at": rec.start_at,
             "recording_finished_at": now,
-            "seq": rec.seq,
+            "daily_seq": rec.daily_seq,
             "forehead_camera_fps": 29.97,
             "forehead_camera_orig_video_path": forehead_video_rel_path,
             "forehead_camera_public_video_path": forehead_video_rel_path,
@@ -153,7 +166,7 @@ async def finish_recording(
         subject_id=rec.subject_id,
         user_id=rec.user_id,
         username=rec.username,
-        record_seq=rec.seq,
+        record_seq=rec.daily_seq,
         recording_start_at=rec.start_at,
         eval_start_at=now,
         forehead_video_path=rec.forehead_video_path,
@@ -185,14 +198,10 @@ async def post_record(
         raise HTTPException(400, "Local video not found")
 
     now = jst_now()
-
-    record_count = await prisma_client.record.count(
-        where={"user_id": user.id, "subject_id": subj.id}
-    )
-    seq = record_count + 1
+    daily_seq = await __calc_daily_seq(UserID(user.id), SubjectID(subj.id), now)
 
     forehead_video_save_path = resolve_forehead_camera_video_path(
-        cfg, user.username, seq, now
+        cfg, user.username, daily_seq, now
     )
     _log.info(f"{forehead_video_save_path=}")
     forehead_video_save_path.parent.mkdir(exist_ok=True, parents=True)
@@ -212,7 +221,7 @@ async def post_record(
             "user_id": user.id,
             "recording_started_at": now,
             "recording_finished_at": now,
-            "seq": seq,
+            "daily_seq": daily_seq,
             "forehead_camera_fps": 29.97,
             "forehead_camera_orig_video_path": forehead_video_rel_path,
             "forehead_camera_public_video_path": forehead_video_rel_path,
@@ -224,7 +233,7 @@ async def post_record(
         subject_id=SubjectID(subj.id),
         user_id=UserID(user.id),
         username=payload.username,
-        record_seq=seq,
+        record_seq=daily_seq,
         recording_start_at=now,
         eval_start_at=now,
         forehead_video_path=forehead_video_save_path,

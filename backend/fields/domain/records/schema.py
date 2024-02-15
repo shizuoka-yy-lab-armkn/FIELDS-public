@@ -18,7 +18,7 @@ class Record(CamelizedPydanticModel):
     forehead_video_url: HttpUrl
     started_at: datetime
     finished_at: datetime
-    seq: int = Field(description="このユーザの中で何回目の収録か")
+    daily_seq: int = Field(description="このユーザのこの日の中で何回目の収録か")
 
     @staticmethod
     def from_db_entity(r: models.Record, cfg: Config) -> "Record":
@@ -35,7 +35,7 @@ class Record(CamelizedPydanticModel):
             forehead_video_url=HttpUrl(cfg.static_base_url + forehead_video_path),
             started_at=r.recording_started_at,
             finished_at=r.recording_finished_at,
-            seq=r.seq,
+            daily_seq=r.daily_seq,
         )
 
 

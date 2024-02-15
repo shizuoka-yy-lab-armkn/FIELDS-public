@@ -20,7 +20,7 @@ class Recording(BaseModel):
     subject_id: SubjectID
     user_id: UserID
     username: str
-    seq: int
+    daily_seq: int
     start_at: datetime
     forehead_video_path: Path
     forehead_video_ffmpeg_pid: int
