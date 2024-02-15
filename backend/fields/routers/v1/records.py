@@ -87,7 +87,7 @@ async def get_record_evaluation(
     eval_segs: list[Segment] = []
     for m in matchings:
         recog = recog_segs[m.src_idx]
-        if m.type == "matched":
+        if m.type == "ok":
             seg = ValidOrderSegment(
                 action_id=ActionID(recog.action_id),
                 display_no=aid2a[recog.action_id].display_no,

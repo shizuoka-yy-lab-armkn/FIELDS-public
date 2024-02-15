@@ -1,3 +1,4 @@
+from collections import defaultdict
 from datetime import datetime
 from pathlib import Path
 from typing import Generic, Literal, NamedTuple, Sequence, TypeVar
@@ -70,7 +71,7 @@ def resolve_tas_likelihood_npy_path(
     )
 
 
-SegmentMatchType = Literal["matched", "missing", "wrong"]
+SegmentMatchType = Literal["ok", "missing", "wrong"]
 
 _T = TypeVar("_T")
 
@@ -109,7 +110,7 @@ def compare_action_seq_by_lcs(
         if i > 0 and j > 0 and src[i - 1] == tgt[j - 1]:
             i -= 1
             j -= 1
-            matchings.append(SegmentMatching("matched", action=src[i], src_idx=i))
+            matchings.append(SegmentMatching("ok", action=src[i], src_idx=i))
             continue
 
         if j > 0 and dp[i, j - 1] == dp[i, j]:
@@ -138,3 +139,37 @@ def compare_action_seq_by_lcs(
         matchings.insert(insert_at, SegmentMatching("missing", action=x, src_idx=-1))
 
     return matchings
+
+
+def mark_wrong_order_by_greedy(
+    src: Sequence[int],
+    correct_first_proc: int,
+    correct_last_proc: int,
+) -> list[SegmentMatchType]:
+    """貪欲法 (greedy) により工程順序間違いのマーキングをする
+    戻り値の list の長さは len(src) に等しい。
+    """
+    pos: dict[int, list[int]] = defaultdict(list)
+
+    for i, proc in reversed(list(enumerate(src))):
+        pos[proc].append(i)
+
+    res: list[SegmentMatchType] = ["wrong" for _ in src]
+
+    i = 0
+    next_proc = correct_first_proc
+
+    while next_proc <= correct_last_proc:
+        stack = pos[next_proc]
+        while len(stack) and stack[-1] < i:
+            stack.pop()
+
+        if len(stack) == 0:
+            next_proc += 1
+            continue
+
+        i = stack.pop()
+        res[i] = "ok"
+        next_proc += 1
+
+    return res
