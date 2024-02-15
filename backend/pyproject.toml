@@ -114,6 +114,7 @@ ignore = [
   "ANN101", # missing-type-self
   "ANN102", # missing-type-cls
   "E741",   # Ambiguous variable name (e.g. `l`)
+  "N801",   # Class name `__ImageFeatureExtractor` should use CapWords convention
 ]
 [tool.ruff.lint.per-file-ignores]
 "**/cmd/*.py" = ["T201", "T203"]  # allow print(), pprint()
