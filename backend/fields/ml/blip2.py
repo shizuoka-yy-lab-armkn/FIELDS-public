@@ -10,24 +10,20 @@ from fields.utils.logging import get_colored_logger
 _log = get_colored_logger(__name__)
 
 
-class _FeatureExtractorInput(TypedDict, total=False):
-    image: torch.Tensor
-    text_input: list[str]
+class __ImageFeatureExtractor(Protocol):
+    class InputDict(TypedDict, total=False):
+        image: torch.Tensor
+        text_input: list[str]
 
+    class Output(Protocol):
+        image_embeds: torch.Tensor
+        image_embeds_proj: torch.Tensor
 
-class _Feature(Protocol):
-    image_embeds: torch.Tensor
-    image_embeds_proj: torch.Tensor
-
-
-class FeatureExtractor(Protocol):
-    def extract_features(
-        self, param: _FeatureExtractorInput, mode: Literal["image"]
-    ) -> _Feature:
+    def extract_features(self, param: InputDict, mode: Literal["image"]) -> Output:
         ...
 
 
-_FnVisionProcessor = Callable[[Image], torch.Tensor]
+__ImageProcessorFunc = Callable[[Image], torch.Tensor]
 
 
 class Blip2FeatureExtractor:
@@ -42,8 +38,8 @@ class Blip2FeatureExtractor:
         _log.info("Loading BLIP-2 feature extractor done.")
         assert model is not None
         assert vis_processors is not None
-        self.feature_extractor: FeatureExtractor = model
-        self.prerprocess_image: _FnVisionProcessor = vis_processors["eval"]
+        self.feature_extractor: __ImageFeatureExtractor = model
+        self.image_preprocessor: __ImageProcessorFunc = vis_processors["eval"]
         self.device = device
 
     def extract_image_feature_from_preproecessed_img_batch(
@@ -57,10 +53,7 @@ class Blip2FeatureExtractor:
         assert embeds.shape == (batch_size, 256)
         return embeds
 
-    def extract_image_feature(
-        self,
-        img: Image,
-    ) -> np.ndarray:
-        img_tensor = self.prerprocess_image(img).unsqueeze_(0)
+    def extract_image_feature(self, img: Image) -> np.ndarray:
+        img_tensor = self.image_preprocessor(img).unsqueeze_(0)
         embeds = self.extract_image_feature_from_preproecessed_img_batch(img_tensor)
         return embeds.cpu().numpy()

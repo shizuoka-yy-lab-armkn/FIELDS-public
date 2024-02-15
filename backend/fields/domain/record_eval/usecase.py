@@ -74,7 +74,7 @@ def extract_video_feature(
             break
 
         img = PIL.Image.fromarray(cv2.cvtColor(frame, cv2.COLOR_BGR2RGB))
-        batch_buff.append(blip2.prerprocess_image(img))
+        batch_buff.append(blip2.image_preprocessor(img))
 
     a = torch.cat(batch_wise_embeds).numpy().T
     _log.info(f"Extracted video feature: {a.shape=}")
