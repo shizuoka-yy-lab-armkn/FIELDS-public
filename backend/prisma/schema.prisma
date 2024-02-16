@@ -27,14 +27,15 @@ model Subject {
   created_at DateTime @default(now())
   updated_at DateTime @default(now()) @updatedAt
 
-  actions Action[]
-  records Record[]
+  actions         Action[]
+  records         Record[]
+  exemplar_videos ExemplarVideo[]
 }
 
 model Action {
   id         String  @id @default(cuid()) // 工程番号ではないので注意
   ord_serial Int // 順序付けに使う連番。1スタートでなくても良いが、飛び飛びの値になってはならない。
-  display_no Int     @default(0) // 表示する工程番号。ソート順には関与しない。
+  display_no Int // 表示する工程番号。ソート順には関与しない。
   subject_id String
   subject    Subject @relation(fields: [subject_id], references: [id])
   short_name String
@@ -46,9 +47,11 @@ model Action {
   created_at DateTime @default(now())
   updated_at DateTime @default(now()) @updatedAt
 
-  record_segments RecordSegment[]
+  record_segments     RecordSegment[]
+  exemplar_video_segs ExemplarVideoSegment[]
 
   @@unique([subject_id, ord_serial])
+  @@unique([subject_id, display_no])
 }
 
 model Record {
@@ -83,4 +86,31 @@ model RecordSegment {
   end_frame   Int // 終了フレーム (0-indexed); 半開区間なのでこの点は含めない
 
   tas_likelihood Float @default(0) // TAS (Temporal Action Segmentation) の尤度
+}
+
+model ExemplarVideo {
+  id         String  @id @default(cuid())
+  subject_id String
+  subject    Subject @relation(fields: [subject_id], references: [id])
+
+  slug String
+  fps  Float
+
+  created_at DateTime @default(now())
+  updated_at DateTime @default(now()) @updatedAt
+
+  segments ExemplarVideoSegment[]
+
+  @@unique([subject_id, slug])
+}
+
+model ExemplarVideoSegment {
+  id                Int           @id @default(autoincrement())
+  exemplar_video_id String
+  exemplar_video    ExemplarVideo @relation(fields: [exemplar_video_id], references: [id])
+  opstep_id         String
+  opstep            Action        @relation(fields: [opstep_id], references: [id])
+
+  begin_sec Float // 開始秒
+  end_sec   Float // 終了秒 半開区間なのでこの点は含めない
 }

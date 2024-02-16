@@ -1,5 +1,17 @@
 import * as schema from "@/gen/oapi/backend/v1/schema";
 
+type SegmentLite = {
+  begin?: number;
+  end?: number;
+  beginSec?: number;
+  endSec?: number;
+};
+
+type Segment = SegmentLite & {
+  type: RecordSegmentType;
+  likelihood?: number;
+};
+
 export class RecordSegmentAggrLite {
   readonly opstepId: string;
 
@@ -34,7 +46,7 @@ export class RecordSegmentAggrLite {
   }
 
   constructor(
-    seg: { begin?: number; end?: number },
+    seg: SegmentLite,
     opstep: schema.ActionMeta,
     fps: number,
   ) {
@@ -46,8 +58,8 @@ export class RecordSegmentAggrLite {
     this.referenceDurSec = opstep.masterDurMean;
 
     this.fps = fps;
-    this.beginSec = (seg.begin ?? 0) / fps;
-    this.endSec = (seg.end ?? 0) / fps;
+    this.beginSec = seg.beginSec ?? ((seg.begin ?? 0) / fps);
+    this.endSec = seg.endSec ?? ((seg.end ?? 0) / fps);
   }
 }
 
@@ -58,7 +70,7 @@ export class RecordSegmentAggr extends RecordSegmentAggrLite {
   public readonly likelihood: number;
 
   constructor(
-    seg: { type: RecordSegmentType; begin?: number; end?: number; likelihood?: number },
+    seg: Segment,
     opstep: schema.ActionMeta,
     fps: number,
   ) {

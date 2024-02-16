@@ -53,6 +53,7 @@ export const GlobalHeader = ({
           <NavItemLink href="/" px="1.25rem">FIELDS</NavItemLink>
           <NavItemLink href="/recording">収録を始める</NavItemLink>
           <NavItemLink href="/records">収録履歴</NavItemLink>
+          <NavItemLink href="/exemplars">お手本動画</NavItemLink>
         </Flex>
         {records != null && (
           <>
