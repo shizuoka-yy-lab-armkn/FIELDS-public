@@ -1,7 +1,9 @@
-from pydantic import Field
+from pydantic import Field, HttpUrl
 
 from fields.base.schema import CamelizedPydanticModel
-from fields.entity import ActionID, SubjectID
+from fields.config import get_config
+from fields.entity import ActionID, ExemplarVideoID, SubjectID
+from prisma import models
 
 
 class ActionMeta(CamelizedPydanticModel):
@@ -26,3 +28,49 @@ class SubjectBrief(CamelizedPydanticModel):
     id: SubjectID
     slug: str
     name: str
+
+
+class ExemplarVideoSegment(CamelizedPydanticModel):
+    opstep_id: str
+    begin_sec: float
+    end_sec: float
+
+
+class ExemplarVideo(CamelizedPydanticModel):
+    id: ExemplarVideoID
+    slug: str
+    subject: SubjectBrief
+    video_url: HttpUrl
+    fps: float
+    segs: list[ExemplarVideoSegment]
+
+    @staticmethod
+    def from_prisma_model(v: models.ExemplarVideo) -> "ExemplarVideo":
+        assert v.subject is not None
+
+        if v.segments is None:
+            segs = []
+        else:
+            segs = [
+                ExemplarVideoSegment(
+                    opstep_id=s.opstep_id,
+                    begin_sec=s.begin_sec,
+                    end_sec=s.end_sec,
+                )
+                for s in v.segments
+            ]
+
+        cfg = get_config()
+
+        return ExemplarVideo(
+            id=ExemplarVideoID(v.id),
+            slug=v.slug,
+            subject=SubjectBrief(
+                id=SubjectID(v.subject.id), slug=v.subject.slug, name=v.subject.name
+            ),
+            video_url=HttpUrl(
+                f"{cfg.static_base_url}/subjects/{v.subject.slug}/{v.slug}.mp4"
+            ),
+            fps=v.fps,
+            segs=segs,
+        )
