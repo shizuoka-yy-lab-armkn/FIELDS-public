@@ -6,6 +6,8 @@
  */
 
 export * from './actionMeta';
+export * from './exemplarVideo';
+export * from './exemplarVideoSegment';
 export * from './finishRecordingResp';
 export * from './hTTPValidationError';
 export * from './loginReq';
