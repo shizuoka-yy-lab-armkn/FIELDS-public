@@ -76,6 +76,7 @@ async def get_record_evaluation(
     )
 
     aid2a = {a.id: a for a in master_actions}
+    ord2a = {a.ord_serial: a for a in master_actions}
 
     recog_seq = [aid2a[s.action_id].ord_serial for s in recog_segs]
     correct_first_proc = master_actions[0].ord_serial
@@ -112,9 +113,10 @@ async def get_record_evaluation(
                 likelihood=recog.tas_likelihood,
             )
         elif m.type == "missing":
+            a = ord2a[m.action]
             seg = MissingSegment(
-                action_id=ActionID(recog.action_id),
-                display_no=aid2a[recog.action_id].display_no,
+                action_id=ActionID(a.id),
+                display_no=a.display_no,
             )
         else:
             assert_never(m.type)

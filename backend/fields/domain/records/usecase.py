@@ -180,12 +180,12 @@ def merge_missings(
     marks: Sequence[SegmentMatchType],
     correct_first_proc: int,
     correct_last_proc: int,
-) -> list[SegmentMatching]:
+) -> list[SegmentMatching[int]]:
     """工程順間違いのマーキング結果に工程抜けの情報をマージした結果を生成する"""
     all_collect_procs = set(range(correct_first_proc, correct_last_proc + 1))
     missings = sorted(all_collect_procs - set(procs))
 
-    res: list[SegmentMatching] = []
+    res: list[SegmentMatching[int]] = []
     i, j = 0, 0
 
     while i < len(procs) and j < len(missings):
