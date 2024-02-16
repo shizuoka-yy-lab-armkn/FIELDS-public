@@ -33,7 +33,7 @@ class Blip2FeatureExtractor:
             name="blip2_feature_extractor",
             model_type="pretrain",
             is_eval=True,
-            device=device,
+            device=device,  # type:ignore
         )
         _log.info("Loading BLIP-2 feature extractor done.")
         assert model is not None
