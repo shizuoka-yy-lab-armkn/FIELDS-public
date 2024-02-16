@@ -93,12 +93,15 @@ model ExemplarVideo {
   subject_id String
   subject    Subject @relation(fields: [subject_id], references: [id])
 
-  slug String @unique
+  slug String
   fps  Float
 
-  created_at DateTime               @default(now())
-  updated_at DateTime               @default(now()) @updatedAt
-  segments   ExemplarVideoSegment[]
+  created_at DateTime @default(now())
+  updated_at DateTime @default(now()) @updatedAt
+
+  segments ExemplarVideoSegment[]
+
+  @@unique([subject_id, slug])
 }
 
 model ExemplarVideoSegment {
