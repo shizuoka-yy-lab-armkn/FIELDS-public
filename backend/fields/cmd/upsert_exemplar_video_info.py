@@ -104,7 +104,7 @@ async def main(
                 begin_sec = _parse_timestamp_to_sec(row[seg_begin_col])
                 end_sec = _parse_timestamp_to_sec(row[seg_end_col])
                 opstep = int(row[-1])
-                print(f"{opstep:2=},  {begin_sec:7.3=},  {end_sec:7.3=}")
+                print(f"{opstep=:2},  {begin_sec=:7.3f},  {end_sec=:7.3f}")
 
                 data.append(
                     {
