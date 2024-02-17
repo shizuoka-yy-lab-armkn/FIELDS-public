@@ -113,7 +113,7 @@ class RecordEvalWorker(RecordEvalWorkerBase):
 
         segs: list[types.RecordSegmentCreateWithoutRelationsInput] = [
             {
-                "action_id": master_actions[seg.val].id,
+                "action_id": master_actions[seg.val - 1].id,
                 "record_id": job.record_id,
                 "begin_frame": prelude_frames + seg.begin,
                 "end_frame": prelude_frames + seg.begin + seg.len,
