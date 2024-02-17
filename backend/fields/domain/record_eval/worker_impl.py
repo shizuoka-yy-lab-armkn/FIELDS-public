@@ -104,6 +104,9 @@ class RecordEvalWorker(RecordEvalWorkerBase):
         # 行動分節
         _log.info("Start mstcn prediction")
         preds, likelihoods = self.mstcn.predict(video_embedding, self.device)
+        print(f"preds: {len(preds)=},  {max(preds)=},  {min(preds)=}")
+        print(f"{len(master_actions)=}")
+        print(*(m.display_no for m in master_actions))
 
         tas_likelihood_path = resolve_tas_likelihood_npy_path(
             self.cfg, job.username, job.record_seq, job.recording_start_at
