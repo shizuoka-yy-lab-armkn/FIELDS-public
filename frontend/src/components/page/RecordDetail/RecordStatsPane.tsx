@@ -89,6 +89,7 @@ const ScoreCard = (
           unit={score.cfg.missingProcessPenalty}
           count={score.input.missingProcessCount}
         >
+          {missingSegs.length === 0 && "工程抜けはありませんでした。素晴らしい！"}
           <UnorderedList>
             {missingSegs.map((s, i) => {
               return (
@@ -109,6 +110,7 @@ const ScoreCard = (
           unit={score.cfg.wrongOrderPenalty}
           count={score.input.wrongOrderCount}
         >
+          {wrongOrderSegs.length === 0 && "工程順ミスはありませんでした。素晴らしい！"}
           <UnorderedList>
             {wrongOrderSegs.map((s, i) => {
               return (
@@ -133,6 +135,12 @@ const ScoreCard = (
         </ScoreCheckPointSection>
 
         <ScoreCheckPointSection title="スピードボーナス" unit={score.detail.speedBonus}>
+          <Text>あなたの開始〜終了までの時間: {score.input.userWorkSecs.toFixed(1)} 秒</Text>
+          <UnorderedList>
+            <ListItem>{score.input.speedBonusMaxPointSecs}秒以内: +{score.cfg.speedBonusMaxPoints}点 (Max)</ListItem>
+            <ListItem>{`  〜 この間${score.cfg.speedBonusSpanSecs}秒区間で線形にスピードボーナス算出 〜`}</ListItem>
+            <ListItem>{score.input.speedBonusMaxPointSecs + score.cfg.speedBonusSpanSecs}秒以上: +{0}点 (Min)</ListItem>
+          </UnorderedList>
         </ScoreCheckPointSection>
       </VStack>
     </Center>
@@ -179,17 +187,17 @@ const TookTimeChartCard = ({ segs }: {
               // でゴリ押ししている
 
 
-                <text
-                  offset="5"
-                  x="35"
-                  y="173"
-                  className="recharts-text recharts-label"
-                  text-anchor="middle"
-                  fill="#808080"
-                  writing-mode="vertical-lr"
-                >
-                  <tspan x="35" dy="0.355em">時間 [秒]</tspan>
-                </text>
+              <text
+                offset="5"
+                x="35"
+                y="173"
+                className="recharts-text recharts-label"
+                text-anchor="middle"
+                fill="#808080"
+                writing-mode="vertical-lr"
+              >
+                <tspan x="35" dy="0.355em">時間 [秒]</tspan>
+              </text>
 
             }
             domain={[0, (dataMax: number) => Math.ceil(dataMax / 5) * 5]}
