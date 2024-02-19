@@ -98,7 +98,7 @@ class RecordEvalWorker(RecordEvalWorkerBase):
         np.save(blip2_npy_path, video_embedding)
 
         master_actions = await prisma.action.find_many(
-            where={"subject_id": job.subject_id}, order={"ord_serial": "asc"}
+            where={"subject_id": job.subject_id}, order={"display_no": "asc"}
         )
 
         # 行動分節
