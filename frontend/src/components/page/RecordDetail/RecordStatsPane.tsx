@@ -156,10 +156,10 @@ const TookTimeChartCard = ({ segs }: {
 
   const data = segs
     .filter(s => s.type !== "missing" && s.durSec > s.referenceDurSec)
+    .sort((a, b) => (b.durSec - b.referenceDurSec) - (a.durSec - a.referenceDurSec))
     .slice(0, TOP_K)
-    .sort((a, b) => b.durSec - a.durSec)
     .map((s) => ({
-      name: `[${s.displayNo}] ${s.shortName}`,
+      name: `[${s.displayNo}] ${s.shortName.slice(0, 11)}`,
       [KEY_YOU]: s.durSec,
       [KEY_MASTER]: s.referenceDurSec,
     }));
@@ -169,7 +169,9 @@ const TookTimeChartCard = ({ segs }: {
   return (
     <Center {...CARD_COMMON_STYLE} flexDirection="column">
       <Heading as="h2" mb={3}>時間のかかっている工程 上位{TOP_K}件</Heading>
-      <Text mb={6}>以下の工程を意識すると時間短縮しやすいでしょう。</Text>
+      <Text mb={6}>
+        以下の工程は熟練者との差が大きい上位4件です。<br />これらを意識すると時間短縮しやすいでしょう。
+      </Text>
       <ResponsiveContainer width="100%" minHeight="440px">
         <BarChart
           width={500}
@@ -187,22 +189,31 @@ const TookTimeChartCard = ({ segs }: {
               // でゴリ押ししている
 
 
-              <text
-                offset="5"
-                x="35"
-                y="173"
-                className="recharts-text recharts-label"
-                text-anchor="middle"
-                fill="#808080"
-                writing-mode="vertical-lr"
-              >
-                <tspan x="35" dy="0.355em">時間 [秒]</tspan>
-              </text>
+                <text
+                  offset="5"
+                  x="35"
+                  y="173"
+                  className="recharts-text recharts-label"
+                  text-anchor="middle"
+                  fill="#808080"
+                  writing-mode="vertical-lr"
+                >
+                  <tspan x="35" dy="0.355em">時間 [秒]</tspan>
+                </text>
 
             }
             domain={[0, (dataMax: number) => Math.ceil(dataMax / 5) * 5]}
           />
-          <Tooltip formatter={(v: number) => `${v.toFixed(1)} 秒`} />
+          <Tooltip
+            formatter={(
+              v: number,
+              _name,
+              _item,
+              i,
+              // @ts-expect-error: Property 'payload' does not exist on type 'Payload<number, NameType> | undefined'.
+              [{ payload }],
+            ) => `${v.toFixed(1)} 秒${i === 1 ? "" : `(+${(payload[KEY_YOU] - payload[KEY_MASTER]).toFixed(2)}秒)`}`}
+          />
           <Legend />
           <Bar dataKey={KEY_YOU} fill="hotpink" label={KEY_YOU} />
           <Bar dataKey={KEY_MASTER} fill="royalblue" label={KEY_MASTER} />
