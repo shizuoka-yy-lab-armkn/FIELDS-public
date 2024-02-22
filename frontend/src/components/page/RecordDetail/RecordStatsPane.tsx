@@ -2,7 +2,7 @@ import { ProcessDisplayNo } from "@/components/domain/records/ProcessDisplayNo";
 import { ChakraNextLink } from "@/components/util/ChakraNextLink";
 import { Record } from "@/gen/oapi/backend/v1/schema";
 import { RecordSegmentAggr } from "@/model/RecordSegmentAggr";
-import { calcScore } from "@/usecase/records";
+import { calcScore, fmtSecsToMSS } from "@/usecase/records";
 import { Box, BoxProps, Center, Heading, Icon, ListItem, Text, UnorderedList, VStack } from "@chakra-ui/react";
 import { ReactNode, useMemo } from "react";
 import { IoCaretForwardCircle } from "react-icons/io5";
@@ -135,11 +135,30 @@ const ScoreCard = (
         </ScoreCheckPointSection>
 
         <ScoreCheckPointSection title="スピードボーナス" unit={score.detail.speedBonus}>
-          <Text>あなたの開始〜終了までの時間: {score.input.userWorkSecs.toFixed(1)} 秒</Text>
+          <Text>
+            あなたの開始〜終了までの時間:&nbsp;
+            <Text
+              as="span"
+              fontSize="2xl"
+              fontWeight="bold"
+              color={score.detail.speedBonus > 0 ? BONUS_FG : PENALTY_FG}
+            >
+              {fmtSecsToMSS(score.input.userWorkSecs)}
+            </Text>
+            &nbsp;秒
+          </Text>
           <UnorderedList>
-            <ListItem>{score.input.speedBonusMaxPointSecs}秒以内: +{score.cfg.speedBonusMaxPoints}点 (Max)</ListItem>
+            <ListItem>
+              <Text as="span" fontWeight="bold">{fmtSecsToMSS(score.input.speedBonusMaxPointSecs)}</Text>
+              以内: <Text as="span" fontWeight="bold" color={BONUS_FG}>+{score.cfg.speedBonusMaxPoints}点</Text> (Max)
+            </ListItem>
             <ListItem>{`  〜 この間${score.cfg.speedBonusSpanSecs}秒区間で線形にスピードボーナス算出 〜`}</ListItem>
-            <ListItem>{score.input.speedBonusMaxPointSecs + score.cfg.speedBonusSpanSecs}秒以上: +{0}点 (Min)</ListItem>
+            <ListItem>
+              <Text as="span" fontWeight="bold">
+                {fmtSecsToMSS(score.input.speedBonusMaxPointSecs + score.cfg.speedBonusSpanSecs)}
+              </Text>
+              以上: <Text as="span" fontWeight="bold" color={BONUS_FG}>+{0}点</Text> (Min)
+            </ListItem>
           </UnorderedList>
         </ScoreCheckPointSection>
       </VStack>
