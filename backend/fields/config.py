@@ -26,7 +26,10 @@ class Config(BaseSettings):
         return Config(_env_file=str(path))  # type: ignore
 
     # meta config
-    model_config = SettingsConfigDict(env_prefix="FIELDS_")
+    model_config = SettingsConfigDict(
+        env_prefix="FIELDS_",
+        extra="forbid",
+    )
 
     debug: bool
 
@@ -54,6 +57,8 @@ class Config(BaseSettings):
     redis_host: str
     redis_port: int
     redis_db: int = 0
+
+    database_url: str
 
     # to get a string like this run:
     # openssl rand -hex 32
