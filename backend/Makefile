@@ -8,12 +8,10 @@ FIELDS_CMD  := poetry run python3 -m fields.cmd
 help:
 	bat Makefile || cat Makefile
 
-dev/setup:
-	ln -sf poetry.$(OS).lock poetry.lock
-
 install:
+	ln -sf poetry.$(OS).lock poetry.lock
 	poetry lock --no-update
-	poetry install
+	poetry install --no-root
 	make gen/prisma
 
 run/server/dev:
