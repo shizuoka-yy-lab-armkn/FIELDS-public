@@ -1,0 +1,79 @@
+// 本ファイルは extend されることを想定している
+// ※ biome-common.jsonc というファイル名は biome コマンドから認識されない
+{
+  "$schema": "https://biomejs.dev/schemas/1.9.2/schema.json",
+  "organizeImports": {
+    "enabled": true
+  },
+  "formatter": {
+    "useEditorconfig": true
+  },
+  "javascript": {
+    "formatter": {
+      "quoteStyle": "single",
+      "trailingCommas": "es5",
+      "lineWidth": 90
+    }
+  },
+  "json": {
+    "parser": {
+      "allowComments": false
+    }
+  },
+  "linter": {
+    "enabled": true,
+    "ignore": ["**/*.js"],
+    "rules": {
+      "recommended": true,
+      "a11y": {
+        "all": true
+      },
+      "complexity": {
+        "all": true,
+        "noForEach": "off",
+        "noExcessiveCognitiveComplexity": "off"
+      },
+      "correctness": {
+        "all": true,
+        "noNodejsModules": "off",
+        // React.ReactNode などの `React` が lint error になってしまうので抑制。
+        // 未宣言の変数は typecheck でも検知できる。
+        "noUndeclaredVariables": "off"
+      },
+      "performance": {
+        "all": true
+      },
+      "security": {
+        "all": true
+      },
+      "suspicious": {
+        "all": true,
+        "noConsole": "off",
+        "noReactSpecificProps": "off"
+      },
+      "nursery": {
+        "all": true,
+        "useComponentExportOnlyModules": {
+          "level": "error",
+          "options": {
+            "allowConstantExport": true,
+            "allowExportNames": ["action", "loader", "headers", "links", "meta"]
+          }
+        }
+      }
+    }
+  },
+  "files": {
+    "include": ["**/*.ts", "**/*.tsx", "**/*.mjs", "**/*.json", "**/*.jsonc"],
+    "ignore": [
+      "**/node_modules",
+      "**/package-lock.json",
+      "**/.next",
+      "out",
+      "build",
+      "**/.venv",
+      "**/tmp",
+      "**/*.d.ts"
+    ]
+  }
+}
