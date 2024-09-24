@@ -10,7 +10,6 @@ help:
 
 install:
 	ln -sf poetry.$(OS).lock poetry.lock
-	poetry lock --no-update
 	poetry install --no-root
 	make gen/prisma
 
