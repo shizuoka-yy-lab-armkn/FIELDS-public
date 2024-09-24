@@ -2,7 +2,7 @@ openapi.json
 *.openapi.json
 .env
 .env.*
-!.env.*.sample
+!.env.example
 !.env.*.example
 /tmp/
 
