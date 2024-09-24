@@ -21,7 +21,7 @@ services:
     environment:
       #POSTGRES_USER: See .env.postgres
       #POSTGRES_PASSWORD: See .env.postgres
-      POSTGRES_DB: proficiv
+      POSTGRES_DB: fields
       POSTGRES_INITDB_ARGS: '--encoding=UTF-8'
       POSTGRES_HOST_AUTH_METHOD: trust
       PGDATA: /var/lib/postgresql/data/pgdata
