@@ -1,4 +1,5 @@
-version: "3"
+name: yylab-fields
+
 services:
   nginx:
     image: tiangolo/nginx-rtmp:latest-2023-11-13
