@@ -3,6 +3,7 @@ openapi.json
 .env
 .env.*
 !.env.*.sample
+!.env.*.example
 /tmp/
 
 .idea
