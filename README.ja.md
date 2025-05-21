@@ -31,10 +31,10 @@ FIELDS はバイクの組立作業の学習を補助する、Web アプリケー
 ## 実行方法
 
 ### (1) リポジトリのクローンと Docker コンテナの起動
-1. リポジトリをクローンする。
+1. リポジトリをダウンロードして ZIP ファイルを展開する。
 
     ```bash
-    git clone git@github.com:shizuoka-yy-lab-armkn/FIELDS-public.git
+    unzip FIELDS-public-3BC4.zip -d FIELDS-public
     cd FIELDS-public
     ```
 

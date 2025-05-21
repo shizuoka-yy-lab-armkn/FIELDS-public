@@ -33,10 +33,10 @@ The system has been confirmed to run under the following environment:
 ## Execution Instructions
 
 ### (1) Clone the repository and start the Docker containers
-1. Clone the repository.
+1. Download the repository and unzip.
 
     ```bash
-    git clone git@github.com:shizuoka-yy-lab-armkn/FIELDS-public.git
+    unzip FIELDS-public-3BC4.zip -d FIELDS-public
     cd FIELDS-public
     ```
 
