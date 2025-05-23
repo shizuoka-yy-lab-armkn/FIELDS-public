@@ -11,8 +11,8 @@ services:
       - ./nginx/conf.d:/etc/nginx/conf.d
       - ./backend/static/public:/var/www/static
     extra_hosts:
-      # コンテナ内部からコンテナ外のネイティブのホストへ繋げるようにする
-      # `host-gateway` が特殊なキーワードで，`native-host` は任意のドメイン名にできる
+      # allow connect to outside of container from container internal
+      # `host-gateway` is special keyword. "native-host" can be any name
       - native-host:host-gateway
 
   postgres:

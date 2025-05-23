@@ -1,7 +1,5 @@
 # FIELDS (Feedback Integrated Expert Level Description System)
 
-日本語: [README.ja.md](./README.ja.md)
-
 :bulb: Homepage: https://sites.google.com/view/jim-fields
 
 FIELDS is a web application that supports learning in motorcycle assembly tasks.
