@@ -1,42 +1,95 @@
-MIT License
+Academic Research Use License (FIELDS)
+====================================
 
-Copyright (c) 2023 Kosuke Nakamura
+Copyright (c) 2023–2025 Shizuoka University
+All rights reserved.
 
-Permission is hereby granted, free of charge, to any person obtaining a copy
-of this software and associated documentation files (the "Software"), to deal
-in the Software without restriction, including without limitation the rights
-to use, copy, modify, merge, publish, distribute, sublicense, and/or sell
-copies of the Software, and to permit persons to whom the Software is
-furnished to do so, subject to the following conditions:
+This software and associated documentation files (the "Software")
+are provided under the terms of this Academic Research Use License
+("License").
 
-The above copyright notice and this permission notice shall be included in all
-copies or substantial portions of the Software.
+This License is based on the MIT License, with additional restrictions
+that limit use of the Software to non-commercial academic research
+and educational purposes only.
 
-THE SOFTWARE IS PROVIDED "AS IS", WITHOUT WARRANTY OF ANY KIND, EXPRESS OR
-IMPLIED, INCLUDING BUT NOT LIMITED TO THE WARRANTIES OF MERCHANTABILITY,
-FITNESS FOR A PARTICULAR PURPOSE AND NONINFRINGEMENT. IN NO EVENT SHALL THE
-AUTHORS OR COPYRIGHT HOLDERS BE LIABLE FOR ANY CLAIM, DAMAGES OR OTHER
-LIABILITY, WHETHER IN AN ACTION OF CONTRACT, TORT OR OTHERWISE, ARISING FROM,
-OUT OF OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN THE
-SOFTWARE.
+----------------------------------------------------------------------
+Base License (MIT License)
+----------------------------------------------------------------------
 
-“Commons Clause” License Condition v1.0
+Permission is hereby granted, free of charge, to any person obtaining a
+copy of this Software and associated documentation files (the
+"Software"), to use, copy, modify, merge, and distribute copies of the
+Software, subject to the conditions and restrictions set forth below.
 
-The Software is provided to you by the Licensor under the License, as defined
-below, subject to the following condition.
+The above copyright notice and this permission notice shall be included
+in all copies or substantial portions of the Software.
 
-Without limiting other conditions in the License, the grant of rights under
-the License will not include, and the License does not grant to you, the
-right to Sell the Software.
+THE SOFTWARE IS PROVIDED "AS IS", WITHOUT WARRANTY OF ANY KIND, EXPRESS
+OR IMPLIED, INCLUDING BUT NOT LIMITED TO THE WARRANTIES OF
+MERCHANTABILITY, FITNESS FOR A PARTICULAR PURPOSE AND NONINFRINGEMENT.
+IN NO EVENT SHALL THE COPYRIGHT HOLDER BE LIABLE FOR ANY CLAIM, DAMAGES
+OR OTHER LIABILITY, WHETHER IN AN ACTION OF CONTRACT, TORT OR OTHERWISE,
+ARISING FROM, OUT OF OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR
+OTHER DEALINGS IN THE SOFTWARE.
 
-For purposes of the foregoing, “Sell” means practicing any or all of the
-rights granted to you under the License to provide to third parties, for a
-fee or other consideration (including without limitation fees for hosting or
-consulting/ support services related to the Software), a product or service
-whose value derives, entirely or substantially, from the functionality of
-the Software. Any license notice or attribution required by the License must
-also include this Commons Clause License Condition notice.
+----------------------------------------------------------------------
+Commons Clause License Condition v1.0
+----------------------------------------------------------------------
 
-Software: All FIELDS associated files.
-License: MIT
-Licensor: Kosuke Nakamura
+The Software is provided to you by the Licensor under the License,
+subject to the following condition.
+
+Without limiting other conditions in the License, the grant of rights
+under this License does not include, and the License does not grant to
+you, the right to Sell the Software.
+
+For purposes of the foregoing, "Sell" means practicing any or all of
+the rights granted to you under this License to provide to third
+parties, for a fee or other consideration (including, without
+limitation, fees for hosting or consulting/support services related to
+the Software), a product or service whose value derives, entirely or
+substantially, from the functionality of the Software.
+
+Any license notice or attribution required by this License must also
+include this Commons Clause License Condition notice.
+
+----------------------------------------------------------------------
+Additional Restrictions (Academic Research Use Only)
+----------------------------------------------------------------------
+
+In addition to the terms of the MIT License and the Commons Clause, the
+following restrictions apply:
+
+1. Academic Use Only
+   This Software and any Derivative Works must be used solely for
+   non-commercial academic research and educational purposes, unless
+   otherwise explicitly approved in writing by the copyright holder(s).
+
+2. Prohibition of Commercial Use
+   Use of this Software, in whole or in part, to develop, train,
+   evaluate, validate, or support commercial products or services is
+   strictly prohibited, unless otherwise explicitly approved in writing
+   by the copyright holder(s).
+
+3. Derivative Works
+   Any Derivative Works, adaptations, modifications, or
+   re-implementations of this Software are subject to the same
+   restrictions as the original Software, unless otherwise explicitly
+   approved in writing by the copyright holder(s).
+
+----------------------------------------------------------------------
+Licensor
+----------------------------------------------------------------------
+
+Licensor: Shizuoka University
+Software: All FIELDS associated files
+
+----------------------------------------------------------------------
+Commercial Licensing
+----------------------------------------------------------------------
+
+Commercial use or any use beyond the scope of non-commercial academic
+research and education requires a separate written license agreement
+with the copyright holder(s).
+
+Please contact Shizuoka University for commercial licensing inquiries.
